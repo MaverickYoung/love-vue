@@ -1,0 +1,42 @@
+<template>
+  <div class="image-container">
+    <img :src="imageSrc" :alt="alt" :style="imgStyle"/>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { defineProps, computed } from 'vue';
+
+const props = defineProps<{
+  name: string;     // 图片名称
+  alt?: string;     // 图片描述
+  width?: string;   // 自定义宽度
+  height?: string;  // 自定义高度
+}>();
+
+// 计算图片源路径
+const imageSrc = computed(() => {
+  return `/src/assets/${props.name}`;
+});
+
+// 计算样式
+const imgStyle = computed(() => {
+  return {
+    width: props.width || '100%',  // 默认宽度为100%
+    height: props.height || 'auto', // 默认高度自适应
+  };
+});
+</script>
+
+<style scoped>
+.image-container {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+  height: 100%;            /* 可根据需要调整容器高度 */
+}
+
+img {
+  display: block; /* 避免底部留白 */
+}
+</style>
