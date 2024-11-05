@@ -7,13 +7,17 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AvatarWrapper: typeof import('./src/components/AvatarWrapper.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     ImageWrapper: typeof import('./src/components/ImageWrapper.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     VanButton: typeof import('vant/es')['Button']
     VanCol: typeof import('vant/es')['Col']
+    VanImage: typeof import('vant/es')['Image']
     VanPopover: typeof import('vant/es')['Popover']
     VanRow: typeof import('vant/es')['Row']
+    VanTab: typeof import('vant/es')['Tab']
+    VanTabs: typeof import('vant/es')['Tabs']
   }
 }

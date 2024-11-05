@@ -4,22 +4,27 @@
       <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
     </div>
 
-    <van-row>
-      <van-col span="8" class="type">
-        <ImageWrapper name="poop-normal.svg"/>
-      </van-col>
-      <van-col span="8" class="type">
-        <ImageWrapper name="poop-normal.svg"/>
-      </van-col>
-      <van-col span="8" class="type">
-        <ImageWrapper name="poop-normal.svg"/>
-      </van-col>
-    </van-row>
+    <div class="card">
+      <van-tabs v-model:active="active" animated swipeable>
+        <van-tab class="content">
+          <template #title>
+            <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
+          </template>
+          <PoopMsg/>
+        </van-tab>
+        <van-tab class="content">
+          <template #title>
+            <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
+          </template>
+        </van-tab>
+        <van-tab>
+          <template #title>
+            <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
+          </template>
 
-    <div class="card msg">
-      <PoopMsg/>
+        </van-tab>
+      </van-tabs>
     </div>
-
     <van-popover
         v-model:show="showPopover"
         :actions="options"
@@ -29,37 +34,42 @@
       <van-row style="width: 250px">
         <van-col span="8" class="type-1" v-for="(option,index) in options" :key="index"
         >
-          <ImageWrapper :name="option.name" width="80%" @click="handleClick(option.name)"/>
+          <ImageWrapper :name="option.name" width="80%" @click="handleClick(option)"/>
         </van-col>
       </van-row>
 
       <template #reference>
-        <ImageWrapper :name="type"
+        <ImageWrapper :name="type.name"
                       width="50%"/>
       </template>
     </van-popover>
-    <van-button type="primary">发射</van-button>
+    <van-button :type="type.type">发射</van-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import ImageWrapper from "@/components/ImageWrapper.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import PoopMsg from "@/views/poop/PoopMsg.vue";
 
-const options = [{name: 'poop-normal.svg'},
-  {name: 'poop-fiery.svg'}, {name: 'poop-runny.svg'}];
+const active = ref('');
+const options = [{name: 'poop-normal.svg', type: 'warning'},
+  {name: 'poop-fiery.svg', type: 'danger'}, {name: 'poop-runny.svg', type: 'primary'}];
 
 const showPopover = ref(false);
-const type = ref('')
+const type = reactive({
+  name: '',
+  type: '',
+})
 
-const handleClick = (name: string) => {
+const handleClick = (options) => {
   showPopover.value = false;
-  type.value = name
+  type.name = options.name;
+  type.type = options.type;
 }
 
 onMounted(() => {
-  type.value = options[0].name;
+  handleClick(options[0]);
 })
 </script>
 
@@ -69,6 +79,7 @@ onMounted(() => {
   display: flex; /* 使用 Flexbox 布局 */
   flex-direction: column; /* 垂直排列 */
   align-items: center; /* 水平居中 */
+  height: 100vh;
 }
 
 .card {
@@ -79,16 +90,12 @@ onMounted(() => {
   width: 300px;
   text-align: center;
   transition: transform 0.2s;
-  margin-bottom: 16px;
+  margin: 16px;
 }
 
-.type {
-  padding: 16px;
-}
-
-.msg {
+.content {
   height: 250px;
-  margin-bottom: 16px;
+  overflow-y: auto; /* 允许垂直滚动 */
 }
 
 .type-1 {

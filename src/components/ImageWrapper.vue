@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, computed } from 'vue';
+import {computed} from 'vue';
 
 const props = defineProps<{
   name: string;     // 图片名称
@@ -32,8 +32,8 @@ const imgStyle = computed(() => {
 .image-container {
   display: flex;
   justify-content: center; /* 水平居中 */
-  align-items: center;     /* 垂直居中 */
-  height: 100%;            /* 可根据需要调整容器高度 */
+  align-items: center; /* 垂直居中 */
+  height: 100%; /* 可根据需要调整容器高度 */
 }
 
 img {
