@@ -64,6 +64,10 @@ const messages = ref<Message[]>([
   {id: 3, time: '2024-11-06 10:16', content: '已经完成前期工作了'},
 ]);
 
+/**
+ * 时间格式化
+ * @param time 时间
+ */
 const formatTime = (time: string) => {
   const targetTime = new Date(time);
   const now = new Date();
@@ -103,15 +107,13 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  border: 1px solid #ccc;
-  border-radius: 8px;
 }
 
 .messages {
   flex: 1;
   overflow-y: auto;
   padding: 4px;
-  background: #f9f9f9;
+  background: #f1f1f1;
 }
 
 .message-container {

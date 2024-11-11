@@ -17,7 +17,7 @@
             <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
         </van-tab>
-        <van-tab>
+        <van-tab class="content">
           <template #title>
             <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
@@ -96,7 +96,9 @@ onMounted(() => {
 .content {
   height: 250px;
   overflow-y: auto; /* 允许垂直滚动 */
+  border-radius: 8px;
 }
+
 
 .type-1 {
   padding: 8px;
