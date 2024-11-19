@@ -1,7 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 import qs from 'qs';
 import {useUserStore} from '@/store/user';
-import cache from '@/utlis/cache';
 import {showDialog, showNotify} from "vant";
 
 // axios实例
@@ -17,8 +16,8 @@ service.interceptors.request.use(
 
         const userStore = useUserStore()
 
-        if (userStore?.token) {
-            config.headers.Authorization = userStore.token
+        if (userStore?.accessToken) {
+            config.headers.Authorization = userStore.accessToken
         }
 
         config.headers['Accept-Language'] = 'zh-CN'
@@ -40,13 +39,13 @@ service.interceptors.request.use(
 )
 
 // 是否刷新
-let isRefreshToken = false
+let isRefreshing = false
 // 重试请求
-let requests: any[] = []
+let requests: Array<() => void> = []
 
 // 刷新token
-const useRefreshTokenApi = (refreshToken: string) => {
-    return service.post('/sys/auth/token?refreshToken=' + refreshToken)
+export const useRefreshTokenApi = (refreshToken: string) => {
+    return service.post(`/sys/auth/token?refreshToken=${refreshToken}`)
 }
 
 // 响应拦截器
@@ -68,70 +67,66 @@ service.interceptors.response.use(
             return res
         }
 
-        // 刷新令牌 失效，跳转到登录页
+        // 刷新令牌失效（需跳转登录页）
         if (res.code === 3002) {
             return handleAuthorized()
         }
 
-        // 没有权限，未登录、访问令牌 过期
+        // 访问令牌失效或没有权限，尝试刷新 accessToken
         if (res.code === 3001 || res.code === 2001) {
             const config = response.config
-            if (!isRefreshToken) {
-                isRefreshToken = true
+            if (!isRefreshing) {
+                isRefreshing = true
 
-                // 不存在 刷新令牌，重新登录
-                const refreshToken = cache.getRefreshToken()
+                const refreshToken = userStore.refreshToken
                 if (!refreshToken) {
                     return handleAuthorized()
                 }
 
                 try {
                     const {data} = await useRefreshTokenApi(refreshToken)
-                    // 设置新 token
-                    userStore.setToken(data)
-                    config.headers!.Authorization = data
-                    requests.forEach((cb: any) => {
-                        cb()
-                    })
+                    // 刷新成功，更新 Token
+                    userStore.setTokens(data.accessToken, data.refreshToken)
+                    config.headers!.Authorization = data.accessToken
+                    // 重试队列中的请求
+                    requests.forEach((cb: any) => cb())
                     requests = []
                     return service(config)
                 } catch (e) {
-                    // 刷新失败
-                    requests.forEach((cb: any) => {
-                        cb()
-                    })
-                    return handleAuthorized()
+                    // 刷新 accessToken 失败，但不清除 refreshToken
+                    showNotify({type: 'warning', message: '服务器异常，请稍后重试'})
+                    requests.forEach((cb: any) => cb())
+                    return Promise.reject(e)
                 } finally {
-                    requests = []
-                    isRefreshToken = false
+                    isRefreshing = false
                 }
             } else {
-                // 多个请求的情况
-                return new Promise(resolve => {
+                // 正在刷新 Token，等待刷新完成再重试请求
+                return new Promise((resolve) => {
                     requests.push(() => {
-                        config.headers!.Authorization = userStore.token
+                        config.headers!.Authorization = userStore.accessToken
                         resolve(service(config))
                     })
                 })
             }
         }
-        // 错误提示
-        showNotify({type: 'danger', message: res.msg});
+
+        // 其他错误提示
+        showNotify({type: 'danger', message: res.msg})
         return Promise.reject(new Error(res.msg || 'Error'))
     },
-    error => {
-        let errorMessage;
+    (error) => {
+        let errorMessage
         if (error.message.includes('Network Error')) {
-            errorMessage = '网络错误，请检查您的网络连接';
+            errorMessage = '网络错误，请检查您的网络连接'
         } else if (error.message.includes('timeout')) {
-            errorMessage = '请求超时，请稍后再试';
+            errorMessage = '请求超时，请稍后再试'
         } else {
-            errorMessage = '未知错误';
-            console.log(error.message);
+            errorMessage = '未知错误'
+            console.log(error.message)
         }
 
-        // 提示错误信息
-        showNotify({type: 'danger', message:errorMessage});
+        showNotify({type: 'danger', message: errorMessage})
         return Promise.reject(error)
     }
 )
@@ -145,8 +140,7 @@ const handleAuthorized = () => {
     }).then(() => {
         const userStore = useUserStore()
 
-        userStore?.setToken('')
-        userStore?.setRefreshToken('')
+        userStore.clearTokens()
         location.reload()
 
         return Promise.reject('登录超时，请重新登录')

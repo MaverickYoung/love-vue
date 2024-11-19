@@ -41,14 +41,15 @@ import {useCaptchaApi, useCaptchaEnabledApi} from "@/api/sys/auth";
 import {router} from "@/router";
 import {useUserStore} from "@/store/user";
 import ImageWrapper from "@/components/ImageWrapper.vue";
+import cache from "@/utlis/cache";
 
 const userStore = useUserStore()
 
 const loginForm = reactive({
-  username: "",
-  password: "",
-  key: "",
-  captcha: ""
+  username: cache.getLoginUsername() as string,
+  password: "" as string,
+  key: "" as string,
+  captcha: "" as string
 })
 
 
@@ -100,6 +101,7 @@ const onLogin = async () => {
       .accountLoginAction(loginData)
       .then(() => {
         router.push({path: '/poop'})
+        cache.setLoginUsername(loginData.username)
       })
       .catch(() => {
         if (captchaVisible.value) {

@@ -2,6 +2,7 @@ import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {useUserStore} from "@/store/user";
+import {useRefreshTokenApi} from "@/utlis/request";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -56,39 +57,57 @@ router.beforeEach(async (to, from, next) => {
 
     const userStore = useUserStore()
 
-    // token存在的情况
-    if (userStore.token) {
+    // 检查是否存在 accessToken
+    if (userStore.accessToken) {
         if (to.path === '/login') {
             next('/poop')
         } else {
-            // 用户信息不存在，则重新拉取
+            // 用户信息不存在时重新拉取
             if (!userStore.user.id) {
                 try {
                     await userStore.getUserInfoAction()
                 } catch (error) {
-                    // 请求异常，则跳转到登录页
-                    userStore?.setToken('')
+                    // 获取用户信息失败，清空 Token 并跳转登录页
+                    userStore.clearTokens()
                     next('/login')
                     return Promise.reject(error)
                 }
 
-                // 错误路由
+                // 添加错误路由
                 router.addRoute(errorRoute)
 
-                next({...to, replace: true})
+                next({ ...to, replace: true })
             } else {
                 next()
             }
         }
     } else {
-        // 没有token的情况下，可以进入白名单
-        if (whiteList.indexOf(to.path) > -1) {
-            next()
+        // 没有 accessToken 的情况下，检查 refreshToken
+        const refreshToken = userStore.refreshToken
+        if (refreshToken) {
+            try {
+                // 使用 refreshToken 刷新 accessToken
+                const { data } = await useRefreshTokenApi(refreshToken)
+                userStore.setTokens(data.accessToken, data.refreshToken)
+
+                next({ ...to, replace: true })
+            } catch (error) {
+                // 刷新令牌失败，跳转到登录页
+                userStore.clearTokens()
+                next('/login')
+                return Promise.reject(error)
+            }
         } else {
-            next('/login')
+            // 没有 refreshToken，且不在白名单中，跳转到登录页
+            if (whiteList.includes(to.path)) {
+                next()
+            } else {
+                next('/login')
+            }
         }
     }
 })
+
 
 // 路由加载后
 router.afterEach(() => {

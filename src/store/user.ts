@@ -21,7 +21,7 @@ export const useUserStore = defineStore('userStore', {
             createTime: ''
         },
         // 访问token
-        token: cache.getToken(),
+        accessToken: '',
         // 刷新token
         refreshToken: cache.getRefreshToken(),
         // 用户头像和昵称
@@ -31,22 +31,22 @@ export const useUserStore = defineStore('userStore', {
         setUser(val: any) {
             this.user = val
         },
-        setToken(val: string) {
-            this.token = val
-            cache.setToken(val)
-        },
-        setRefreshToken(val: string) {
-            this.refreshToken = val
-            cache.setRefreshToken(val)
-        },
         getUserId() {
             return this.user.id
+        },
+        setTokens(accessToken: string, refreshToken: string) {
+            this.accessToken = accessToken
+            this.refreshToken = refreshToken
+            cache.setRefreshToken(refreshToken)
+        },
+        clearTokens() {
+            this.accessToken = ''
+            this.refreshToken = ''
         },
         // 账号登录
         async accountLoginAction(loginForm: any) {
             const {data} = await useAccountLoginApi(loginForm)
-            this.setToken(data.accessToken)
-            this.setRefreshToken(data.refreshToken)
+            this.setTokens(data.accessToken, data.refreshToken)
         },
         // 获取用户信息
         async getUserInfoAction() {
@@ -58,8 +58,7 @@ export const useUserStore = defineStore('userStore', {
             await useLogoutApi()
 
             // 移除 token
-            this.setToken('')
-            this.setRefreshToken('')
+            this.clearTokens()
         },
         // 获取单个用户资料
         getUserProfile(id: number): UserProfile | undefined {
