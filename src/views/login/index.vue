@@ -37,7 +37,6 @@
 
 <script setup lang="ts">
 import {onMounted, reactive, ref} from "vue";
-import love from "@/assets/love.svg"
 import {useCaptchaApi, useCaptchaEnabledApi} from "@/api/sys/auth";
 import {router} from "@/router";
 import {useUserStore} from "@/store/user";

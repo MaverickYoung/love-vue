@@ -18,20 +18,16 @@
           <div v-if="message.userId !== currentUserId" class="message-left">
             <avatar-wrapper class="avatar-left" :src="getAvatar(message.userId)"/>
             <div class="message-content-wrapper">
-              <div class="sent">
-                <image-wrapper class="message-content" width="45px"
-                               :src="getPoopSrc(message.type)"/>
-              </div>
+              <image-wrapper class="message-content" width="45px"
+                             :src="getPoopSrc(message.type)"/>
             </div>
           </div>
 
           <!-- 发送消息：头像在右，消息内容在左 -->
           <div v-else class="message-right">
             <div class="message-content-wrapper">
-              <div class="received">
-                <image-wrapper class="message-content" width="45px"
-                               :src="getPoopSrc(message.type)"/>
-              </div>
+              <image-wrapper class="message-content" width="45px"
+                             :src="getPoopSrc(message.type)"/>
             </div>
             <avatar-wrapper class="avatar-right" :src="getAvatar(message.userId)"/>
           </div>
@@ -217,27 +213,6 @@ defineExpose({
   flex-direction: column;
   max-width: 70%; /* 消息框最大宽度 */
   word-wrap: break-word;
-}
-
-/* 消息框样式 */
-.message {
-  padding: 8px;
-  border-radius: 4px;
-  word-wrap: break-word;
-
-  /* 发送消息样式 */
-
-  &.sent {
-    background-color: #dcf8c6;
-    margin-left: 4px; /* 添加左边距，确保消息框不紧贴头像 */
-  }
-
-  /* 接收消息样式 */
-
-  &.received {
-    background-color: #fff;
-    margin-right: 4px; /* 添加右边距，确保消息框不紧贴头像 */
-  }
 }
 
 /* 消息内容 */
