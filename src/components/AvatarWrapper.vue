@@ -4,7 +4,7 @@
       :width="computedSize"
       :height="computedSize"
       fit="cover"
-      :src="computedAvatarUrl"
+      :src="avatar"
   />
 </template>
 
@@ -13,17 +13,9 @@ import {computed} from "vue";
 
 
 const props = defineProps<{
-  avatarUrl?: string;     // 头像地址
+  avatar?: string;     // 头像地址
   size?: string;   // 自定义大小
 }>();
-
-// 默认头像 URL
-const defaultAvatar = 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg';
-
-// 计算属性，根据 avatarUrl 是否为空返回不同的 URL
-const computedAvatarUrl = computed(() => {
-  return props.avatarUrl || defaultAvatar;
-});
 
 // 计算大小
 const computedSize = computed(() => {

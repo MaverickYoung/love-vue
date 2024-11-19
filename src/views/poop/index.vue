@@ -1,88 +1,113 @@
 <template>
   <div class="container">
-    <div class="card">
-      <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
+    <div class="card-item">
+      <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
     </div>
 
-    <div class="card">
-      <van-tabs v-model:active="active" animated swipeable>
-        <van-tab class="content">
+    <div class="card-item">
+      <van-tabs v-model:active="activeTab" animated swipeable>
+        <van-tab class="tab-content">
           <template #title>
-            <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
+            <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
-          <PoopMsg/>
+          <poop-message ref="poopMessageRef"/>
         </van-tab>
-        <van-tab class="content">
+        <van-tab class="tab-content">
           <template #title>
-            <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
+            <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
         </van-tab>
-        <van-tab class="content">
+        <van-tab class="tab-content">
           <template #title>
-            <ImageWrapper name="poop-normal.svg" width="50%" alt="小便便图标"/>
+            <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
-
         </van-tab>
       </van-tabs>
     </div>
-    <van-popover
-        v-model:show="showPopover"
-        :actions="options"
-        actions-direction="horizontal"
-        placement="top"
-    >
+
+    <van-popover v-model:show="isPopoverVisible" actions-direction="horizontal"
+                 placement="top">
       <van-row style="width: 250px">
-        <van-col span="8" class="type-1" v-for="(option,index) in options" :key="index"
-        >
-          <ImageWrapper :name="option.name" width="80%" @click="handleClick(option)"/>
+        <van-col span="8" class="popover-item" v-for="poop in poopOptions" :key="poop.id">
+          <image-wrapper :src="poop.src" width="80%" @click="onOptionClick(poop)"/>
         </van-col>
       </van-row>
 
       <template #reference>
-        <ImageWrapper :name="type.name"
-                      width="50%"/>
+        <image-wrapper :src="selectedType?.src?selectedType?.src:''" width="50%"/>
       </template>
     </van-popover>
-    <van-button :type="type.type">发射</van-button>
+    <van-button :color="selectedType?.color" @click="onSubmit">发射</van-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import ImageWrapper from "@/components/ImageWrapper.vue";
-import {onMounted, reactive, ref} from "vue";
-import PoopMsg from "@/views/poop/PoopMsg.vue";
+import {onMounted, ref} from "vue";
+import PoopMessage from "@/views/poop/PoopMessage.vue";
+import {Poop, usePoopStore} from "@/store/poop";
+import {showSuccessToast} from "vant";
+import {useLogSaveApi} from "@/api/poop/log";
 
-const active = ref('');
-const options = [{name: 'poop-normal.svg', type: 'warning'},
-  {name: 'poop-fiery.svg', type: 'danger'}, {name: 'poop-runny.svg', type: 'primary'}];
+const selectedType = ref<Poop>();
 
-const showPopover = ref(false);
-const type = reactive({
-  name: '',
-  type: '',
-})
+const activeTab = ref('');
 
-const handleClick = (options) => {
-  showPopover.value = false;
-  type.name = options.name;
-  type.type = options.type;
+const isPopoverVisible = ref(false);
+
+// 使用 ref 引用子组件实例
+const poopMessageRef = ref<InstanceType<typeof PoopMessage> | null>(null);
+
+const onOptionClick = (option: Poop) => {
+  isPopoverVisible.value = false;
+  selectedType.value = option;
+};
+
+const poopStore = usePoopStore();
+
+onMounted(async () => {
+  await poopStore.getPoopsAction()
+  poopOptions.value = [...poopStore.poops.values()];
+  setInitialOption();
+});
+
+const poopOptions = ref<Poop[]>([])
+
+// 滚动到底部
+const scrollToBottom = () => {
+  if (poopMessageRef.value) {
+    poopMessageRef.value.$el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  }
+};
+
+const onSubmit = async () => {
+  await useLogSaveApi(selectedType.value?.id);
+  showSuccessToast('发射成功');
+
+  await poopMessageRef.value?.onLogPage();
+
+  scrollToBottom();
 }
 
-onMounted(() => {
-  handleClick(options[0]);
-})
+
+const setInitialOption = () => {
+  onOptionClick(poopOptions.value[0]);
+};
 </script>
 
 <style scoped>
 .container {
-  padding: 0 16px; /* 设定容器的内边距，适应屏幕边缘 */
-  display: flex; /* 使用 Flexbox 布局 */
-  flex-direction: column; /* 垂直排列 */
-  align-items: center; /* 水平居中 */
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   height: 100vh;
 }
 
-.card {
+.card-item {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -93,14 +118,13 @@ onMounted(() => {
   margin: 16px;
 }
 
-.content {
+.tab-content {
   height: 250px;
-  overflow-y: auto; /* 允许垂直滚动 */
   border-radius: 8px;
+  overflow-y: auto;
 }
 
-
-.type-1 {
+.popover-item {
   padding: 8px;
 }
 </style>

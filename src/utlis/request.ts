@@ -1,8 +1,8 @@
-import axios, {AxiosResponse} from 'axios' ;
+import axios, {AxiosResponse} from 'axios';
 import qs from 'qs';
 import {useUserStore} from '@/store/user';
 import cache from '@/utlis/cache';
-import {Dialog, showNotify} from "vant";
+import {showDialog, showNotify} from "vant";
 
 // axios实例
 const service = axios.create({
@@ -14,6 +14,7 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
     (config: any) => {
+
         const userStore = useUserStore()
 
         if (userStore?.token) {
@@ -31,7 +32,7 @@ service.interceptors.request.use(
             config.data = qs.stringify(config.data)
         }
 
-        return config
+        return config;
     },
     error => {
         return Promise.reject(error)
@@ -72,8 +73,8 @@ service.interceptors.response.use(
             return handleAuthorized()
         }
 
-        // 没有权限，如：未登录、访问令牌 过期
-        if (res.code === 3002 || res.code === 2001) {
+        // 没有权限，未登录、访问令牌 过期
+        if (res.code === 3001 || res.code === 2001) {
             const config = response.config
             if (!isRefreshToken) {
                 isRefreshToken = true
@@ -87,8 +88,8 @@ service.interceptors.response.use(
                 try {
                     const {data} = await useRefreshTokenApi(refreshToken)
                     // 设置新 token
-                    userStore.setToken(data.access_token)
-                    config.headers!.Authorization = data.access_token
+                    userStore.setToken(data)
+                    config.headers!.Authorization = data
                     requests.forEach((cb: any) => {
                         cb()
                     })
@@ -114,27 +115,33 @@ service.interceptors.response.use(
                 })
             }
         }
-        // 显示错误提示，确保 msg 未定义时有默认值
-        const errorMessage = res.msg !== undefined ? res.msg : '发生错误';
-        showNotify(errorMessage);
-
-        return Promise.reject(new Error(errorMessage));
+        // 错误提示
+        showNotify({type: 'danger', message: res.msg});
+        return Promise.reject(new Error(res.msg || 'Error'))
     },
     error => {
-        // 统一错误处理
-        const errorMessage = error.message || '网络错误';
-        showNotify(errorMessage)
+        let errorMessage;
+        if (error.message.includes('Network Error')) {
+            errorMessage = '网络错误，请检查您的网络连接';
+        } else if (error.message.includes('timeout')) {
+            errorMessage = '请求超时，请稍后再试';
+        } else {
+            errorMessage = '未知错误';
+            console.log(error.message);
+        }
+
+        // 提示错误信息
+        showNotify({type: 'danger', message:errorMessage});
         return Promise.reject(error)
     }
 )
 
 const handleAuthorized = () => {
-    Dialog.alert({
+    showDialog({
         title: '提示',
         message: '登录超时，请重新登录',
-        showCancelButton: false,
         confirmButtonText: '重新登录',
-        theme: 'round-button' // 圆角按钮样式，可根据需要设置
+        theme: 'round-button' // 圆角按钮样式
     }).then(() => {
         const userStore = useUserStore()
 
@@ -143,7 +150,7 @@ const handleAuthorized = () => {
         location.reload()
 
         return Promise.reject('登录超时，请重新登录')
-    })
+    });
 }
 
 // 导出 axios 实例

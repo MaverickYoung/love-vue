@@ -1,11 +1,17 @@
 import {createApp} from 'vue';
 import './style.css';
 import App from './App.vue';
-import 'vant/lib/index.css';
 import {router} from "./router";
 import {createPinia} from "pinia";
+import 'vant/lib/index.css';
+
+// vant按需引入，函数式组件不自动引入 bug
+import 'vant/es/toast/style'
+import 'vant/es/notify/style'
+import 'vant/es/dialog/style'
+
 
 const app = createApp(App);
 app.use(router);
-app.mount('#app')
 app.use(createPinia())
+app.mount('#app')

@@ -15,27 +15,25 @@
         <!-- 发送/接收消息时头像和消息内容分别布局 -->
         <div class="message-body">
           <!-- 接收消息：头像在左，消息内容在右 -->
-          <div v-if="message.id !== userId" class="message-left">
-            <AvatarWrapper class="avatar-left"/>
+          <div v-if="message.userId !== currentUserId" class="message-left">
+            <avatar-wrapper class="avatar-left" :src="getAvatar(message.userId)"/>
             <div class="message-content-wrapper">
-              <div
-                  :class="['message', message.id === userId ? 'sent' : 'received']"
-              >
-                <span class="message-content">{{ message.content }}</span>
+              <div class="sent">
+                <image-wrapper class="message-content" width="45px"
+                               :src="getPoopSrc(message.type)"/>
               </div>
             </div>
           </div>
 
           <!-- 发送消息：头像在右，消息内容在左 -->
-          <div v-if="message.id === userId" class="message-right">
+          <div v-else class="message-right">
             <div class="message-content-wrapper">
-              <div
-                  :class="['message', message.id === userId ? 'sent' : 'received']"
-              >
-                <span class="message-content">{{ message.content }}</span>
+              <div class="received">
+                <image-wrapper class="message-content" width="45px"
+                               :src="getPoopSrc(message.type)"/>
               </div>
             </div>
-            <AvatarWrapper class="avatar-right"/>
+            <avatar-wrapper class="avatar-right" :src="getAvatar(message.userId)"/>
           </div>
         </div>
       </div>
@@ -45,24 +43,29 @@
 
 
 <script lang="ts" setup>
-import {ref, onMounted} from 'vue';
+import {onMounted, reactive, ref} from 'vue';
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
+import {useLogPageApi} from "@/api/poop/log";
+import {useUserStore} from "@/store/user";
+import {usePoopStore} from "@/store/poop";
+import ImageWrapper from "@/components/ImageWrapper.vue";
 
-interface Message {
-  id: number; // 用户编号
+interface LogItem {
+  id: number; // ID
+  userId: number; // 用户ID
   time: string; // 消息时间
-  content: string; // 消息内容
+  type: number; // 便便类型
 }
 
-const userId = 1; // 假设当前用户编号为 1
-const messages = ref<Message[]>([
-  {id: 1, time: '2022-11-01 10:00', content: '你好！'},
-  {id: 2, time: '2023-11-10 10:01', content: '你好，有什么可以帮助你的吗？'},
-  {id: 1, time: '2024-11-03 10:02', content: '我想了解一下项目进度。'},
-  {id: 1, time: '2024-11-04 10:15', content: '还在吗？'},
-  {id: 2, time: '2024-11-05 10:15', content: '在的'},
-  {id: 3, time: '2024-11-06 10:16', content: '已经完成前期工作了'},
-]);
+const userStore = useUserStore()
+const poopStore = usePoopStore()
+
+// 当前用户ID
+const currentUserId = userStore.getUserId();
+
+const userIdList = ref(new Set<number>());
+
+const messages = ref<LogItem[]>([]);
 
 /**
  * 时间格式化
@@ -96,9 +99,50 @@ const formatTime = (time: string) => {
 const messagesContainer = ref<HTMLElement | null>(null);
 
 onMounted(() => {
+  onLogPage();
   if (messagesContainer.value) {
-    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+    messagesContainer.value.scrollTo(0, messagesContainer.value.scrollHeight);
   }
+});
+
+const pagePrams = reactive({
+  size: 100,
+  current: 1,
+})
+
+/**
+ * 获取便便日志
+ */
+const onLogPage = async () => {
+  const {data} = (await useLogPageApi(pagePrams.size, pagePrams.current));
+
+  // 更新userIdList
+  data?.list?.forEach((item: LogItem) => {
+    userIdList.value.add(item.userId);
+  });
+
+  await userStore.fetchUserProfilesAction(userIdList.value);
+
+  // 填充数据
+  messages.value = data.list.map((item: any) => ({
+    id: item.id,
+    userId: item.userId,
+    time: item.logTime,
+    type: item.poopType
+  }));
+}
+
+const getAvatar = (userId: number) => {
+  return userStore.getUserProfile(userId)?.avatar;
+}
+
+const getPoopSrc = (id: number): string => {
+  return poopStore.getPoop(id)?.src ?? ''
+}
+
+// 暴露方法给父组件
+defineExpose({
+  onLogPage
 });
 </script>
 
@@ -180,18 +224,20 @@ onMounted(() => {
   padding: 8px;
   border-radius: 4px;
   word-wrap: break-word;
-}
 
-/* 发送消息样式 */
-.message.sent {
-  background-color: #dcf8c6;
-  margin-left: 4px; /* 添加左边距，确保消息框不紧贴头像 */
-}
+  /* 发送消息样式 */
 
-/* 接收消息样式 */
-.message.received {
-  background-color: #fff;
-  margin-right: 4px; /* 添加右边距，确保消息框不紧贴头像 */
+  &.sent {
+    background-color: #dcf8c6;
+    margin-left: 4px; /* 添加左边距，确保消息框不紧贴头像 */
+  }
+
+  /* 接收消息样式 */
+
+  &.received {
+    background-color: #fff;
+    margin-right: 4px; /* 添加右边距，确保消息框不紧贴头像 */
+  }
 }
 
 /* 消息内容 */

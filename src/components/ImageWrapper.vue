@@ -1,6 +1,6 @@
 <template>
   <div class="image-container">
-    <img :src="imageSrc" :alt="alt" :style="imgStyle"/>
+    <img :src="src" :alt="alt" :style="imgStyle"/>
   </div>
 </template>
 
@@ -8,16 +8,11 @@
 import {computed} from 'vue';
 
 const props = defineProps<{
-  name: string;     // 图片名称
+  src: string;     // 图片
   alt?: string;     // 图片描述
   width?: string;   // 自定义宽度
   height?: string;  // 自定义高度
 }>();
-
-// 计算图片源路径
-const imageSrc = computed(() => {
-  return `/src/assets/${props.name}`;
-});
 
 // 计算样式
 const imgStyle = computed(() => {

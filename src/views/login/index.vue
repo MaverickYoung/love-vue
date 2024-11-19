@@ -1,10 +1,25 @@
 <template>
   <div class="container">
     <div class="form">
-      <img :src="love" class="logo" alt="logo">
+      <image-wrapper src="/src/assets/love.svg" alt="logo" class="logo"/>
       <span class="form-span"></span>
       <input v-model="loginForm.username" placeholder="用户名" type="text" class="form-input"/>
-      <input v-model="loginForm.password" placeholder="密码" type="text" class="form-input"/>
+      <div class="input-container">
+        <input v-model="loginForm.password" placeholder="密码" :type="isPasswordVisible ? 'text' : 'password'"
+               class="form-input"/>
+        <div
+            class="eye-icon"
+            @click="togglePasswordVisibility"
+        >
+          <image-wrapper src="/src/assets/eye-show.svg" v-if="isPasswordVisible" class="eye"/>
+          <div v-else>
+            <div class="slash-background"></div>
+            <div class="slash"></div>
+            <image-wrapper src="/src/assets/eye-show.svg" class="eye"/>
+          </div>
+        </div>
+      </div>
+
       <van-row v-if="captchaVisible">
         <van-col span="9">
           <input v-model="loginForm.captcha" type="text" class="form-input" style="width: 80px"
@@ -25,6 +40,10 @@ import {onMounted, reactive, ref} from "vue";
 import love from "@/assets/love.svg"
 import {useCaptchaApi, useCaptchaEnabledApi} from "@/api/sys/auth";
 import {router} from "@/router";
+import {useUserStore} from "@/store/user";
+import ImageWrapper from "@/components/ImageWrapper.vue";
+
+const userStore = useUserStore()
 
 const loginForm = reactive({
   username: "",
@@ -37,7 +56,14 @@ const loginForm = reactive({
 const captchaBase64 = ref('')
 
 // 是否显示验证码
-const captchaVisible = ref(true)
+const captchaVisible = ref(false)
+
+
+const isPasswordVisible = ref(false);
+
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value;
+};
 
 onMounted(() => {
   onCaptchaEnabled()
@@ -62,20 +88,19 @@ const onCaptcha = async () => {
 }
 
 const onLogin = async () => {
-  captchaVisible.value = !captchaVisible.value
-
   // 重新封装登录数据
   const loginData = {
-    username: loginForm.username.trim,
-    password: loginForm.password.trim,
+    username: loginForm.username.trim(),
+    password: loginForm.password.trim(),
     key: loginForm.key,
-    captcha: loginForm.captcha.trim
+    captcha: loginForm.captcha.trim()
   }
+
   // 用户登录
   userStore
       .accountLoginAction(loginData)
       .then(() => {
-        router.push({path: '/home'})
+        router.push({path: '/poop'})
       })
       .catch(() => {
         if (captchaVisible.value) {
@@ -125,25 +150,30 @@ body {
   overflow: hidden;
 }
 
-.form-input:focus {
-  box-shadow: inset 4px 4px 4px #d1d9e6,
-  inset -4px -4px 4px #f9f9f9;
-}
-
 .form-input {
   width: 200px;
   height: 45px;
   margin: 10px 0;
   padding-left: 16px;
+  padding-right: 30px;
   font-size: 16px;
-  letter-spacing: 0;
+  letter-spacing: 1px;
   border: none;
-  outline: none;
   background-color: #ecf0f3;
   transition: 0.25s ease;
   border-radius: 8px;
   box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.1),
   inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+  color: #202020;
+
+  &:focus {
+    box-shadow: inset 4px 4px 4px #d1d9e6,
+    inset -4px -4px 4px #f9f9f9;
+  }
+
+  &::placeholder {
+    color: #a0a5a8;
+  }
 }
 
 .submit {
@@ -161,18 +191,63 @@ body {
   border: none;
   outline: none;
   transition: 0.25s;
+
+  &:active {
+    box-shadow: 2px 2px 6px #d1d9e6,
+    -2px -2px 6px #f9f9f9;
+    transform: scale(0.97);
+  }
 }
 
-.submit:active {
-  box-shadow: 2px 2px 6px #d1d9e6,
-  -2px -2px 6px #f9f9f9;
-  transform: scale(0.97);
-}
 
 .captcha {
   width: 110px;
   height: 45px;
   margin: 10px 0;
+}
+
+.input-container {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.eye {
+  width: 20px;
+}
+
+.slash-background {
+  position: absolute;
+  width: 0;
+  height: 3px;
+  background-color: #ffffff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  animation: draw-slash 0.3s forwards;
+}
+
+.slash {
+  position: absolute;
+  width: 0;
+  height: 1px;
+  background: #444444;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  animation: draw-slash 0.3s forwards;
+}
+
+@keyframes draw-slash {
+  to {
+    width: 100%; /* 线条从中心向两边扩展 */
+  }
 }
 
 </style>
