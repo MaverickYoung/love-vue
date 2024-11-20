@@ -57,7 +57,7 @@ router.beforeEach(async (to, from, next) => {
 
     const userStore = useUserStore()
 
-    // 检查是否存在 accessToken
+    // 检查是否存在访问令牌
     if (userStore.accessToken) {
         if (to.path === '/login') {
             next('/poop')
@@ -67,7 +67,7 @@ router.beforeEach(async (to, from, next) => {
                 try {
                     await userStore.getUserInfoAction()
                 } catch (error) {
-                    // 获取用户信息失败，清空 Token 并跳转登录页
+                    // 获取用户信息失败，清空令牌并跳转登录页
                     userStore.clearTokens()
                     next('/login')
                     return Promise.reject(error)
@@ -76,21 +76,24 @@ router.beforeEach(async (to, from, next) => {
                 // 添加错误路由
                 router.addRoute(errorRoute)
 
-                next({ ...to, replace: true })
+                next({...to, replace: true})
             } else {
                 next()
             }
         }
+    } else if (whiteList.includes(to.path)) {
+        // 前往白名单直接放行
+        next()
     } else {
-        // 没有 accessToken 的情况下，检查 refreshToken
+        // 没有访问令牌的情况下，检查 refreshToken
         const refreshToken = userStore.refreshToken
         if (refreshToken) {
             try {
                 // 使用 refreshToken 刷新 accessToken
-                const { data } = await useRefreshTokenApi(refreshToken)
+                const {data} = await useRefreshTokenApi(refreshToken)
                 userStore.setTokens(data.accessToken, data.refreshToken)
 
-                next({ ...to, replace: true })
+                next({...to, replace: true})
             } catch (error) {
                 // 刷新令牌失败，跳转到登录页
                 userStore.clearTokens()
@@ -98,12 +101,8 @@ router.beforeEach(async (to, from, next) => {
                 return Promise.reject(error)
             }
         } else {
-            // 没有 refreshToken，且不在白名单中，跳转到登录页
-            if (whiteList.includes(to.path)) {
-                next()
-            } else {
-                next('/login')
-            }
+            // 没有刷新令牌，跳转到登录页
+            next('/login')
         }
     }
 })

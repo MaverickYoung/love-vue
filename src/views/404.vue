@@ -1,36 +1,45 @@
 <template>
-  <div class="password-container">
-    <input
-        :type="isPasswordVisible ? 'text' : 'password'"
-        class="password-input"
-        placeholder="请输入密码"
+  <div @click="datePickerVisible= true">2024-10</div>
+  <van-popup
+      v-model:show="datePickerVisible"
+      position="bottom"
+      :style="{ height: '30%' }"
+  >
+    <van-date-picker
+        v-model="currentDate"
+        title="选择年月"
+        :min-date="minDate"
+        :max-date="maxDate"
+        :formatter="formatter"
+        :columns-type="columnsType"
     />
-
-  </div>
+  </van-popup>
 </template>
 
 
 <script setup lang="ts">
-import {ref} from 'vue';
-import ImageWrapper from "@/components/ImageWrapper.vue";
+import {ref} from "vue";
+import {DatePickerColumnType} from "vant";
 
-const isPasswordVisible = ref(false);
+const datePickerVisible = ref(false);
+const currentDate = ref(['2024', '11']);
+const columnsType: DatePickerColumnType[] = ['year', 'month'];
 
-const togglePasswordVisibility = () => {
-  isPasswordVisible.value = !isPasswordVisible.value;
+const minDate = new Date(2024, 10, 1);
+const maxDate = new Date(2025, 10, 1);
+
+const formatter = (type: string, option: any) => {
+  if (type === 'year') {
+    option.text += '年';
+  }
+  if (type === 'month') {
+    option.text += '月';
+  }
+  return option;
 };
+
 </script>
 
 <style scoped>
-.password-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.password-input {
-  padding: 8px;
-  width: 200px;
-}
 
 </style>

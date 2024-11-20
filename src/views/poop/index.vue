@@ -16,6 +16,7 @@
           <template #title>
             <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
+          <poop-reward/>
         </van-tab>
         <van-tab class="tab-content">
           <template #title>
@@ -48,6 +49,7 @@ import PoopMessage from "@/views/poop/PoopMessage.vue";
 import {Poop, usePoopStore} from "@/store/poop";
 import {showSuccessToast} from "vant";
 import {useLogSaveApi} from "@/api/poop/log";
+import PoopReward from "@/views/poop/PoopReward.vue";
 
 const selectedType = ref<Poop>();
 
@@ -66,18 +68,22 @@ const onOptionClick = (option: Poop) => {
 const poopStore = usePoopStore();
 
 onMounted(async () => {
-  await poopStore.getPoopsAction()
+  await poopStore.getPoopsAction();
   poopOptions.value = [...poopStore.poops.values()];
   setInitialOption();
+
+  await poopMessageRef.value?.onLogPage();
+
+  scrollToBottom(true);
 });
 
 const poopOptions = ref<Poop[]>([])
 
 // 滚动到底部
-const scrollToBottom = () => {
+const scrollToBottom = (immediate = false) => {
   if (poopMessageRef.value) {
     poopMessageRef.value.$el.scrollIntoView({
-      behavior: 'smooth',
+      behavior: immediate ? 'auto' : 'smooth', // 首次加载使用 'auto'，后续使用 'smooth'
       block: 'end',
     });
   }
@@ -104,7 +110,7 @@ const setInitialOption = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100%;
 }
 
 .card-item {

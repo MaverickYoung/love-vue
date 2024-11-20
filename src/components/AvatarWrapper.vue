@@ -13,14 +13,13 @@ import {computed} from "vue";
 
 
 const props = defineProps<{
-  avatar?: string;     // 头像地址
+  avatar?: string;     // 头像
   size?: string;   // 自定义大小
 }>();
 
 // 计算大小
 const computedSize = computed(() => {
-  // 默认大小为10rem
-  return props.size || '2rem';
+  return props.size || '50px';
 })
 </script>
 

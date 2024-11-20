@@ -16,7 +16,7 @@
         <div class="message-body">
           <!-- 接收消息：头像在左，消息内容在右 -->
           <div v-if="message.userId !== currentUserId" class="message-left">
-            <avatar-wrapper class="avatar-left" :src="getAvatar(message.userId)"/>
+            <avatar-wrapper class="avatar-left" size="30px" :src="getAvatar(message.userId)"/>
             <div class="message-content-wrapper">
               <image-wrapper class="message-content" width="45px"
                              :src="getPoopSrc(message.type)"/>
@@ -29,7 +29,7 @@
               <image-wrapper class="message-content" width="45px"
                              :src="getPoopSrc(message.type)"/>
             </div>
-            <avatar-wrapper class="avatar-right" :src="getAvatar(message.userId)"/>
+            <avatar-wrapper class="avatar-right" size="30px" :src="getAvatar(message.userId)"/>
           </div>
         </div>
       </div>
@@ -93,13 +93,6 @@ const formatTime = (time: string) => {
 };
 
 const messagesContainer = ref<HTMLElement | null>(null);
-
-onMounted(() => {
-  onLogPage();
-  if (messagesContainer.value) {
-    messagesContainer.value.scrollTo(0, messagesContainer.value.scrollHeight);
-  }
-});
 
 const pagePrams = reactive({
   size: 100,
@@ -202,8 +195,6 @@ defineExpose({
 
 /* 头像 */
 .avatar-left, .avatar-right {
-  width: 30px; /* 头像大小 */
-  height: 30px;
   margin: 0 10px; /* 头像和消息内容之间的间距 */
 }
 
