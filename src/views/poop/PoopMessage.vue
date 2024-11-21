@@ -1,6 +1,6 @@
 <template>
-  <div class="chat-container">
-    <div class="messages" ref="messagesContainer">
+  <div class="container">
+    <div class="messages-container" ref="messagesContainer">
       <div
           v-for="message in messages"
           :key="message.id"
@@ -34,6 +34,20 @@
         </div>
       </div>
     </div>
+
+    <van-popover v-model:show="isPopoverVisible" actions-direction="horizontal"
+                 placement="top">
+      <van-row style="width: 250px">
+        <van-col span="8" class="popover-item" v-for="poop in poopOptions" :key="poop.id">
+          <image-wrapper :src="poop.src" width="80%" @click="onOptionClick(poop)"/>
+        </van-col>
+      </van-row>
+
+      <template #reference>
+        <image-wrapper :src="selectedType?.src?selectedType?.src:''" width="50%"/>
+      </template>
+    </van-popover>
+    <van-button :color="selectedType?.color" @click="onSubmit">发射</van-button>
   </div>
 </template>
 
@@ -41,10 +55,12 @@
 <script lang="ts" setup>
 import {onMounted, reactive, ref} from 'vue';
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
-import {useLogPageApi} from "@/api/poop/log";
+import {useLogPageApi, useLogSaveApi} from "@/api/poop/log";
 import {useUserStore} from "@/store/user";
-import {usePoopStore} from "@/store/poop";
+import {Poop, usePoopStore} from "@/store/poop";
 import ImageWrapper from "@/components/ImageWrapper.vue";
+import {showSuccessToast} from "vant";
+import PoopMessage from "@/views/poop/PoopMessage.vue";
 
 interface LogItem {
   id: number; // ID
@@ -62,6 +78,18 @@ const currentUserId = userStore.getUserId();
 const userIdList = ref(new Set<number>());
 
 const messages = ref<LogItem[]>([]);
+
+const isPopoverVisible = ref(false);
+
+// 使用 ref 引用子组件实例
+const messagesContainer = ref<HTMLElement | null>(null);
+
+const selectedType = ref<Poop>();
+
+const onOptionClick = (option: Poop) => {
+  isPopoverVisible.value = false;
+  selectedType.value = option;
+};
 
 /**
  * 时间格式化
@@ -91,8 +119,6 @@ const formatTime = (time: string) => {
     return `${year}-${month}-${date} ${hours}:${minutes}`;
   }
 };
-
-const messagesContainer = ref<HTMLElement | null>(null);
 
 const pagePrams = reactive({
   size: 100,
@@ -129,30 +155,64 @@ const getPoopSrc = (id: number): string => {
   return poopStore.getPoop(id)?.src ?? ''
 }
 
-// 暴露方法给父组件
-defineExpose({
-  onLogPage
-});
+const poopOptions = ref<Poop[]>([])
+
+// 滚动到底部
+const scrollToBottom = (immediate = false) => {
+  const container = messagesContainer.value;
+  const lastMessage = container?.querySelector('.message-container:last-child');
+  if (lastMessage) {
+    lastMessage.scrollIntoView({behavior: immediate ? 'auto' : 'smooth'});
+  }
+};
+
+const onSubmit = async () => {
+  await useLogSaveApi(selectedType.value?.id);
+  showSuccessToast('发射成功');
+
+  await onLogPage();
+  scrollToBottom();
+}
+
+
+const setInitialOption = () => {
+  onOptionClick(poopOptions.value[0]);
+};
+
+onMounted(async () => {
+  await poopStore.getPoopsAction();
+  poopOptions.value = [...poopStore.poops.values()];
+  setInitialOption();
+
+  await onLogPage();
+
+  scrollToBottom(true)
+})
 </script>
 
 <style scoped>
-.chat-container {
+.container {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.messages {
+.messages-container {
   flex: 1;
   overflow-y: auto;
   padding: 4px;
   background: #f1f1f1;
+  max-height: 220px;
+  height: 220px;
+  width: 250px;
+  margin-bottom: 16px;
 }
 
 .message-container {
   display: flex;
   flex-direction: column;
   align-items: center; /* 保证时间部分垂直居中 */
+  width: 100%;
   margin: 5px 0;
 }
 
@@ -209,5 +269,9 @@ defineExpose({
 /* 消息内容 */
 .message-content {
   margin-top: 2px;
+}
+
+.popover-item {
+  padding: 8px;
 }
 </style>

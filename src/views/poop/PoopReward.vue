@@ -1,15 +1,19 @@
 <template>
   <div class="container">
     <div @click="datePickerVisible= true" class="date-container">{{ formatDate }}</div>
-    <div v-for="(reward,index) in rewardList" :key="index">
-      <div class="reward-container">
+    <hr class="divider">
+    <div class="reward-container">
+      <div v-for="(reward,index) in rewardList" :key="index">
         <div class="photo-frame">
           <!-- 使用 image-wrapper 包裹图片 -->
-          <image-wrapper :src="reward.rewardImage" width="180px" class="reward-image"/>
+          <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" width="180px" class="reward-image"/>
+          <div v-else class="reward-not">
+            <span><b>{{ userProfile(reward.userId)?.nickname }}</b> 的奖励呢？</span>
+          </div>
           <!-- 头像 -->
           <avatar-wrapper
               class="avatar"
-              :src="useUserStore().getUserProfile(reward.userId)?.avatar"
+              :src="userProfile(reward.userId)?.avatar"
               size="30px"
           />
           <!-- 王冠 -->
@@ -17,16 +21,37 @@
         </div>
       </div>
     </div>
+    <hr class="divider">
+    <van-uploader v-model="fileList" :max-count="1" :before-read="beforeRead" :disabled="!isUploadAllowed"/>
+    <van-button type="primary" @click="uploaderReward" :disabled="isUploadButtonDisabled">上传</van-button>
+    <van-popup
+        v-model:show="datePickerVisible"
+        position="bottom"
+        :style="{ height: '40%'}"
+        teleport="#app"
+        round
+    >
+      <van-date-picker
+          v-model="currentDate"
+          title="选择年月"
+          :min-date="minDate"
+          :max-date="maxDate"
+          :formatter="formatter"
+          :columns-type="columnsType"
+          ref="datePickerRef"
+          @confirm="onConfirm"
+      />
+    </van-popup>
   </div>
-
 </template>
 
 <script setup lang="ts">
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import {computed, onMounted, ref} from "vue";
-import {useRewardApi} from "@/api/poop/summary";
+import {useRewardApi, useUpdateRewardApi} from "@/api/poop/summary";
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
+import {DatePickerColumnType, DatePickerInstance, showSuccessToast, showToast, UploaderFileListItem} from "vant";
 
 
 interface RewardItem {
@@ -34,6 +59,12 @@ interface RewardItem {
   userId: number;
   isRewarded: boolean;
   rewardImage: string;
+}
+
+const userStore = useUserStore();
+
+const userProfile = (id: number) => {
+  return userStore.getUserProfile(id);
 }
 
 const rewardList = ref<RewardItem[]>([]);
@@ -44,42 +75,135 @@ const onGetReward = async (month: string) => {
 }
 
 const datePickerVisible = ref(false);
-const currentDate = ref(['2024', '10']);
+const columnsType: DatePickerColumnType[] = ['year', 'month'];
+
+
+const minDate = new Date(2024, 9); // 最小日期为 2024 年 10 月
+const maxDate = new Date(); // 获取当前日期
+maxDate.setMonth(maxDate.getMonth() - 1); // 当前月份减一个月
+
+// 格式为 [year,month] 值为maxDate
+const currentDate = ref([maxDate.getFullYear().toString(), (maxDate.getMonth() + 1).toString().padStart(2, '0')]);
+
+
+const formatter = (type: string, option: any) => {
+  if (type === 'year') {
+    option.text += '年';
+  }
+  if (type === 'month') {
+    option.text += '月';
+  }
+  return option;
+};
 
 const formatDate = computed(() => {
   return `${currentDate.value[0]}-${currentDate.value[1]}`;
 })
 
+// 上传的奖励列表
+const fileList = ref<UploaderFileListItem[]>([]);
+
+// 支持的图片格式
+const supportedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+
 onMounted(() => {
   onGetReward(formatDate.value);
 })
 
+// 上传前的验证函数
+const beforeRead = (file: File | File[]): boolean => {
+  // 确保 file 是数组时，遍历所有文件
+  const files = Array.isArray(file) ? file : [file];
+
+  for (let i = 0; i < files.length; i++) {
+    const currentFile = files[i];
+    if (!supportedFormats.includes(currentFile.type)) {
+      showToast('请上传 jpg, jpeg, png, gif 或 svg 格式图片');
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const uploaderReward = async () => {
+  await Promise.all(
+      fileList.value.map((fileItem) => {
+        if (fileItem.file) {
+          return useUpdateRewardApi(fileItem.file, formatDate.value);
+        }
+      })
+  );
+  showSuccessToast("上传完成")
+
+  await onGetReward(formatDate.value);
+}
+
+// 允许上传
+const isUploadAllowed = computed(() => {
+  return rewardList.value.some(item => item.userId === userStore.getUserId());
+});
+
+// 上传按钮是否禁用
+const isUploadButtonDisabled = computed(() => {
+  return !isUploadAllowed.value || fileList.value.length === 0;
+});
+
+const datePickerRef = ref<DatePickerInstance>();
+
+
+const onConfirm = () => {
+  datePickerVisible.value = false; // 关闭弹窗
+  onGetReward(formatDate.value)
+};
 </script>
 
 <style scoped>
-.reward-container {
-  position: relative;
-  width: 100%; /* 容器宽度占满父容器 */
-  height: 100%; /* 容器高度占满父容器 */
+.date-container {
+  padding-top: 8px;
+}
 
-  .date-container {
-    padding: 10px;
-  }
+.divider {
+  border: 1px solid rgb(198, 198, 198); /* 设置分割线的颜色和宽度 */
+  margin: 5px 0; /* 设置上下的间距 */
+  width: 220px;
+}
+
+.reward-container {
+  max-height: 220px;
+  overflow-y: auto;
 
   .photo-frame {
+    margin-bottom: 8px;
+
     /* 外层相框 */
     position: relative;
     display: inline-block;
     padding: 10px; /* 外框和内框的间距 */
 
-    /* 第一圈细线黑色相框 */
-    border: 2px solid black;
+    /* 第一圈细线相框 */
+    border: 2px solid rgb(131, 131, 131);
     border-radius: 10px; /* 圆角效果 */
 
-    .reward-image {
+    .reward-image, .reward-not {
       /* 内层细线相框 */
-      border: 2px solid black;
+      border: 2px solid rgb(131, 131, 131);
       border-radius: 8px; /* 圆角效果，与外框稍微小一点 */
+    }
+
+    .reward-not {
+      width: 180px;
+      height: 50px;
+      position: relative;
+      line-height: 50px;
+      text-align: left;
+
+      span {
+        position: absolute;
+        right: 10px; /* 距离右边偏移 */
+        top: 50%; /* 垂直居中 */
+        transform: translateY(-50%);
+      }
     }
 
     .avatar {
@@ -92,11 +216,10 @@ onMounted(() => {
 
     .crown {
       position: absolute;
-      top: -5px; /* 王冠相对于头像的位置，向上偏移 */
-      right: -5px; /* 王冠相对于头像的位置，向右偏移 */
-      width: 20px; /* 王冠的宽度 */
-      height: auto; /* 高度自动 */
+      bottom: 42px; /* 王冠相对于头像的位置，向上偏移 */
+      left: 42px; /* 王冠相对于头像的位置，向右偏移 */
       z-index: 20; /* 保证王冠在头像上层 */
+      height: auto;
     }
   }
 }

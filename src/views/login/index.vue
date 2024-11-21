@@ -22,7 +22,7 @@
 
       <van-row v-if="captchaVisible">
         <van-col span="9">
-          <input v-model="loginForm.captcha" type="text" class="form-input" style="width: 80px"
+          <input v-model="loginForm.captcha" type="text" class="form-input captcha-input"
                  placeholder="验证码"/>
         </van-col>
         <van-col span="2" style="width: 10px">
@@ -175,6 +175,12 @@ body {
   &::placeholder {
     color: #a0a5a8;
   }
+}
+
+.captcha-input {
+  width: 80px;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
 .submit {
