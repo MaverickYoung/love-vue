@@ -1,9 +1,6 @@
 import service from '@/utlis/request'
 
 
-export const useSummaryListApi = (data: any) => {
-    return service.get('/poop/summary/list', data)
-}
 
 export const useUpdateRewardApi = (image: File, month: string) => {
     const formData = new FormData();

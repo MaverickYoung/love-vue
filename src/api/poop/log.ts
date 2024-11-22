@@ -10,3 +10,20 @@ export const useLogSaveApi = (type: number | undefined) => {
         return service.post(`/poop/log?type=${type}`)
     }
 }
+
+/**
+ * 获取便便统计
+ * @param {string} start 起始年月 YYYY-MM
+ * @param {string} end 结束年月 YYYY-MM
+ * @returns
+ */
+export const useLogListApi = (start?: string, end?: string) => {
+    const params = new URLSearchParams();
+
+    if (start) params.append('start', start);
+    if (end) params.append('end', end);
+
+    const url = `/poop/log/list?${params.toString()}`;
+
+    return service.get(url);
+};
