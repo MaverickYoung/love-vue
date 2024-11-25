@@ -16,11 +16,10 @@ const routes: RouteRecordRaw[] = [
         meta: {description: '登陆'}
     },
     {
-        path: '/layout',
-        name: 'layout',
-        component: () => import("@/layout/index.vue"),
-        meta: {description: '布局'},
-        children: []
+        path: '/setting',
+        name: 'setting',
+        component: () => import("@/views/setting/index.vue"),
+        meta: {description: '设置'},
     },
     {
         path: '/poop',

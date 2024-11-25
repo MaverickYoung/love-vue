@@ -18,7 +18,7 @@ export const useUserStore = defineStore('userStore', {
             nickname: '',
             gender: 0,
             avatar: '',
-            createTime: ''
+            background: ''
         },
         // 访问token
         accessToken: '',
