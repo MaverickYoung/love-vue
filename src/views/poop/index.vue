@@ -22,6 +22,7 @@
           <template #title>
             <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
+          <poop-stats/>
         </van-tab>
       </van-tabs>
     </div>
@@ -33,6 +34,7 @@ import ImageWrapper from "@/components/ImageWrapper.vue";
 import {ref} from "vue";
 import PoopMessage from "@/views/poop/PoopMessage.vue";
 import PoopReward from "@/views/poop/PoopReward.vue";
+import PoopStats from "@/views/poop/PoopStats.vue";
 
 const activeTab = ref('');
 
