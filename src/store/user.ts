@@ -25,7 +25,7 @@ export const useUserStore = defineStore('userStore', {
         // 刷新token
         refreshToken: cache.getRefreshToken(),
         // 用户头像和昵称
-        userProfiles: new Map<number, UserProfile>()
+        userProfiles: [] as { key: number; value: UserProfile }[]
     }),
     actions: {
         setUser(val: any) {
@@ -62,15 +62,17 @@ export const useUserStore = defineStore('userStore', {
         },
         // 获取单个用户资料
         getUserProfile(id: number): UserProfile | undefined {
+            if (id === undefined || id === null) return undefined;
+
             if (id === this.user.id) {
                 return {
                     id: this.user.id,
                     nickname: this.user.nickname,
-                    avatar: this.user.avatar
-                }
-            } else {
-                return this.userProfiles.get(id);
+                    avatar: this.user.avatar,
+                };
             }
+            this.fetchUserProfilesAction(new Set<number>([id])).then(r => null)
+            return this.userProfiles.find(item => item.key === id)?.value;
         },
         // 获取用户资料
         async fetchUserProfilesAction(userIdList: Set<number>) {
@@ -78,8 +80,8 @@ export const useUserStore = defineStore('userStore', {
             const missingIds: number[] = [];
 
             // 查找不存在的 ID
-            userIdList.forEach((userId) => {
-                if (!this.userProfiles.has(userId) && userId !== this.user.id) {
+            userIdList.forEach(userId => {
+                if (userId !== this.user.id && !this.userProfiles.some(item => item.key === userId)) {
                     missingIds.push(userId);
                 }
             });
@@ -90,7 +92,7 @@ export const useUserStore = defineStore('userStore', {
 
                 // 将获取到的用户资料缓存到 userProfiles 中
                 data.forEach((userProfile: UserProfile) => {
-                    this.userProfiles.set(userProfile.id, userProfile);
+                    this.userProfiles.push({key: userProfile.id, value: userProfile});
                 });
             }
         },
