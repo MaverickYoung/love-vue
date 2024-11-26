@@ -1,8 +1,31 @@
 <template>
-  <router-view/>
+  <div class="page-wrapper">
+    <router-view/>
+  </div>
 
-  <van-tabbar route>
+  <!-- 判断当前路由是否为登录页面，不是登录页时显示 tabbar -->
+  <van-tabbar v-if="!isLoginPage" route class="tab-bar">
     <van-tabbar-item replace to="/poop" icon="home-o">便便</van-tabbar-item>
     <van-tabbar-item replace to="/setting" icon="setting-o">设置</van-tabbar-item>
   </van-tabbar>
 </template>
+
+<script setup>
+import {useRoute} from 'vue-router'
+
+const route = useRoute()
+const isLoginPage = route.name === 'login' // 登录页面路由名称
+</script>
+
+<style scoped>
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100dvh - 50px);
+}
+
+.tab-bar {
+  height: 50px;
+}
+</style>

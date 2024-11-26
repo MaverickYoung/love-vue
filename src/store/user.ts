@@ -27,12 +27,25 @@ export const useUserStore = defineStore('userStore', {
         // 用户头像和昵称
         userProfiles: new Map<number, UserProfile>()
     }),
+    getters: {
+        getUserProfile: (state) => {
+            return (id: number): UserProfile | undefined => {
+                if (id === state.user.id) {
+                    return {
+                        id: state.user.id,
+                        nickname: state.user.nickname,
+                        avatar: state.user.avatar,
+                    };
+                }
+
+                return state.userProfiles.get(id)!;
+            };
+        }
+
+    },
     actions: {
         setUser(val: any) {
             this.user = val
-        },
-        getUserId() {
-            return this.user.id
         },
         setTokens(accessToken: string, refreshToken: string) {
             this.accessToken = accessToken
@@ -60,19 +73,7 @@ export const useUserStore = defineStore('userStore', {
             // 移除 token
             this.clearTokens()
         },
-        // 获取单个用户资料
-        getUserProfile(id: number): UserProfile | undefined {
-            if (id === this.user.id) {
-                return {
-                    id: this.user.id,
-                    nickname: this.user.nickname,
-                    avatar: this.user.avatar
-                }
-            } else {
-                return this.userProfiles.get(id);
-            }
-        },
-        // 获取用户资料
+        // 获取并缓存用户资料
         async fetchUserProfilesAction(userIdList: Set<number>) {
             // 用来存储不存在的 ID
             const missingIds: number[] = [];

@@ -8,12 +8,12 @@
           <!-- 使用 image-wrapper 包裹图片 -->
           <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" width="180px" class="reward-image"/>
           <div v-else class="reward-not">
-            <span><b>{{ userProfile(reward.userId)?.nickname }}</b> 的奖励呢？</span>
+            <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
           </div>
           <!-- 头像 -->
           <avatar-wrapper
               class="avatar"
-              :src="userProfile(reward.userId)?.avatar"
+              :src="getAvatar(reward.userId)"
               size="30px"
           />
           <!-- 王冠 -->
@@ -63,8 +63,12 @@ interface RewardItem {
 
 const userStore = useUserStore();
 
-const userProfile = (id: number) => {
-  return userStore.getUserProfile(id);
+const getAvatar = (userId: number) => {
+  return userStore.getUserProfile(userId)?.avatar;
+}
+
+const getNickname = (userId: number) => {
+  return userStore.getUserProfile(userId)?.nickname;
 }
 
 const rewardList = ref<RewardItem[]>([]);
@@ -72,6 +76,8 @@ const rewardList = ref<RewardItem[]>([]);
 const onGetReward = async (month: string) => {
   const {data} = await useRewardApi(month);
   rewardList.value = data;
+  const userIds = new Set<number>(data.map((item: RewardItem) => item.userId));
+  await userStore.fetchUserProfilesAction(userIds);
 }
 
 const datePickerVisible = ref(false);
@@ -141,7 +147,7 @@ const uploaderReward = async () => {
 
 // 允许上传
 const isUploadAllowed = computed(() => {
-  return rewardList.value.some(item => item.userId === userStore.getUserId());
+  return rewardList.value.some(item => item.userId === userStore.user.id);
 });
 
 // 上传按钮是否禁用
@@ -159,8 +165,10 @@ const onConfirm = () => {
 </script>
 
 <style scoped>
+
+
 .date-container {
-  padding-top: 8px;
+  height: 30px;
 }
 
 .divider {
@@ -192,17 +200,15 @@ const onConfirm = () => {
     }
 
     .reward-not {
+      display: flex;
       width: 180px;
-      height: 50px;
-      position: relative;
-      line-height: 50px;
       text-align: left;
 
       span {
-        position: absolute;
-        right: 10px; /* 距离右边偏移 */
-        top: 50%; /* 垂直居中 */
-        transform: translateY(-50%);
+        margin-left: auto; /* 将 span 推到右边 */
+        padding: 4px;
+        max-width: 120px; /* 限制最大宽度 */
+        word-wrap: break-word; /* 长单词换行 */
       }
     }
 

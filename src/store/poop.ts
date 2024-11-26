@@ -34,10 +34,14 @@ export const usePoopStore = defineStore('poopStore', {
     state: () => ({
         poops: new Map<number, Poop>(),
     }),
-    actions: {
-        getPoop(id: number | undefined): Poop | undefined {
-            return id ? this.poops.get(id) : undefined;
+    getters: {
+        getPoop(state) {
+            return (id: number | undefined): Poop | undefined => {
+                return id ? state.poops.get(id) : undefined;
+            };
         },
+    },
+    actions: {
         async getPoopsAction() {
             // const {data} = await usePoopsApi()
             // this.poops = data

@@ -82,7 +82,7 @@ const updateChartOptions = () => {
       axisPointer: {type: 'shadow'},
     },
     grid: {
-      top: '22%',
+      top: '10%',
       left: '3%',
       right: '4%',
       bottom: '2%',
@@ -94,6 +94,8 @@ const updateChartOptions = () => {
       data: Array.from(users.values()).flatMap(user =>
           Array.from(poopTypes).map(poopType => `${user} - ${poopTypeMap.get(poopType)}`)
       ),
+      type: 'scroll',
+      formatter: name => name.length > 15 ? `${name.substring(0, 15)}...` : name // 控制名称长度
     },
     xAxis: {type: 'value'},
     yAxis: {type: 'category', data: Array.from(months)},
@@ -128,7 +130,6 @@ onMounted(async () => {
 
 <style scoped>
 .container {
-  margin-top: 20px;
   max-height: 400px;
   overflow-y: auto;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="card-item">
-      <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
+      <image-wrapper src="/src/assets/poop-normal.svg" width="40%" alt="小便便图标"/>
     </div>
 
     <div class="card-item">
@@ -10,7 +10,7 @@
           <template #title>
             <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
           </template>
-          <poop-message ref="poopMessageRef"/>
+          <poop-message/>
         </van-tab>
         <van-tab class="tab-content">
           <template #title>
@@ -55,12 +55,10 @@ const activeTab = ref('');
   padding: 16px;
   width: 300px;
   text-align: center;
-  transition: transform 0.2s;
   margin: 16px 0 16px 0;
 }
 
 .tab-content {
-  height: 400px;
-  border-radius: 8px;
+  height: 440px;
 }
 </style>
