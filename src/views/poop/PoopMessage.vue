@@ -47,7 +47,7 @@
         <image-wrapper :src="selectedType?.src?selectedType?.src:''" width="50%"/>
       </template>
     </van-popover>
-    <van-button :color="selectedType?.color" @click="onSubmit">发射</van-button>
+    <van-button :color="selectedType?.color" @click="onSubmit">发 射</van-button>
   </div>
 </template>
 

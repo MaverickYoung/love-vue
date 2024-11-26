@@ -17,13 +17,13 @@
               size="30px"
           />
           <!-- 王冠 -->
-          <image-wrapper src="/src/assets/crown.svg" width="20px" class="crown"/>
+          <image-wrapper src="/src/assets/crown.svg" width="15px" class="crown"/>
         </div>
       </div>
     </div>
     <hr class="divider">
     <van-uploader v-model="fileList" :max-count="1" :before-read="beforeRead" :disabled="!isUploadAllowed"/>
-    <van-button type="primary" @click="uploaderReward" :disabled="isUploadButtonDisabled">上传</van-button>
+    <van-button type="primary" @click="uploaderReward" :disabled="isUploadButtonDisabled">上 传</van-button>
     <van-popup
         v-model:show="datePickerVisible"
         position="bottom"
@@ -142,6 +142,8 @@ const uploaderReward = async () => {
   );
   showSuccessToast("上传完成")
 
+  fileList.value = []
+
   await onGetReward(formatDate.value);
 }
 
@@ -165,11 +167,6 @@ const onConfirm = () => {
 </script>
 
 <style scoped>
-
-
-.date-container {
-  height: 30px;
-}
 
 .divider {
   border: 1px solid rgb(198, 198, 198); /* 设置分割线的颜色和宽度 */
@@ -228,5 +225,10 @@ const onConfirm = () => {
       height: auto;
     }
   }
+}
+
+/* 覆盖默认样式*/
+::v-deep(.van-uploader__upload) {
+  margin: 16px;
 }
 </style>
