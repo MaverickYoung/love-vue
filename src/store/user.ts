@@ -25,14 +25,11 @@ export const useUserStore = defineStore('userStore', {
         // 刷新token
         refreshToken: cache.getRefreshToken(),
         // 用户头像和昵称
-        userProfiles: [] as { key: number; value: UserProfile }[]
+        userProfiles: new Map<number, UserProfile>()
     }),
     actions: {
         setUser(val: any) {
             this.user = val
-        },
-        getUserId() {
-            return this.user.id
         },
         setTokens(accessToken: string, refreshToken: string) {
             this.accessToken = accessToken
@@ -60,28 +57,14 @@ export const useUserStore = defineStore('userStore', {
             // 移除 token
             this.clearTokens()
         },
-        // 获取单个用户资料
-        getUserProfile(id: number): UserProfile | undefined {
-            if (id === undefined || id === null) return undefined;
-
-            if (id === this.user.id) {
-                return {
-                    id: this.user.id,
-                    nickname: this.user.nickname,
-                    avatar: this.user.avatar,
-                };
-            }
-            this.fetchUserProfilesAction(new Set<number>([id])).then(r => null)
-            return this.userProfiles.find(item => item.key === id)?.value;
-        },
-        // 获取用户资料
+        // 获取并缓存用户资料
         async fetchUserProfilesAction(userIdList: Set<number>) {
             // 用来存储不存在的 ID
             const missingIds: number[] = [];
 
             // 查找不存在的 ID
-            userIdList.forEach(userId => {
-                if (userId !== this.user.id && !this.userProfiles.some(item => item.key === userId)) {
+            userIdList.forEach((userId) => {
+                if (!this.userProfiles.has(userId) && userId !== this.user.id) {
                     missingIds.push(userId);
                 }
             });
@@ -92,7 +75,7 @@ export const useUserStore = defineStore('userStore', {
 
                 // 将获取到的用户资料缓存到 userProfiles 中
                 data.forEach((userProfile: UserProfile) => {
-                    this.userProfiles.push({key: userProfile.id, value: userProfile});
+                    this.userProfiles.set(userProfile.id, userProfile);
                 });
             }
         },

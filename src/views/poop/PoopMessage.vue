@@ -60,7 +60,6 @@ import {useUserStore} from "@/store/user";
 import {Poop, usePoopStore} from "@/store/poop";
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import {showSuccessToast} from "vant";
-import PoopMessage from "@/views/poop/PoopMessage.vue";
 
 interface LogItem {
   id: number; // ID
@@ -73,7 +72,7 @@ const userStore = useUserStore()
 const poopStore = usePoopStore()
 
 // 当前用户ID
-const currentUserId = userStore.getUserId();
+const currentUserId = userStore.user.id;
 
 const userIdList = ref(new Set<number>());
 
@@ -202,8 +201,8 @@ onMounted(async () => {
   overflow-y: auto;
   padding: 4px;
   background: #f1f1f1;
-  max-height: 220px;
-  height: 220px;
+  max-height: 240px;
+  min-height: 240px;
   width: 250px;
   margin-bottom: 16px;
 }
