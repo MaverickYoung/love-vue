@@ -27,6 +27,22 @@ export const useUserStore = defineStore('userStore', {
         // 用户头像和昵称
         userProfiles: new Map<number, UserProfile>()
     }),
+    getters: {
+        getUserProfile: (state) => {
+            return (id: number): UserProfile | undefined => {
+                if (id === state.user.id) {
+                    return {
+                        id: state.user.id,
+                        nickname: state.user.nickname,
+                        avatar: state.user.avatar,
+                    };
+                }
+
+                return state.userProfiles.get(id)!;
+            };
+        }
+
+    },
     actions: {
         setUser(val: any) {
             this.user = val
