@@ -15,9 +15,9 @@
 <script setup lang="ts">
 import {useRoute} from 'vue-router'
 import {computed, onMounted, ref} from 'vue'
-import {useThemeStore} from "@/store/theme";
+import {applyTheme} from "@/store/theme";
+import cache from "@/utlis/cache";
 
-const themeStore = useThemeStore()
 const route = useRoute()
 const isLoginPage = computed(() => {
   return route.name === 'login'
@@ -28,7 +28,7 @@ const onChange = (index: number) => {
   activeIndex.value = index;
 };
 onMounted(() => {
-  themeStore.switchTheme(themeStore.currentTheme)
+  applyTheme(cache.getTheme())
 })
 </script>
 

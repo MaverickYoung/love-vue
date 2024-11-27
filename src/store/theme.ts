@@ -1,4 +1,3 @@
-import {defineStore} from 'pinia';
 import cache from "@/utlis/cache";
 
 // 主题接口，定义所有可配置的 CSS 变量
@@ -44,39 +43,29 @@ const darkTheme: Theme = {
     '--box-shadow': 'rgba(255,255,255,0.1)'
 }
 
-const customTheme: Theme = () => {
-    cache.getTheme()
+/**
+ * 切换主题
+ * @param theme 主题配置
+ */
+export const switchTheme = (theme: 'light' | 'dark' | Theme ) => {
+    if (theme === 'light') {
+        applyTheme(lightTheme)
+    } else if (theme === 'dark') {
+        applyTheme(darkTheme)
+    } else {
+        applyTheme(theme);
+    }
 }
 
-// 定义 Pinia Store
-export const useThemeStore = defineStore('theme', {
-    state: () => ({
-        currentTheme: 'light',  // 默认为亮色主题
-    }),
+/**
+ * 应用主题
+ * @param theme 主题配置
+ */
+export const applyTheme = (theme: Theme) => {
+    Object.entries(theme).forEach(([key, value]) => {
+        const cssValue = typeof value === 'number' ? value.toString() : value;
+        document.documentElement.style.setProperty(key, cssValue);
+    });
 
-    actions: {
-        // 切换主题
-        switchTheme(theme: 'light' | 'dark' | 'custom') {
-            let themeToApply: Theme;
-
-            if (theme === 'light') {
-                themeToApply = lightTheme;
-            } else if (theme === 'dark') {
-                themeToApply = darkTheme;
-            } else {
-                // 使用自定义主题
-                themeToApply = lightTheme;
-            }
-
-            this.applyTheme(themeToApply);
-        },
-
-        // 应用主题
-        applyTheme(theme: Theme) {
-            Object.entries(theme).forEach(([key, value]) => {
-                const cssValue = typeof value === 'number' ? value.toString() : value;
-                document.documentElement.style.setProperty(key, cssValue);
-            });
-        },
-    },
-});
+    cache.setTheme(theme);
+}

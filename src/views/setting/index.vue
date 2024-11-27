@@ -38,7 +38,8 @@
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
 import {onMounted, ref} from "vue";
-import {useThemeStore} from "@/store/theme";
+import {switchTheme, Theme} from "@/store/theme";
+import cache from "@/utlis/cache";
 
 const userStore = useUserStore()
 
@@ -50,21 +51,23 @@ const password = ref<string>();
 const gender = ref<number>();
 const background = ref<string>();
 
-const themeStore = useThemeStore();
+const theme = ref<Theme>();
+
 
 // 切换亮色主题
 const switchToLightTheme = () => {
-  themeStore.switchTheme('light');
+  switchTheme('light');
 };
 
 // 切换暗色主题
 const switchToDarkTheme = () => {
-  themeStore.switchTheme('dark');
+  switchTheme('dark');
 };
 
 // 切换自定义主题（你可以根据输入的颜色来修改主题）
 const switchToCustomTheme = () => {
-  themeStore.switchTheme('custom');
+  theme.value = cache.getTheme();
+  switchTheme(theme.value);
 };
 
 onMounted(() => {
