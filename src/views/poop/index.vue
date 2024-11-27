@@ -49,10 +49,10 @@ const activeTab = ref('');
 }
 
 .card-item {
-  background-color: white;
+  background-color: var(--van-background-2);
   border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  padding: 16px;
+  box-shadow: 0 8px 16px var(--box-shadow);
+  padding: 16px 0 16px 0;
   width: 300px;
   text-align: center;
   margin: 16px 0 16px 0;
@@ -60,5 +60,6 @@ const activeTab = ref('');
 
 .tab-content {
   height: 440px;
+  position: relative;
 }
 </style>

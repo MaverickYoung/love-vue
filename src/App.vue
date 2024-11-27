@@ -4,19 +4,31 @@
   </div>
 
   <!-- 判断当前路由是否为登录页面，不是登录页时显示 tabbar -->
-  <van-tabbar v-if="!isLoginPage" route class="tab-bar">
-    <van-tabbar-item replace to="/poop" icon="home-o">便便</van-tabbar-item>
-    <van-tabbar-item replace to="/setting" icon="setting-o">设置</van-tabbar-item>
+  <van-tabbar v-if="!isLoginPage" route class="tab-bar" @change="onChange">
+    <van-tabbar-item replace to="/poop" icon="home-o" :class="{'tab-item--active': activeIndex === 0}">便便
+    </van-tabbar-item>
+    <van-tabbar-item replace to="/setting" icon="setting-o" :class="{'tab-item--active': activeIndex === 1}">设置
+    </van-tabbar-item>
   </van-tabbar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useRoute} from 'vue-router'
-import {computed} from 'vue'
+import {computed, onMounted, ref} from 'vue'
+import {useThemeStore} from "@/store/theme";
 
+const themeStore = useThemeStore()
 const route = useRoute()
 const isLoginPage = computed(() => {
   return route.name === 'login'
+})
+
+const activeIndex = ref<number>(0);
+const onChange = (index: number) => {
+  activeIndex.value = index;
+};
+onMounted(() => {
+  themeStore.switchTheme(themeStore.currentTheme)
 })
 </script>
 
@@ -30,5 +42,9 @@ const isLoginPage = computed(() => {
 
 .tab-bar {
   height: 50px;
+}
+
+.tab-item--active * {
+  color: var(--van-primary-color);
 }
 </style>

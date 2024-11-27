@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="poop-stats-container">
     <base-chart :options="chartOptions" width="250px" height="400px"/>
   </div>
 </template>
@@ -84,7 +84,7 @@ const updateChartOptions = () => {
     grid: {
       top: '10%',
       left: '3%',
-      right: '4%',
+      right: '3%',
       bottom: '2%',
       containLabel: true
     },
@@ -129,8 +129,8 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.container {
-  max-height: 400px;
-  overflow-y: auto;
+.poop-stats-container {
+  margin: 16px;
+  padding: 16px;
 }
 </style>

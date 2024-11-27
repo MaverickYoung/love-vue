@@ -1,47 +1,50 @@
 <template>
-  <div class="container">
-    <div @click="datePickerVisible= true" class="date-container">{{ formatDate }}</div>
-    <hr class="divider">
-    <div class="reward-container">
-      <div v-for="(reward,index) in rewardList" :key="index">
-        <div class="photo-frame">
-          <!-- 使用 image-wrapper 包裹图片 -->
-          <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" width="180px" class="reward-image"/>
-          <div v-else class="reward-not">
-            <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
+  <div>
+    <div class="poop-reward-container">
+      <div @click="datePickerVisible= true" class="date-container">{{ formatDate }}</div>
+      <hr class="divider">
+      <div class="reward-container">
+        <div v-for="(reward,index) in rewardList" :key="index">
+          <div class="photo-frame">
+            <!-- 使用 image-wrapper 包裹图片 -->
+            <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" width="180px" class="reward-image"/>
+            <div v-else class="reward-not">
+              <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
+            </div>
+            <!-- 头像 -->
+            <avatar-wrapper
+                class="avatar"
+                :src="getAvatar(reward.userId)"
+                size="30px"
+            />
+            <!-- 王冠 -->
+            <image-wrapper src="/src/assets/crown.svg" width="15px" class="crown"/>
           </div>
-          <!-- 头像 -->
-          <avatar-wrapper
-              class="avatar"
-              :src="getAvatar(reward.userId)"
-              size="30px"
-          />
-          <!-- 王冠 -->
-          <image-wrapper src="/src/assets/crown.svg" width="15px" class="crown"/>
         </div>
       </div>
+      <hr class="divider">
+      <van-uploader v-model="fileList" :max-count="1" :before-read="beforeRead" :disabled="!isUploadAllowed"/>
+      <van-button type="primary" @click="uploaderReward" :disabled="isUploadButtonDisabled">上 传</van-button>
+      <van-popup
+          v-model:show="datePickerVisible"
+          position="bottom"
+          :style="{ height: '40%'}"
+          style="margin: 0"
+          teleport="#app"
+          round
+      >
+        <van-date-picker
+            v-model="currentDate"
+            title="选择年月"
+            :min-date="minDate"
+            :max-date="maxDate"
+            :formatter="formatter"
+            :columns-type="columnsType"
+            ref="datePickerRef"
+            @confirm="onConfirm"
+        />
+      </van-popup>
     </div>
-    <hr class="divider">
-    <van-uploader v-model="fileList" :max-count="1" :before-read="beforeRead" :disabled="!isUploadAllowed"/>
-    <van-button type="primary" @click="uploaderReward" :disabled="isUploadButtonDisabled">上 传</van-button>
-    <van-popup
-        v-model:show="datePickerVisible"
-        position="bottom"
-        :style="{ height: '40%'}"
-        teleport="#app"
-        round
-    >
-      <van-date-picker
-          v-model="currentDate"
-          title="选择年月"
-          :min-date="minDate"
-          :max-date="maxDate"
-          :formatter="formatter"
-          :columns-type="columnsType"
-          ref="datePickerRef"
-          @confirm="onConfirm"
-      />
-    </van-popup>
   </div>
 </template>
 
@@ -167,62 +170,70 @@ const onConfirm = () => {
 </script>
 
 <style scoped>
+.poop-reward-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 430px;
+  margin: 8px;
 
-.divider {
-  border: 1px solid rgb(198, 198, 198); /* 设置分割线的颜色和宽度 */
-  margin: 5px 0; /* 设置上下的间距 */
-  width: 220px;
-}
+  .divider {
+    border: 1px solid var(--van-text-color-2); /* 设置分割线的颜色和宽度 */
+    margin: 5px 0; /* 设置上下的间距 */
+    width: 220px;
+  }
 
-.reward-container {
-  max-height: 220px;
-  overflow-y: auto;
+  .reward-container {
+    max-height: 220px;
+    min-height: 220px;
+    overflow-y: auto;
 
-  .photo-frame {
-    margin-bottom: 8px;
+    .photo-frame {
+      margin-bottom: 8px;
 
-    /* 外层相框 */
-    position: relative;
-    display: inline-block;
-    padding: 10px; /* 外框和内框的间距 */
+      /* 外层相框 */
+      position: relative;
+      display: inline-block;
+      padding: 10px; /* 外框和内框的间距 */
 
-    /* 第一圈细线相框 */
-    border: 2px solid rgb(131, 131, 131);
-    border-radius: 10px; /* 圆角效果 */
+      /* 第一圈细线相框 */
+      border: 2px solid var(--van-text-color-3);
+      border-radius: 10px; /* 圆角效果 */
 
-    .reward-image, .reward-not {
-      /* 内层细线相框 */
-      border: 2px solid rgb(131, 131, 131);
-      border-radius: 8px; /* 圆角效果，与外框稍微小一点 */
-    }
-
-    .reward-not {
-      display: flex;
-      width: 180px;
-      text-align: left;
-
-      span {
-        margin-left: auto; /* 将 span 推到右边 */
-        padding: 4px;
-        max-width: 120px; /* 限制最大宽度 */
-        word-wrap: break-word; /* 长单词换行 */
+      .reward-image, .reward-not {
+        /* 内层细线相框 */
+        border: 2px solid var(--van-text-color-3);
+        border-radius: 8px; /* 圆角效果，与外框稍微小一点 */
       }
-    }
 
-    .avatar {
-      position: absolute;
-      bottom: 20px; /* 距离底部的间距，可调整 */
-      left: 20px; /* 距离左侧的间距，可调整 */
-      z-index: 10; /* 保证头像在图片上层 */
-      overflow: hidden;
-    }
+      .reward-not {
+        display: flex;
+        width: 180px;
+        text-align: left;
 
-    .crown {
-      position: absolute;
-      bottom: 42px; /* 王冠相对于头像的位置，向上偏移 */
-      left: 42px; /* 王冠相对于头像的位置，向右偏移 */
-      z-index: 20; /* 保证王冠在头像上层 */
-      height: auto;
+        span {
+          margin-left: auto; /* 将 span 推到右边 */
+          padding: 4px;
+          max-width: 120px; /* 限制最大宽度 */
+          word-wrap: break-word; /* 长单词换行 */
+        }
+      }
+
+      .avatar {
+        position: absolute;
+        bottom: 20px; /* 距离底部的间距，可调整 */
+        left: 20px; /* 距离左侧的间距，可调整 */
+        z-index: 10; /* 保证头像在图片上层 */
+        overflow: hidden;
+      }
+
+      .crown {
+        position: absolute;
+        bottom: 42px; /* 王冠相对于头像的位置，向上偏移 */
+        left: 42px; /* 王冠相对于头像的位置，向右偏移 */
+        z-index: 20; /* 保证王冠在头像上层 */
+        height: auto;
+      }
     }
   }
 }

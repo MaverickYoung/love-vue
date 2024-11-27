@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="poop-messages-container">
     <div class="messages-container" ref="messagesContainer">
       <div
           v-for="message in messages"
@@ -16,7 +16,7 @@
         <div class="message-body">
           <!-- 接收消息：头像在左，消息内容在右 -->
           <div v-if="message.userId !== currentUserId" class="message-left">
-            <avatar-wrapper class="avatar-left" size="30px" :src="getAvatar(message.userId)"/>
+            <avatar-wrapper class="avatar" size="30px" :src="getAvatar(message.userId)"/>
             <div class="message-content-wrapper">
               <image-wrapper class="message-content" width="45px"
                              :src="getPoopSrc(message.type)"/>
@@ -29,7 +29,7 @@
               <image-wrapper class="message-content" width="45px"
                              :src="getPoopSrc(message.type)"/>
             </div>
-            <avatar-wrapper class="avatar-right" size="30px" :src="getAvatar(message.userId)"/>
+            <avatar-wrapper class="avatar" size="30px" :src="getAvatar(message.userId)"/>
           </div>
         </div>
       </div>
@@ -47,6 +47,7 @@
         <image-wrapper :src="selectedType?.src?selectedType?.src:''" width="50%"/>
       </template>
     </van-popover>
+    <br/>
     <van-button :color="selectedType?.color" @click="onSubmit">发 射</van-button>
   </div>
 </template>
@@ -74,11 +75,11 @@ const poopStore = usePoopStore()
 // 当前用户ID
 const currentUserId = userStore.user.id;
 
-const userIdList = ref(new Set<number>());
+const userIdList = ref<Set<number>>(new Set<number>());
 
 const messages = ref<LogItem[]>([]);
 
-const isPopoverVisible = ref(false);
+const isPopoverVisible = ref<boolean>(false);
 
 // 使用 ref 引用子组件实例
 const messagesContainer = ref<HTMLElement | null>(null);
@@ -190,87 +191,94 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.container {
+.poop-messages-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
-}
-
-.messages-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 4px;
-  background: #f1f1f1;
-  max-height: 240px;
-  min-height: 240px;
-  width: 250px;
-  margin-bottom: 16px;
-}
-
-.message-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* 保证时间部分垂直居中 */
-  width: 100%;
-  margin: 5px 0;
-}
-
-.message-time-wrapper {
-  width: 100%;
-  text-align: center; /* 使时间居中 */
-  margin-bottom: 5px; /* 让时间和消息内容之间有间距 */
-}
-
-.message-time {
-  font-size: 0.8em;
-  color: #888;
-}
-
-/* 聊天消息容器 */
-.message-body {
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  width: 100%;
-  margin-bottom: 10px; /* 让每条消息之间有间距 */
-}
+  margin: 16px;
 
-/* 接收消息：头像左对齐，消息内容右对齐 */
-.message-left {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start; /* 头像和消息内容左对齐 */
-}
+  .messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px;
+    background: var(--van-background-3);
+    max-height: 240px;
+    min-height: 240px;
+    width: 250px;
+    margin-bottom: 16px;
 
-/* 发送消息：头像右对齐，消息内容左对齐 */
-.message-right {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end; /* 头像和消息内容右对齐 */
-  width: 100%; /* 确保消息部分占满整行 */
-}
+    .message-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 保证时间部分垂直居中 */
+      width: 100%;
+      margin: 5px 0;
 
-/* 头像 */
-.avatar-left, .avatar-right {
-  margin: 0 10px; /* 头像和消息内容之间的间距 */
-}
+      .message-time-wrapper {
+        width: 100%;
+        text-align: center; /* 使时间居中 */
+        margin-bottom: 5px; /* 让时间和消息内容之间有间距 */
 
-/* 消息内容容器 */
-.message-content-wrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 70%; /* 消息框最大宽度 */
-  word-wrap: break-word;
-}
+        .message-time {
+          font-size: 0.8em;
+          color: var(--van-text-color-2);
+        }
+      }
 
-/* 消息内容 */
-.message-content {
-  margin-top: 2px;
-}
+      /* 聊天消息容器 */
 
-.popover-item {
-  padding: 8px;
+      .message-body {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px; /* 让每条消息之间有间距 */
+
+        /* 接收消息：头像左对齐，消息内容右对齐 */
+
+        .message-left {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start; /* 头像和消息内容左对齐 */
+        }
+
+        /* 发送消息：头像右对齐，消息内容左对齐 */
+
+        .message-right {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end; /* 头像和消息内容右对齐 */
+          width: 100%; /* 确保消息部分占满整行 */
+        }
+
+
+        /* 头像 */
+
+        .avatar {
+          margin: 0 10px; /* 头像和消息内容之间的间距 */
+        }
+
+        /* 消息内容容器 */
+
+        .message-content-wrapper {
+          display: flex;
+          flex-direction: column;
+          max-width: 70%; /* 消息框最大宽度 */
+          word-wrap: break-word;
+
+          /* 消息内容 */
+          .message-content {
+            margin-top: 2px;
+          }
+        }
+      }
+    }
+  }
+
+  .popover-item {
+    padding: 8px;
+  }
 }
 </style>

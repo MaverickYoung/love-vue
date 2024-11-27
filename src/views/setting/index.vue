@@ -18,16 +18,18 @@
       <div class="label">性别</div>
       <div class="value">{{ user.gender }}</div>
     </div>
-    <div class="info-item">
+    <div class="info-item" @click="switchToLightTheme">
       <div class="label">背景</div>
       <div class="value">{{ user.background }}</div>
     </div>
 
     <br/> <!-- 用于增加与主题项的间距 -->
 
-    <div class="info-item">
+    <div class="info-item" @click="switchToDarkTheme">
       <div class="label">主题</div>
-      <div class="value"></div>
+      <div class="value">
+        <div class="color-box"/>
+      </div>
     </div>
   </div>
 </template>
@@ -36,6 +38,7 @@
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
 import {onMounted, ref} from "vue";
+import {useThemeStore} from "@/store/theme";
 
 const userStore = useUserStore()
 
@@ -46,23 +49,23 @@ const nickname = ref<string>();
 const password = ref<string>();
 const gender = ref<number>();
 const background = ref<string>();
-const theme = ref<string>();
 
-const colors = [
-  '#409eff',
-  '#0BB2D4',
-  '#3E8EF7',
-  '#11C26D',
-  '#17B3A3',
-  '#667AFA',
-  '#997B71',
-  '#9463F7',
-  '#757575',
-  '#EB6709',
-  '#F74584',
-  '#FCB900',
-  '#FF4C52'
-]
+const themeStore = useThemeStore();
+
+// 切换亮色主题
+const switchToLightTheme = () => {
+  themeStore.switchTheme('light');
+};
+
+// 切换暗色主题
+const switchToDarkTheme = () => {
+  themeStore.switchTheme('dark');
+};
+
+// 切换自定义主题（你可以根据输入的颜色来修改主题）
+const switchToCustomTheme = () => {
+  themeStore.switchTheme('custom');
+};
 
 onMounted(() => {
 
@@ -80,8 +83,9 @@ onMounted(() => {
   padding: 20px;
 
   border-radius: 10px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px var(--box-shadow);
 
+  background: var(--van-background-2);
 
   /* 头像样式 */
 
@@ -98,7 +102,7 @@ onMounted(() => {
     width: 100%;
     max-width: 300px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--van-border-color);
     border-radius: 8px;
     margin: 8px 0;
 
@@ -113,15 +117,26 @@ onMounted(() => {
     /* 值样式 */
 
     .value {
-      color: #888;
+      color: var(--van-text-color-2);
       text-align: right;
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
 
       /* 添加 ">" 符号 */
 
       &::after {
-        content: " >";
-        color: #ccc;
+        content: ">";
+        margin-left: 8px;
+      }
+
+      .color-box {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid var(--van-border-color);
+        background-color: var(--van-background);
       }
     }
   }
