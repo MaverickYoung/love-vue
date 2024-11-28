@@ -1,5 +1,5 @@
 import {Storage} from "./storage"
-import {lightTheme, Theme} from "@/store/theme";
+import {ITheme, lightTheme} from "@/store/theme";
 
 const key = {
     refreshTokenKey: 'loveRefreshToken',
@@ -25,11 +25,11 @@ class Cache {
         Storage.setItem(key.loginUsername, value)
     }
 
-    getTheme = (): Theme => {
-        return Storage.getItem(key.theme) ?? lightTheme
+    getTheme = (): ITheme => {
+        return Storage.getItem(key.theme) ?? {theme: lightTheme, isLight: true}
     }
 
-    setTheme = (value: Theme) => {
+    setTheme = (value: ITheme) => {
         Storage.setItem(key.theme, value)
     }
 }

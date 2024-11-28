@@ -1,3 +1,26 @@
+
+:root:root {
+    --van-primary-color: #1989FA;
+    --van-success-color: #07C160;
+    --van-danger-color: #EE0A24;
+    --van-warning-color: #FF976A;
+    --van-background: #E6E6E6;
+    --van-text-color: #323233;
+    --box-shadow: #00000019;
+    --van-background-2: #D2D2D2;
+    --van-background-3: #BDBDBD;
+    --van-background-4: #A9A9A9;
+    --van-background-5: #949494;
+    --van-text-color-2: #424242;
+    --van-text-color-3: #515152;
+    --van-text-color-4: #616161;
+    --van-text-color-5: #707071;
+    --box-shadow-2: #1A1A1A19;
+    --box-shadow-3: #33333319;
+    --box-shadow-4: #4D4D4D19;
+    --box-shadow-5: #66666619;
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -13,45 +36,3 @@ body {
 button * {
     color: white;
 }
-
-:root {
-    --box-shadow: rgba(0, 0, 0, 0.1);
-}
-
-/*:root:root {*/
-/*    !* 调色板 *!*/
-/*    --van-black: #000;*/
-/*    --van-white: #fff;*/
-/*    --van-gray-1: #f7f8fa;*/
-/*    --van-gray-2: #f2f3f5;*/
-/*    --van-gray-3: #ebedf0;*/
-/*    --van-gray-4: #dcdee0;*/
-/*    --van-gray-5: #c8c9cc;*/
-/*    --van-gray-6: #969799;*/
-/*    --van-gray-7: #646566;*/
-/*    --van-gray-8: #323233;*/
-/*    --van-red: #ee0a24;*/
-/*    --van-blue: #1989fa;*/
-/*    --van-orange: #ff976a;*/
-/*    --van-orange-dark: #ed6a0c;*/
-/*    --van-orange-light: #fffbe8;*/
-/*    --van-green: #07c160;*/
-
-/*    !* 渐变颜色 *!*/
-/*    --van-gradient-red: linear-gradient(to right, #ff6034, #ee0a24);*/
-/*    --van-gradient-orange: linear-gradient(to right, #ffd01e, #ff8917);*/
-
-/*    !* 组件颜色 *!*/
-/*    --van-primary-color: var(--van-blue);*/
-/*    --van-success-color: var(--van-green);*/
-/*    --van-danger-color: var(--van-red);*/
-/*    --van-warning-color: var(--van-orange);*/
-/*    --van-text-color: var(--van-gray-8);*/
-/*    --van-text-color-2: var(--van-gray-6);*/
-/*    --van-text-color-3: var(--van-gray-5);*/
-/*    --van-active-color: var(--van-gray-2);*/
-/*    --van-active-opacity: 0.6;*/
-/*    --van-disabled-opacity: 0.5;*/
-/*    --van-background: var(--van-gray-1);*/
-/*    --van-background-2: var(--van-white);*/
-/*}*/

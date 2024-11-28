@@ -144,9 +144,9 @@ body {
   width: 300px;
   height: 400px;
   padding: 25px;
-  background-color: #ecf0f3;
-  box-shadow: 10px 10px 10px #d1d9e6,
-  -10px -10px 10px #f9f9f9;
+  background-color: var(--van-background);
+  box-shadow: 10px 10px 10px var(--box-shadow),
+  -10px -10px 10px var(--box-shadow-5);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -160,16 +160,16 @@ body {
   font-size: 16px;
   letter-spacing: 1px;
   border: none;
-  background-color: #ecf0f3;
+  background-color: var(--van-background);
   transition: 0.25s ease;
   border-radius: 8px;
-  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.1),
-  inset -6px -6px 12px rgba(255, 255, 255, 0.8);
-  color: #202020;
+  box-shadow: inset 6px 6px 12px var(--box-shadow),
+  inset -6px -6px 12px var(--box-shadow-5),;
+  color: var(--van-text-color);
 
   &:focus {
-    box-shadow: inset 4px 4px 4px #d1d9e6,
-    inset -4px -4px 4px #f9f9f9;
+    box-shadow: inset 4px 4px 4px var(--box-shadow),
+    inset -4px -4px 4px  var(--box-shadow-5);
   }
 
   &::placeholder {

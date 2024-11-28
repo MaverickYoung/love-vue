@@ -49,7 +49,7 @@ const activeTab = ref('');
 }
 
 .card-item {
-  background-color: var(--van-background-2);
+  background-color: var(--van-background-3);
   border-radius: 10px;
   box-shadow: 0 8px 16px var(--box-shadow);
   padding: 16px 0 16px 0;
