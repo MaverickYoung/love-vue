@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import {useRoute} from 'vue-router'
 import {computed, onMounted, ref} from 'vue'
-import {applyTheme} from "@/store/theme";
+import {applyTheme} from "@/utlis/theme";
 import cache from "@/utlis/cache";
 
 const route = useRoute()

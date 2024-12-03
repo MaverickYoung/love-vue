@@ -1,5 +1,5 @@
 import {Storage} from "./storage"
-import {ITheme, lightTheme} from "@/store/theme";
+import {Theme, ThemeConfig} from "@/utlis/theme";
 
 const key = {
     refreshTokenKey: 'loveRefreshToken',
@@ -25,11 +25,22 @@ class Cache {
         Storage.setItem(key.loginUsername, value)
     }
 
-    getTheme = (): ITheme => {
-        return Storage.getItem(key.theme) ?? {theme: lightTheme, isLight: true}
-    }
+    // 获取主题配置
+    getTheme = (): ThemeConfig => {
+        const themeConfig = Storage.getItem(key.theme);
 
-    setTheme = (value: ITheme) => {
+        // 如果 themeConfig 是无效的（类型错误或为空），返回默认的亮色主题
+        if (!themeConfig || typeof themeConfig.isLight !== 'boolean' || !themeConfig.styles) {
+            return {
+                isLight: true, // 默认为亮色主题
+                styles: {} as Theme,
+            };
+        }
+        return themeConfig;
+    };
+
+
+    setTheme = (value: ThemeConfig) => {
         Storage.setItem(key.theme, value)
     }
 }

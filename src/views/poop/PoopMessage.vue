@@ -201,7 +201,7 @@ onMounted(async () => {
     flex: 1;
     overflow-y: auto;
     padding: 4px;
-    background: var(--van-background-3);
+    background: var(--van-background-2);
     max-height: 240px;
     min-height: 240px;
     width: 250px;

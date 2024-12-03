@@ -38,7 +38,7 @@
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
 import {onMounted, ref} from "vue";
-import {switchTheme, Theme} from "@/store/theme";
+import {applyTheme, Theme, ThemeConfig} from "@/utlis/theme";
 import cache from "@/utlis/cache";
 
 const userStore = useUserStore()
@@ -51,27 +51,39 @@ const password = ref<string>();
 const gender = ref<number>();
 const background = ref<string>();
 
-const theme = ref<Theme>();
+const theme = ref<ThemeConfig>();
 
 
 // 切换亮色主题
 const switchToLightTheme = () => {
-  switchTheme('light');
+  const config: ThemeConfig = {styles: {} as Theme, isLight: true}
+
+  cache.setTheme(config);
+  applyTheme(config);
+
 };
 
 // 切换暗色主题
 const switchToDarkTheme = () => {
-  switchTheme('dark');
+  const config: ThemeConfig = {styles: {} as Theme, isLight: false}
+
+  cache.setTheme(config);
+  applyTheme(config);
+
 };
 
-// 切换自定义主题（你可以根据输入的颜色来修改主题）
+// 切换自定义主题
 const switchToCustomTheme = () => {
-  theme.value = cache.getTheme();
-  switchTheme(theme.value);
+  if (!theme.value) {
+    throw new Error("主题值不能为空");
+  }
+
+  cache.setTheme(theme.value);
+  applyTheme(theme.value);
 };
 
 onMounted(() => {
-
+  theme.value = cache.getTheme();
 })
 
 </script>
@@ -86,7 +98,7 @@ onMounted(() => {
   padding: 20px;
 
   border-radius: 10px;
-  box-shadow: 0 8px 16px var(--box-shadow);
+  box-shadow: 0 8px 16px var(--box-shadow-bottom);
 
   background: var(--van-background-2);
 

@@ -12,12 +12,12 @@ const useEcharts = (elRef: Ref<HTMLDivElement>, options: EChartsCoreOption) => {
     };
 
     // 初始化
-    const initCharts = (themeColor?: Array<string>) => {
+    const initCharts = (isLight: boolean, themeColor?: Array<string>) => {
         const el = unref(elRef);
         if (!el || !unref(el)) {
             return;
         }
-        charts.value = echarts.init(el);
+        isLight ? charts.value = echarts.init(el) : charts.value = echarts.init(el, 'dark');
         if (themeColor) {
             options.color = themeColor;
         }

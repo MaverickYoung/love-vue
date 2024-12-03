@@ -1,24 +1,18 @@
 
 :root:root {
-    --van-primary-color: #1989FA;
-    --van-success-color: #07C160;
-    --van-danger-color: #EE0A24;
-    --van-warning-color: #FF976A;
     --van-background: #E6E6E6;
     --van-text-color: #323233;
-    --box-shadow: #00000019;
-    --van-background-2: #D2D2D2;
-    --van-background-3: #BDBDBD;
-    --van-background-4: #A9A9A9;
-    --van-background-5: #949494;
-    --van-text-color-2: #424242;
-    --van-text-color-3: #515152;
-    --van-text-color-4: #616161;
-    --van-text-color-5: #707071;
-    --box-shadow-2: #1A1A1A19;
-    --box-shadow-3: #33333319;
-    --box-shadow-4: #4D4D4D19;
-    --box-shadow-5: #66666619;
+    --van-background-2: #FFFFFF;
+    --van-background-3: #FFFFFF;
+    --van-text-color-2: #000000;
+    --van-text-color-3: #000000;
+
+    --box-shadow-top: #FFFFFF19;
+    --box-shadow-bottom: #00000033;
+    --box-shadow-soft: #D1D9E6;
+    --box-shadow-deep: #F9F9F9;
+
+    --van-tabs-nav-background: var(--van-background);
 }
 
 * {

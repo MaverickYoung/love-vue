@@ -10,7 +10,8 @@
 
 <script setup lang="ts">
 import {onMounted, PropType, ref, watch} from "vue";
-import {EChartsCoreOption, useEcharts} from "./useEcharts"; // 引入hooks
+import {EChartsCoreOption, useEcharts} from "./useEcharts";
+import {useAppStore} from "@/store/app"; // 引入hooks
 
 const props = defineProps({
   options: {type: Object as PropType<EChartsCoreOption>, required: true},
@@ -37,7 +38,9 @@ watch(
     }
 );
 
+const appStore=useAppStore()
+
 onMounted(() => {
-  initCharts();
+  initCharts(appStore.getIsLight);
 });
 </script>

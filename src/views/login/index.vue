@@ -111,7 +111,7 @@ const onLogin = async () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 
 * {
   box-sizing: border-box;
@@ -145,8 +145,8 @@ body {
   height: 400px;
   padding: 25px;
   background-color: var(--van-background);
-  box-shadow: 10px 10px 10px var(--box-shadow),
-  -10px -10px 10px var(--box-shadow-5);
+  box-shadow: 10px 10px 10px var(--box-shadow-soft),
+    -10px -10px 10px var(--box-shadow-deep);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -163,17 +163,17 @@ body {
   background-color: var(--van-background);
   transition: 0.25s ease;
   border-radius: 8px;
-  box-shadow: inset 6px 6px 12px var(--box-shadow),
-  inset -6px -6px 12px var(--box-shadow-5),;
+  box-shadow: inset 6px 6px 12px var(--box-shadow-bottom),
+    inset -6px -6px 12px var(--box-shadow-top);
   color: var(--van-text-color);
 
   &:focus {
-    box-shadow: inset 4px 4px 4px var(--box-shadow),
-    inset -4px -4px 4px  var(--box-shadow-5);
+    box-shadow: inset 4px 4px 4px var(--box-shadow-soft),
+      inset -4px -4px 4px var(--box-shadow-deep);
   }
 
   &::placeholder {
-    color: #a0a5a8;
+    color: var(--van-text-color-5);
   }
 }
 
@@ -191,18 +191,18 @@ body {
   font-weight: 700;
   font-size: 14px;
   letter-spacing: 1px;
-  background-color: #4b70e2;
-  color: #f9f9f9;
-  box-shadow: 8px 8px 16px #d1d9e6,
-  -8px -8px 16px #f9f9f9;
+  background-color: var(--van-primary-color);
+  color: white;
   border: none;
   outline: none;
   transition: 0.25s;
+  touch-action: manipulation;
 
   &:active {
-    box-shadow: 2px 2px 6px #d1d9e6,
-    -2px -2px 6px #f9f9f9;
+    box-shadow: 2px 2px 6px var(--box-shadow-soft),
+      -2px -2px 6px var(--box-shadow-deep);
     transform: scale(0.97);
+    filter: brightness(90%);
   }
 }
 
@@ -233,7 +233,7 @@ body {
   position: absolute;
   width: 0;
   height: 3px;
-  background-color: #ffffff;
+  background-color: var(--van-background);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-45deg);
