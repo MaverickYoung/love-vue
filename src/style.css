@@ -13,6 +13,8 @@
     --box-shadow-deep: #F9F9F9;
 
     --van-tabs-nav-background: var(--van-background);
+
+    --button-text-color: white;
 }
 
 * {
@@ -27,6 +29,7 @@ body {
     background-color: var(--van-background);
 }
 
-button * {
-    color: white;
+
+button, button * {
+    color: var(--button-text-color);
 }

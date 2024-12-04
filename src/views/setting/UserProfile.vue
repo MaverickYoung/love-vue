@@ -1,35 +1,34 @@
 <template>
-  <div class="profile-wrapper">
-    <avatar-wrapper :src="user.avatar" size="80px"/>
 
-    <div class="info-item">
-      <div class="label">用户名</div>
-      <div class="value">{{ user.username }}</div>
-    </div>
-    <div class="info-item">
-      <div class="label">昵称</div>
-      <div class="value">{{ user.nickname }}</div>
-    </div>
-    <div class="info-item">
-      <div class="label">密码</div>
-      <div class="value"></div>
-    </div>
-    <div class="info-item">
-      <div class="label">性别</div>
-      <div class="value">{{ user.gender }}</div>
-    </div>
+  <avatar-wrapper :src="user.avatar" size="80px"/>
 
-    <br/>
-    <div class="info-item" @click="switchToDarkTheme">
-      <div class="label">主题</div>
-      <div class="value">
-        <div class="color-box"/>
-      </div>
+  <div class="info-item">
+    <div class="label">用户名</div>
+    <div class="value">{{ user.username }}</div>
+  </div>
+  <div class="info-item">
+    <div class="label">昵称</div>
+    <div class="value">{{ user.nickname }}</div>
+  </div>
+  <div class="info-item">
+    <div class="label">密码</div>
+    <div class="value"></div>
+  </div>
+  <div class="info-item">
+    <div class="label">性别</div>
+    <div class="value">{{ user.gender }}</div>
+  </div>
+
+  <br/>
+  <div class="info-item" @click="switchToDarkTheme">
+    <div class="label">主题</div>
+    <div class="value">
+      <div class="color-box"/>
     </div>
-    <div class="info-item" @click="switchToLightTheme">
-      <div class="label">背景</div>
-      <div class="value">{{ user.background }}</div>
-    </div>
+  </div>
+  <div class="info-item" @click="switchToLightTheme">
+    <div class="label">背景</div>
+    <div class="value">{{ user.background }}</div>
   </div>
 </template>
 
@@ -84,77 +83,59 @@ const switchToCustomTheme = () => {
 onMounted(() => {
   theme.value = cache.getTheme();
 })
-
 </script>
 
+
 <style scoped>
-.profile-wrapper {
+/* 头像样式 */
+avatar-wrapper {
+  margin-bottom: 20px;
+}
+
+/* 子容器样式 */
+.info-item {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  border: 1px solid var(--van-border-color);
+  border-radius: 8px;
+  margin: 8px 0;
 
-  width: 300px;
-  padding: 20px;
+  /* 标签样式 */
 
-  border-radius: 10px;
-  box-shadow: 0 8px 16px var(--box-shadow-bottom);
-
-  background: var(--van-background-2);
-
-  /* 头像样式 */
-
-  avatar-wrapper {
-    margin-bottom: 20px;
+  .label {
+    font-weight: bold;
+    text-align: left;
+    flex: 1;
   }
 
-  /* 子容器样式 */
+  /* 值样式 */
 
-  .info-item {
+  .value {
+    color: var(--van-text-color-2);
+    text-align: right;
+    flex: 1;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    border: 1px solid var(--van-border-color);
-    border-radius: 8px;
-    margin: 8px 0;
+    justify-content: flex-end;
 
-    /* 标签样式 */
+    /* 添加 ">" 符号 */
 
-    .label {
-      font-weight: bold;
-      text-align: left;
-      flex: 1;
+    &::after {
+      content: ">";
+      margin-left: 8px;
     }
 
-    /* 值样式 */
-
-    .value {
-      color: var(--van-text-color-2);
-      text-align: right;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-
-      /* 添加 ">" 符号 */
-
-      &::after {
-        content: ">";
-        margin-left: 8px;
-      }
-
-      .color-box {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        border: 1px solid var(--van-border-color);
-        background-color: var(--van-background);
-      }
+    .color-box {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid var(--van-border-color);
+      background-color: var(--van-background);
     }
   }
 }
-
-
 </style>

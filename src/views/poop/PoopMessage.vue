@@ -48,7 +48,7 @@
       </template>
     </van-popover>
     <br/>
-    <van-button :color="selectedType?.color" @click="onSubmit">发 射</van-button>
+    <custom-button :backgroundColor="selectedType?.color" square @click="onSubmit" class="submit">发 射</custom-button>
   </div>
 </template>
 
@@ -61,6 +61,7 @@ import {useUserStore} from "@/store/user";
 import {Poop, usePoopStore} from "@/store/poop";
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import {showSuccessToast} from "vant";
+import CustomButton from "@/components/CustomButton.vue";
 
 interface LogItem {
   id: number; // ID
@@ -269,6 +270,7 @@ onMounted(async () => {
           word-wrap: break-word;
 
           /* 消息内容 */
+
           .message-content {
             margin-top: 2px;
           }
@@ -279,6 +281,13 @@ onMounted(async () => {
 
   .popover-item {
     padding: 8px;
+  }
+
+  .submit {
+    width: 75px !important;
+    font-size: 14px;
+    word-spacing: 2px;
+    padding: 10px 0
   }
 }
 </style>

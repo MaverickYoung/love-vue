@@ -1,5 +1,7 @@
 <template>
-  <router-view/>
+  <div class="profile-wrapper">
+    <router-view/>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -7,5 +9,17 @@
 </script>
 
 <style scoped>
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
+  width: 300px;
+  padding: 20px;
+
+  border-radius: 10px;
+  box-shadow: 0 8px 16px var(--box-shadow-bottom);
+
+  background: var(--van-background-2);
+}
 </style>

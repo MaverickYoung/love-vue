@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="login-container">
     <div class="form">
       <image-wrapper src="/src/assets/love.svg" alt="logo" class="logo"/>
       <span class="form-span"></span>
@@ -30,7 +30,7 @@
         <van-col span="13">
           <img :src="captchaBase64" alt="" class="captcha" @click="onCaptcha"/></van-col>
       </van-row>
-      <button class="submit" @click="onLogin()">登 录</button>
+      <custom-button @click="onLogin()" class="submit">登 录</custom-button>
     </div>
   </div>
 </template>
@@ -42,6 +42,7 @@ import {router} from "@/router";
 import {useUserStore} from "@/store/user";
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import cache from "@/utlis/cache";
+import CustomButton from "@/components/CustomButton.vue";
 
 const userStore = useUserStore()
 
@@ -130,20 +131,12 @@ body {
 
 .form {
   display: flex;
-  justify-content: center;
+
   align-items: center;
   flex-direction: column;
 
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-
   width: 300px;
-  height: 400px;
-  padding: 25px;
+  padding: 30px 25px;
   background-color: var(--van-background);
   box-shadow: 10px 10px 10px var(--box-shadow-soft),
     -10px -10px 10px var(--box-shadow-deep);
@@ -184,28 +177,10 @@ body {
 }
 
 .submit {
-  width: 200px;
-  height: 45px;
-  border-radius: 25px;
-  margin-top: 25px;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 1px;
-  background-color: var(--van-primary-color);
-  color: white;
-  border: none;
-  outline: none;
-  transition: 0.25s;
-  touch-action: manipulation;
-
-  &:active {
-    box-shadow: 2px 2px 6px var(--box-shadow-soft),
-      -2px -2px 6px var(--box-shadow-deep);
-    transform: scale(0.97);
-    filter: brightness(90%);
-  }
+  width: 200px !important;
+  height: 45px !important;
+  margin-top: 20px;
 }
-
 
 .captcha {
   width: 110px;
@@ -257,4 +232,10 @@ body {
   }
 }
 
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>

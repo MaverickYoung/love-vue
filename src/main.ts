@@ -1,9 +1,9 @@
 import {createApp} from 'vue';
-import './style.css';
 import App from './App.vue';
 import {router} from "./router";
 import {createPinia} from "pinia";
 import 'vant/lib/index.css';
+import './style.css';
 
 // vant按需引入，函数式组件不自动引入 bug
 import 'vant/es/toast/style'
