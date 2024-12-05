@@ -14,7 +14,7 @@
   flex-direction: column;
   align-items: center;
 
-  width: 300px;
+  width: 270px;
   padding: 20px;
 
   border-radius: 10px;

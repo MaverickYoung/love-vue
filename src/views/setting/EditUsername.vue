@@ -1,62 +1,57 @@
 <template>
-  <form class="edit-field-form">
-    <h2>修改用户名</h2>
-    <label>用户名
-      <input
-          v-model="username"
-          type="text"
-          placeholder="用户名 2-20位 不含空格"
-      />
-    </label>
-    <p v-if="error" class="error">{{ error }}</p>
-    <custom-button>取消</custom-button>
-  </form>
+  <EditFieldForm
+      title="修改用户名"
+      :columns="columns"
+      :validate="validateFields"
+      :on-confirm="handleConfirm"
+  />
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import CustomButton from "@/components/CustomButton.vue";
+import {reactive} from "vue";
+import EditFieldForm, {Column} from "@/components/EditFieldForm.vue";
+import {useUserInfoSubmitApi} from "@/api/sys/user";
+import {useRouter} from "vue-router";
+import {useUserStore} from "@/store/user";
 
-const username = ref<string>('');
-const error = ref<string | null>(null);
-
-
-</script>
-
-<style scoped>
-.edit-field-form {
-  h2 {
-    text-align: center; /* 标题居中 */
-    margin-bottom: 16px; /* 增加与其他项的间距 */
+// 定义每一列的内容
+const columns = reactive([
+  {
+    label: '用户名',
+    placeholder: '请输入用户名 2-50位',
+    value: ''
   }
+] as Column[]);
 
-  label {
-    display: flex; /* 使用 flex 布局 */
-    align-items: center; /* 垂直居中对齐 label 和 input */
-    margin-top: 16px; /* 每一项增加间距 */
+// 校验函数
+const validateFields = (value: string, index: number) => {
+  // 校验长度
+  if (value.length < 2 || value.length > 50) {
+    return '用户名长度应为2到50位';
+  }
+  return '';
+};
 
-    input {
-      flex: 1; /* 输入框占据剩余空间 */
-      border: none; /* 去除原边框 */
-      border-bottom: 1px solid var(--van-text-color-2); /* 添加下边框 */
-      padding: 8px 0; /* 给输入框增加上下内边距 */
-      font-size: 14px;
-      margin-left: 16px; /* 输入框与 label 之间的间距 */
+const router = useRouter()
 
-      &:focus {
-        outline: none; /* 去除焦点时的外框 */
-        border-bottom-color: var(--van-primary-color); /* 焦点时下边框高亮 */
-      }
+// 确认按钮处理
+const handleConfirm = async () => {
+  // 进行前端校验
+  const validationErrors: string[] = [];
+  columns.forEach((column, index) => {
+    const error = validateFields(column.value, index);
+    if (error) {
+      validationErrors.push(error);
     }
-  }
+  });
 
-  .error {
-    color: var(--van-danger-color);
-    margin-bottom: 16px; /* 与按钮之间增加间距 */
+  // 处理校验错误
+  if (validationErrors.length == 0) {
+    await useUserInfoSubmitApi({'username': columns[0].value})
+    await userStore.getUserInfoAction()
+    router.back();
   }
+};
 
-  button{
-    margin-top: 32px;
-  }
-}
-</style>
+const userStore=useUserStore();
+</script>

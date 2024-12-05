@@ -2,19 +2,19 @@
 
   <avatar-wrapper :src="user.avatar" size="80px"/>
 
-  <div class="info-item">
+  <div class="info-item" @click="router.push('/setting/edit-username')">
     <div class="label">用户名</div>
     <div class="value">{{ user.username }}</div>
   </div>
-  <div class="info-item">
+  <div class="info-item" @click="router.push('/setting/edit-nickname')">
     <div class="label">昵称</div>
     <div class="value">{{ user.nickname }}</div>
   </div>
-  <div class="info-item">
+  <div class="info-item" @click="router.push('/setting/edit-password')">
     <div class="label">密码</div>
     <div class="value"></div>
   </div>
-  <div class="info-item">
+  <div class="info-item" @click="switchGender">
     <div class="label">性别</div>
     <div class="value">{{ user.gender }}</div>
   </div>
@@ -38,14 +38,14 @@ import {useUserStore} from "@/store/user";
 import {onMounted, ref} from "vue";
 import {applyTheme, Theme, ThemeConfig} from "@/utlis/theme";
 import cache from "@/utlis/cache";
+import {useRouter} from "vue-router";
 
 const userStore = useUserStore()
 
 const user = userStore.user
 
-const username = ref<string>();
-const nickname = ref<string>();
-const password = ref<string>();
+const router = useRouter()
+
 const gender = ref<number>();
 const background = ref<string>();
 
@@ -79,6 +79,15 @@ const switchToCustomTheme = () => {
   cache.setTheme(theme.value);
   applyTheme(theme.value);
 };
+
+const switchGender = () => {
+
+}
+
+
+const switchBackground = () => {
+
+}
 
 onMounted(() => {
   theme.value = cache.getTheme();
