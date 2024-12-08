@@ -20,6 +20,32 @@ const routes: RouteRecordRaw[] = [
         name: 'setting',
         component: () => import("@/views/setting/index.vue"),
         meta: {description: '设置'},
+        children: [
+            {
+                path: 'user-profile',
+                name: 'user-profile',
+                component: () => import("@/views/setting/UserProfile.vue"),
+                meta: {description: '个人资料'},
+            },
+            {
+                path: "edit-username",
+                name: 'edit-username',
+                component: () => import("@/views/setting/EditUsername.vue"),
+                meta: {description: '修改用户名'},
+            },
+            {
+                path: "edit-password",
+                name: "edit-password",
+                component: () => import("@/views/setting/EditPassword.vue"),
+                meta: {description: '修改密码'},
+            },
+            {
+                path: "edit-nickname",
+                name: "edit-nickname",
+                component: () => import("@/views/setting/EditNickname.vue"),
+                meta: {description: '修改昵称'},
+            },
+        ]
     },
     {
         path: '/poop',

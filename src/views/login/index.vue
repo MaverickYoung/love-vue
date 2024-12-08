@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="login-container">
     <div class="form">
       <image-wrapper src="/src/assets/love.svg" alt="logo" class="logo"/>
       <span class="form-span"></span>
@@ -30,7 +30,7 @@
         <van-col span="13">
           <img :src="captchaBase64" alt="" class="captcha" @click="onCaptcha"/></van-col>
       </van-row>
-      <button class="submit" @click="onLogin()">登 录</button>
+      <custom-button @click="onLogin()" class="submit">登 录</custom-button>
     </div>
   </div>
 </template>
@@ -42,6 +42,7 @@ import {router} from "@/router";
 import {useUserStore} from "@/store/user";
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import cache from "@/utlis/cache";
+import CustomButton from "@/components/CustomButton.vue";
 
 const userStore = useUserStore()
 
@@ -111,7 +112,7 @@ const onLogin = async () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 
 * {
   box-sizing: border-box;
@@ -130,23 +131,15 @@ body {
 
 .form {
   display: flex;
-  justify-content: center;
+
   align-items: center;
   flex-direction: column;
 
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-
   width: 300px;
-  height: 400px;
-  padding: 25px;
-  background-color: #ecf0f3;
-  box-shadow: 10px 10px 10px #d1d9e6,
-  -10px -10px 10px #f9f9f9;
+  padding: 30px 25px;
+  background-color: var(--van-background);
+  box-shadow: 10px 10px 10px var(--box-shadow-soft),
+    -10px -10px 10px var(--box-shadow-deep);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -160,20 +153,20 @@ body {
   font-size: 16px;
   letter-spacing: 1px;
   border: none;
-  background-color: #ecf0f3;
+  background-color: var(--van-background);
   transition: 0.25s ease;
   border-radius: 8px;
-  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.1),
-  inset -6px -6px 12px rgba(255, 255, 255, 0.8);
-  color: #202020;
+  box-shadow: inset 6px 6px 12px var(--box-shadow-bottom),
+    inset -6px -6px 12px var(--box-shadow-top);
+  color: var(--van-text-color);
 
   &:focus {
-    box-shadow: inset 4px 4px 4px #d1d9e6,
-    inset -4px -4px 4px #f9f9f9;
+    box-shadow: inset 4px 4px 4px var(--box-shadow-soft),
+      inset -4px -4px 4px var(--box-shadow-deep);
   }
 
   &::placeholder {
-    color: #a0a5a8;
+    color: var(--van-text-color-5);
   }
 }
 
@@ -184,28 +177,10 @@ body {
 }
 
 .submit {
-  width: 200px;
-  height: 45px;
-  border-radius: 25px;
-  margin-top: 25px;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 1px;
-  background-color: #4b70e2;
-  color: #f9f9f9;
-  box-shadow: 8px 8px 16px #d1d9e6,
-  -8px -8px 16px #f9f9f9;
-  border: none;
-  outline: none;
-  transition: 0.25s;
-
-  &:active {
-    box-shadow: 2px 2px 6px #d1d9e6,
-    -2px -2px 6px #f9f9f9;
-    transform: scale(0.97);
-  }
+  width: 200px !important;
+  height: 45px !important;
+  margin-top: 20px;
 }
-
 
 .captcha {
   width: 110px;
@@ -233,7 +208,7 @@ body {
   position: absolute;
   width: 0;
   height: 3px;
-  background-color: #ffffff;
+  background-color: var(--van-background);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-45deg);
@@ -257,4 +232,10 @@ body {
   }
 }
 
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>

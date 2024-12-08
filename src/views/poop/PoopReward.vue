@@ -178,7 +178,7 @@ const onConfirm = () => {
   margin: 8px;
 
   .divider {
-    border: 1px solid var(--van-text-color-2); /* 设置分割线的颜色和宽度 */
+    border: 1px solid var(--van-text-color-2);
     margin: 5px 0; /* 设置上下的间距 */
     width: 220px;
   }

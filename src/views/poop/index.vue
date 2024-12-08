@@ -5,7 +5,7 @@
     </div>
 
     <div class="card-item">
-      <van-tabs v-model:active="activeTab" animated swipeable>
+      <van-tabs v-model:active="activeTab" animated swipeable >
         <van-tab class="tab-content">
           <template #title>
             <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
@@ -49,9 +49,8 @@ const activeTab = ref('');
 }
 
 .card-item {
-  background-color: var(--van-background-2);
   border-radius: 10px;
-  box-shadow: 0 8px 16px var(--box-shadow);
+  box-shadow: 0 8px 16px var(--box-shadow-bottom);
   padding: 16px 0 16px 0;
   width: 300px;
   text-align: center;
@@ -62,4 +61,5 @@ const activeTab = ref('');
   height: 440px;
   position: relative;
 }
+
 </style>
