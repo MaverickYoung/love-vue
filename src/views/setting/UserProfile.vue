@@ -56,7 +56,6 @@ const theme = ref<ThemeConfig>();
 const switchToLightTheme = () => {
   const config: ThemeConfig = {styles: {} as Theme, isLight: true}
 
-  cache.setTheme(config);
   applyTheme(config);
 
 };
@@ -65,7 +64,6 @@ const switchToLightTheme = () => {
 const switchToDarkTheme = () => {
   const config: ThemeConfig = {styles: {} as Theme, isLight: false}
 
-  cache.setTheme(config);
   applyTheme(config);
 
 };
@@ -76,7 +74,6 @@ const switchToCustomTheme = () => {
     throw new Error("主题值不能为空");
   }
 
-  cache.setTheme(theme.value);
   applyTheme(theme.value);
 };
 
@@ -107,7 +104,7 @@ avatar-wrapper {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 300px;
+  max-width: 270px;
   padding: 10px;
   border: 1px solid var(--van-border-color);
   border-radius: 8px;
@@ -141,8 +138,8 @@ avatar-wrapper {
     .color-box {
       width: 16px;
       height: 16px;
-      border-radius: 4px;
-      border: 1px solid var(--van-border-color);
+      border-radius: 2px;
+      border: 2px solid var(--van-text-color-3);
       background-color: var(--van-background);
     }
   }

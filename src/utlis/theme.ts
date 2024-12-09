@@ -49,36 +49,29 @@ const defaultDarkExtras = {
 };
 
 /**
- * 获取完整的主题样式
- * @param config 自定义主题配置
- * @returns 合并后的完整主题样式
- */
-const getCompleteThemeStyles = (config: ThemeConfig) => {
-    const baseStyles = config.isLight ? lightBaseStyles : darkBaseStyles; // 根据 isLight 获取基础样式
-    const defaultExtras = config.isLight ? defaultLightExtras : defaultDarkExtras; // 根据 isLight 获取默认额外样式
-
-    return {
-        ...defaultExtras, // 默认的额外样式
-        ...baseStyles, // 默认基础样式
-        ...config.styles, // 用户自定义样式（优先级最高）
-    };
-};
-
-
-/**
  * 应用主题
  * @param config 主题配置
  */
 export const applyTheme = (config: ThemeConfig) => {
-    const themeStyles = getCompleteThemeStyles(config); // 获取完整样式
+    // 获取基础样式和默认额外样式
+    const { isLight, styles: customStyles } = config;
+    const baseStyles = isLight ? lightBaseStyles : darkBaseStyles;
+    const extraStyles = isLight ? defaultLightExtras : defaultDarkExtras;
 
-    useAppStore().setTheme(config)
+    // 合并基础样式和自定义样式
+    config.styles = { ...baseStyles, ...customStyles };
 
-    // 设置 HTML 类名
-    document.documentElement.classList.toggle('van-theme-dark', !config.isLight);
+    // 更新主题配置到全局状态
+    useAppStore().setTheme(config);
+
+    // 合并额外样式和最终样式
+    const mergedStyles = { ...extraStyles, ...config.styles };
+
+    // 设置 HTML 类名以切换Vant主题
+    document.documentElement.classList.toggle('van-theme-dark', !isLight);
 
     // 应用样式到根节点
-    Object.entries(themeStyles).forEach(([key, value]) => {
-        document.documentElement.style.setProperty(key, value);
+    Object.entries(mergedStyles).forEach(([property, value]) => {
+        document.documentElement.style.setProperty(property, value);
     });
 };

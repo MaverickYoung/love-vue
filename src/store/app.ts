@@ -14,6 +14,7 @@ export const useAppStore = defineStore('appStore', {
     actions: {
         setTheme(theme: ThemeConfig): void {
             this.theme = theme;
+            cache.setTheme(theme)
         }
     }
 })

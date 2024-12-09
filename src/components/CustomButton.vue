@@ -4,7 +4,6 @@
       :class="{ square }"
       :style="buttonStyle"
       @click="handleClick"
-      :type="type"
   >
     <slot></slot> <!-- 插槽，用来传递按钮文字 -->
   </button>
@@ -24,10 +23,6 @@ const colorMap = {
 
 // 接受外部传递的属性
 const props = defineProps({
-  type: {
-    type: String,
-    default: 'button', // 默认类型是普通按钮
-  },
   color: {
     type: String as PropType<'primary' | 'success' | 'danger' | 'warning'>,
     default: 'primary', // 默认颜色
@@ -62,7 +57,7 @@ const buttonStyle = computed(() => {
   }
 })
 
-const handleClick = (event) => {
+const handleClick = (event: any) => {
   event.preventDefault() // 阻止表单提交
 }
 </script>
@@ -74,8 +69,11 @@ const handleClick = (event) => {
   border: none;
   outline: none;
   cursor: pointer;
-  transition: all 0.3s ease; /* 平滑过渡效果 */
+  transition: all 0.1s ease; /* 平滑过渡效果 */
   word-spacing: 10px;
+  display: flex; /* 启用 Flex 布局 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
 }
 
 .custom-button:active {

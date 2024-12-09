@@ -112,7 +112,7 @@ const onLogin = async () => {
 }
 </script>
 
-<style scoped lang="less">
+<style scoped>
 
 * {
   box-sizing: border-box;
@@ -166,7 +166,7 @@ body {
   }
 
   &::placeholder {
-    color: var(--van-text-color-5);
+    color: var(--van-text-color-3);
   }
 }
 

@@ -45,6 +45,12 @@ const routes: RouteRecordRaw[] = [
                 component: () => import("@/views/setting/EditNickname.vue"),
                 meta: {description: '修改昵称'},
             },
+            {
+                path: "theme-manager",
+                name: "theme-manager",
+                component: () => import("@/views/setting/ThemeManager.vue"),
+                meta: {description: '主题管理'},
+            },
         ]
     },
     {
