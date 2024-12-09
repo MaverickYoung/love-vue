@@ -29,34 +29,50 @@
       <div class="info-item">
         <div class="label">主要背景色</div>
         <div class="value">
-          <div class="color-box" :style="{ backgroundColor: appStore.theme.styles['--van-background'] }"/>
+          <van-popover v-model:show="showPopover" placement="left">
+            <color-picker :color="backgroundColor" @update:color="onUpdateBackground"/>
+            <template #reference>
+              <div class="color-box"
+                   :style="{ backgroundColor: backgroundColor }"/>
+            </template>
+          </van-popover>
         </div>
       </div>
 
       <div class="info-item">
         <div class="label">次要背景色</div>
         <div class="value">
-          <div class="color-box" :style="{ backgroundColor: appStore.theme.styles['--van-background-2'] }"/>
-
+          <van-popover v-model:show="showPopover2" placement="left">
+            <color-picker :color="backgroundColor2" @update:color="onUpdateBackground2"/>
+            <template #reference>
+              <div class="color-box"
+                   :style="{ backgroundColor: backgroundColor2 }"/>
+            </template>
+          </van-popover>
         </div>
       </div>
 
       <div class="info-item">
         <div class="label">辅助背景色</div>
         <div class="value">
-          <div class="color-box" :style="{ backgroundColor: appStore.theme.styles['--van-background-3'] }"/>
+          <van-popover v-model:show="showPopover3" placement="left">
+            <color-picker :color="backgroundColor3" @update:color="onUpdateBackground3"/>
+            <template #reference>
+              <div class="color-box"
+                   :style="{ backgroundColor: backgroundColor3 }"/>
+            </template>
+          </van-popover>
         </div>
       </div>
     </div>
 
   </div>
-  <color-picker :color="backgroundColor" @update:color="onUpdateBackground"/>
 </template>
 
 <script setup lang="ts">
 
 import {useAppStore} from "@/store/app";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import ColorPicker from "@/components/ColorPicker.vue";
 
 const appStore = useAppStore()
@@ -66,9 +82,30 @@ const backgroundColor = ref<string>();
 const backgroundColor2 = ref<string>();
 const backgroundColor3 = ref<string>();
 
+const showPopover = ref(false);
+const showPopover2 = ref(false);
+const showPopover3 = ref(false);
+
 const onUpdateBackground = (color: string) => {
-  console.log(color);
+  showPopover.value = false;
+  backgroundColor.value = color;
 }
+
+const onUpdateBackground2 = (color: string) => {
+  showPopover2.value = false;
+  backgroundColor2.value = color;
+}
+
+const onUpdateBackground3 = (color: string) => {
+  showPopover3.value = false;
+  backgroundColor3.value = color;
+}
+
+onMounted(() => {
+  backgroundColor.value = appStore.theme.styles['--van-background'];
+  backgroundColor2.value = appStore.theme.styles['--van-background-2'];
+  backgroundColor3.value = appStore.theme.styles['--van-background-3'];
+})
 
 </script>
 
@@ -121,10 +158,13 @@ const onUpdateBackground = (color: string) => {
       }
 
       .color-box {
+        position: relative;
         width: 16px;
         height: 16px;
-        border-radius: 2px;
-        border: 2px solid var(--van-text-color-3);
+        border-radius: 3px;
+        overflow: hidden;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWElEQVRIiWM8fubkfwYygKWJOSM5+mCAhRLNoxaPWjxq8ajFoxbTyeL/DAfJ0Xjs3Cl7Siwmu4Yht1aDgZEYx6MWj1o8avGoxaMWD3qLya5X//4nqx6HAQC7RBGFzolqTAAAAABJRU5ErkJggg==');
+        background-size: 16px 16px;
       }
     }
   }

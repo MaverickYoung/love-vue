@@ -61,7 +61,7 @@ import CustomButton from "@/components/CustomButton.vue";
 
 const props = defineProps({
   color: {
-    type: Object as PropType<Rgba | string>,
+    type: String as PropType<Rgba | string>,
     default() {
       return {
         r: 217,
@@ -542,18 +542,6 @@ const predefineChange = (item: string): void => {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-}
-
-/* 颜色方块 */
-.color-diamond {
-  position: relative;
-  margin-left: 5px;
-  width: 26px;
-  height: 26px;
-  border-radius: 3px;
-  overflow: hidden;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWElEQVRIiWM8fubkfwYygKWJOSM5+mCAhRLNoxaPWjxq8ajFoxbTyeL/DAfJ0Xjs3Cl7Siwmu4Yht1aDgZEYx6MWj1o8avGoxaMWD3qLya5X//4nqx6HAQC7RBGFzolqTAAAAABJRU5ErkJggg==');
-  background-size: 10px 10px;
 }
 
 /* 颜色的值 hex rgba */
