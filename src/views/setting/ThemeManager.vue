@@ -1,5 +1,6 @@
 <template>
   <div class="theme-manager-container">
+    <back-button/>
     <h2>主题配置</h2>
     <div class="info-item">
       <div class="label">主题切换</div>
@@ -25,44 +26,23 @@
     </div>
 
     <br/>
-    <div>
-      <div class="info-item">
-        <div class="label">主要背景色</div>
-        <div class="value">
-          <van-popover v-model:show="showPopover" placement="left">
-            <color-picker :color="backgroundColor" @update:color="onUpdateBackground"/>
-            <template #reference>
-              <div class="color-box"
-                   :style="{ backgroundColor: backgroundColor }"/>
-            </template>
-          </van-popover>
-        </div>
-      </div>
-
-      <div class="info-item">
-        <div class="label">次要背景色</div>
-        <div class="value">
-          <van-popover v-model:show="showPopover2" placement="left">
-            <color-picker :color="backgroundColor2" @update:color="onUpdateBackground2"/>
-            <template #reference>
-              <div class="color-box"
-                   :style="{ backgroundColor: backgroundColor2 }"/>
-            </template>
-          </van-popover>
-        </div>
-      </div>
-
-      <div class="info-item">
-        <div class="label">辅助背景色</div>
-        <div class="value">
-          <van-popover v-model:show="showPopover3" placement="left">
-            <color-picker :color="backgroundColor3" @update:color="onUpdateBackground3"/>
-            <template #reference>
-              <div class="color-box"
-                   :style="{ backgroundColor: backgroundColor3 }"/>
-            </template>
-          </van-popover>
-        </div>
+    <div v-for="(config, key) in backgroundColors" :key="key" class="info-item">
+      <div class="label">{{ config.label }}</div>
+      <div class="value">
+        <van-popover v-model:show="popoverStates[key]" placement="left">
+          <color-picker
+              :color="theme.styles[config.key]"
+              @update:color="color => onUpdateBackground(key, color)"
+              @close="popoverStates[key] = false"
+              @reset="onUpdateBackground(key, '')"
+          />
+          <template #reference>
+            <div
+                class="color-box"
+                :style="{ backgroundColor: theme.styles[config.key] }"
+            />
+          </template>
+        </van-popover>
       </div>
     </div>
 
@@ -72,49 +52,57 @@
 <script setup lang="ts">
 
 import {useAppStore} from "@/store/app";
-import {onMounted, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import ColorPicker from "@/components/ColorPicker.vue";
+import {Theme, ThemeConfig} from "@/utlis/theme";
+import BackButton from "@/components/BackButton.vue";
 
 const appStore = useAppStore()
 const selectedTheme = ref('light');
+type BackgroundKey = '--van-background' | '--van-background-2' | '--van-background-3';
 
-const backgroundColor = ref<string>();
-const backgroundColor2 = ref<string>();
-const backgroundColor3 = ref<string>();
+// 存储背景色弹窗状态和对应的标签
+const backgroundColors = {
+  background: {key: '--van-background' as BackgroundKey, label: '主要背景色'},
+  background2: {key: '--van-background-2' as BackgroundKey, label: '次要背景色'},
+  background3: {key: '--van-background-3' as BackgroundKey, label: '辅助背景色'},
+};
 
-const showPopover = ref(false);
-const showPopover2 = ref(false);
-const showPopover3 = ref(false);
+const theme = reactive<ThemeConfig>(appStore.theme);
 
-const onUpdateBackground = (color: string) => {
-  showPopover.value = false;
-  backgroundColor.value = color;
+// 动态生成弹窗状态
+const popoverStates = reactive(
+    Object.fromEntries(Object.keys(backgroundColors).map(key => [key, false]))
+);
+
+// 通用更新方法
+const onUpdateBackground = (key: keyof typeof backgroundColors, color: string) => {
+  popoverStates[key] = false; // 关闭对应弹窗
+  theme.styles[backgroundColors[key].key] = color; // 更新样式
+  onApplyTheme();
+};
+
+
+const onApplyTheme = () => {
+  appStore.setTheme(theme);
 }
 
-const onUpdateBackground2 = (color: string) => {
-  showPopover2.value = false;
-  backgroundColor2.value = color;
-}
-
-const onUpdateBackground3 = (color: string) => {
-  showPopover3.value = false;
-  backgroundColor3.value = color;
-}
-
-onMounted(() => {
-  backgroundColor.value = appStore.theme.styles['--van-background'];
-  backgroundColor2.value = appStore.theme.styles['--van-background-2'];
-  backgroundColor3.value = appStore.theme.styles['--van-background-3'];
+watch(selectedTheme, () => {
+  theme.styles = {} as Theme
+  theme.isLight = selectedTheme.value === "light"
+  appStore.setTheme(theme);
 })
-
 </script>
 
 <style scoped>
+
+
 .theme-manager-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  position: relative;
 
   h2 {
     margin-bottom: 20px;

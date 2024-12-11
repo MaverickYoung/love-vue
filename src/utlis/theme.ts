@@ -1,5 +1,4 @@
 // 主题样式接口
-import {useAppStore} from "@/store/app";
 
 export interface Theme {
     '--van-background': string;
@@ -54,18 +53,15 @@ const defaultDarkExtras = {
  */
 export const applyTheme = (config: ThemeConfig) => {
     // 获取基础样式和默认额外样式
-    const { isLight, styles: customStyles } = config;
+    const {isLight, styles: customStyles} = config;
     const baseStyles = isLight ? lightBaseStyles : darkBaseStyles;
     const extraStyles = isLight ? defaultLightExtras : defaultDarkExtras;
 
     // 合并基础样式和自定义样式
-    config.styles = { ...baseStyles, ...customStyles };
-
-    // 更新主题配置到全局状态
-    useAppStore().setTheme(config);
+    config.styles = {...baseStyles, ...customStyles};
 
     // 合并额外样式和最终样式
-    const mergedStyles = { ...extraStyles, ...config.styles };
+    const mergedStyles = {...extraStyles, ...config.styles};
 
     // 设置 HTML 类名以切换Vant主题
     document.documentElement.classList.toggle('van-theme-dark', !isLight);

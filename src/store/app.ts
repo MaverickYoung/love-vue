@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 import cache from "@/utlis/cache";
-import {ThemeConfig} from "@/utlis/theme";
+import {applyTheme, ThemeConfig} from "@/utlis/theme";
 
 export const useAppStore = defineStore('appStore', {
     state: () => ({
@@ -15,6 +15,7 @@ export const useAppStore = defineStore('appStore', {
         setTheme(theme: ThemeConfig): void {
             this.theme = theme;
             cache.setTheme(theme)
+            applyTheme(theme)
         }
     }
 })

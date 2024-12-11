@@ -20,13 +20,13 @@
   </div>
 
   <br/>
-  <div class="info-item" @click="switchToDarkTheme">
+  <div class="info-item" @click="router.push('/setting/theme-manager')">
     <div class="label">主题</div>
     <div class="value">
       <div class="color-box"/>
     </div>
   </div>
-  <div class="info-item" @click="switchToLightTheme">
+  <div class="info-item">
     <div class="label">背景</div>
     <div class="value">{{ user.background }}</div>
   </div>
@@ -35,9 +35,7 @@
 <script setup lang="ts">
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
-import {onMounted, ref} from "vue";
-import {applyTheme, Theme, ThemeConfig} from "@/utlis/theme";
-import cache from "@/utlis/cache";
+import {ref} from "vue";
 import {useRouter} from "vue-router";
 
 const userStore = useUserStore()
@@ -48,47 +46,10 @@ const router = useRouter()
 
 const gender = ref<number>();
 const background = ref<string>();
-
-const theme = ref<ThemeConfig>();
-
-
-// 切换亮色主题
-const switchToLightTheme = () => {
-  const config: ThemeConfig = {styles: {} as Theme, isLight: true}
-
-  applyTheme(config);
-
-};
-
-// 切换暗色主题
-const switchToDarkTheme = () => {
-  const config: ThemeConfig = {styles: {} as Theme, isLight: false}
-
-  applyTheme(config);
-
-};
-
-// 切换自定义主题
-const switchToCustomTheme = () => {
-  if (!theme.value) {
-    throw new Error("主题值不能为空");
-  }
-
-  applyTheme(theme.value);
-};
-
 const switchGender = () => {
 
 }
 
-
-const switchBackground = () => {
-
-}
-
-onMounted(() => {
-  theme.value = cache.getTheme();
-})
 </script>
 
 

@@ -1,5 +1,6 @@
 <template>
   <form class="edit-field-form">
+    <back-button/>
     <h2>{{ title }}</h2>
     <div v-for="(column, index) in columns" :key="index" class="form-item">
       <div class="label">{{ column.label }}</div>
@@ -14,7 +15,6 @@
     </div>
 
     <div class="button-group">
-      <custom-button color="danger" @click="router.back()">返 回</custom-button>
       <custom-button @click="onConfirm()">确 认</custom-button>
     </div>
   </form>
@@ -22,8 +22,8 @@
 
 <script setup lang="ts">
 import {onMounted, PropType} from "vue";
-import {router} from "@/router";
 import CustomButton from "@/components/CustomButton.vue";
+import BackButton from "@/components/BackButton.vue";
 
 export interface Column {
   label: string;
@@ -84,6 +84,8 @@ onMounted(() => {
 
 <style scoped>
 .edit-field-form {
+  position: relative;;
+
   h2 {
     text-align: center;
     margin-bottom: 24px;
@@ -104,6 +106,7 @@ onMounted(() => {
     border: none;
     border-bottom: 1px solid var(--van-text-color-2);
     font-size: 14px;
+    background-color: var(--van-background-3);
 
     &:focus {
       outline: none;
