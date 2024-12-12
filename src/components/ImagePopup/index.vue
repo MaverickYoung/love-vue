@@ -21,7 +21,6 @@ const emit = defineEmits(['update:show']);
 
 // 关闭弹窗
 const closePopup = () => {
-  console.log(123)
   emit('update:show', false);
 };
 </script>

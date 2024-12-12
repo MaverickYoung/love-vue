@@ -50,31 +50,24 @@
     </div>
   </van-popup>
 
-  <image-popup :src="user.avatar" :show="showAvatarPopup" @update:show="showAvatarPopup=false">
-    <image-popup-button label="更换头像" @click="triggerAvatarFileSelect"/>
-    <!-- 隐藏的文件输入框 -->
-    <input
-        type="file"
-        ref="avatarInput"
-        accept="image/*"
-        style="display: none;"
-        @change="handleAvatarFileChange"
-    />
-    <image-popup-button label="保存头像" @click="saveBase64AsImage(user.avatar,'头像')"/>
-  </image-popup>
-
-  <image-popup :src="user.background" :show="showBackgroundPopup" @update:show="showBackgroundPopup=false">
-    <image-popup-button label="更换背景图" @click="triggerBackgroundFileSelect"/>
-    <!-- 隐藏的文件输入框 -->
-    <input
-        type="file"
-        ref="backgroundInput"
-        accept="image/*"
-        style="display: none;"
-        @change="handleBackgroundFileChange"
-    />
-    <image-popup-button label="保存背景图" @click="saveBase64AsImage(user.background,'背景图')"/>
-  </image-popup>
+  <image-manager
+      :src="user.avatar"
+      :show="showAvatarPopup"
+      :updateShow="(val) => (showAvatarPopup = val)"
+      changeLabel="更换头像"
+      saveLabel="保存头像"
+      :onFileChange="handleAvatarFileChange"
+      :onSave="() => saveBase64AsImage(user.avatar, '头像')"
+  />
+  <image-manager
+      :src="user.background"
+      :show="showBackgroundPopup"
+      :updateShow="(val) => (showBackgroundPopup = val)"
+      changeLabel="更换背景图"
+      saveLabel="保存背景图"
+      :onFileChange="handleBackgroundFileChange"
+      :onSave="() => saveBase64AsImage(user.background, '背景图')"
+  />
 
 </template>
 
@@ -85,9 +78,8 @@ import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import {useUpdateAvatarApi, useUpdateBackgroundApi, useUserInfoSubmitApi} from "@/api/sys/user";
-import ImagePopup from "@/components/ImagePopup/index.vue";
-import ImagePopupButton from "@/components/ImagePopup/ImagePopupButton.vue";
 import {saveBase64AsImage} from "@/utlis/file";
+import ImageManager from "@/components/ImagePopup/ImageManager.vue";
 
 const userStore = useUserStore()
 
@@ -145,21 +137,7 @@ const showGenderPopup = ref(false);
 const showAvatarPopup = ref(false);
 const showBackgroundPopup = ref(false);
 
-const avatarInput = ref<HTMLInputElement | null>(null);
-const backgroundInput = ref<HTMLInputElement | null>(null);
-
-// 触发头像文件选择框
-const triggerAvatarFileSelect = () => {
-  avatarInput.value?.click();
-};
-
-// 触发背景图文件选择框
-const triggerBackgroundFileSelect = () => {
-  backgroundInput.value?.click();
-};
-
-// 处理头像文件选择事件
-const handleAvatarFileChange = async (event: Event) => {
+const handleFileChange = async (type: 'avatar' | 'background', event: Event) => {
   const input = event.target as HTMLInputElement;
   if (!input.files || input.files.length === 0) {
     return;
@@ -167,30 +145,25 @@ const handleAvatarFileChange = async (event: Event) => {
 
   const file = input.files[0];
 
-  await useUpdateAvatarApi(file);
-
-  await userStore.getUserInfoAction()
-
-  user.avatar = userStore.user.avatar;
-
-};
-
-// 处理背景图文件选择事件
-const handleBackgroundFileChange = async (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  if (!input.files || input.files.length === 0) {
-    return;
+  if (type === 'avatar') {
+    await useUpdateAvatarApi(file);
+  } else {
+    await useUpdateBackgroundApi(file);
   }
 
-  const file = input.files[0];
+  await userStore.getUserInfoAction();
 
-  await useUpdateBackgroundApi(file);
-
-  await userStore.getUserInfoAction()
-
-  user.background = userStore.user.background;
-
+  if (type === 'avatar') {
+    user.avatar = userStore.user.avatar;
+  } else {
+    user.background = userStore.user.background;
+  }
 };
+
+// 调用
+const handleAvatarFileChange = (event: Event) => handleFileChange('avatar', event);
+const handleBackgroundFileChange = (event: Event) => handleFileChange('background', event);
+
 onMounted(() => {
   setGenderLabel();
 })
