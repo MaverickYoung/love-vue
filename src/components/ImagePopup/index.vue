@@ -49,6 +49,7 @@ const closePopup = () => {
     .empty-image-placeholder {
       font-size: 30px;
       margin: 50px;
+      color: white;
     }
   }
 }
