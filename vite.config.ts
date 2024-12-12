@@ -29,5 +29,15 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 3000, // 端口号
         open: false // 是否自动打开浏览器
+    },
+    build: {
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                //生产环境时移除console、debugger
+                drop_console: true,
+                drop_debugger: true,
+            }
+        }
     }
 });
