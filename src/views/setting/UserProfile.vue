@@ -1,18 +1,6 @@
 <template>
 
   <avatar-wrapper :src="user.avatar" size="80px" @click="showAvatarPopup=true"/>
-  <image-popup :src="user.avatar" :show="showAvatarPopup" @update:show="showAvatarPopup=false">
-    <image-popup-button label="更换头像" @click="triggerFileSelect"/>
-    <!-- 隐藏的文件输入框 -->
-    <input
-        type="file"
-        ref="fileInput"
-        accept="image/*"
-        style="display: none;"
-        @change="handleFileChange"
-    />
-    <image-popup-button label="保存图片"/>
-  </image-popup>
 
   <div class="info-item" @click="router.push('/setting/edit-username')">
     <div class="label">用户名</div>
@@ -38,9 +26,9 @@
       <div class="color-box"/>
     </div>
   </div>
-  <div class="info-item">
+  <div class="info-item" @click="showBackgroundPopup=true">
     <div class="label">背景</div>
-    <div class="value">{{ user.background }}</div>
+    <div class="value"></div>
   </div>
 
   <van-popup :show="showGenderPopup" round teleport="body">
@@ -62,6 +50,31 @@
     </div>
   </van-popup>
 
+  <image-popup :src="user.avatar" :show="showAvatarPopup" @update:show="showAvatarPopup=false">
+    <image-popup-button label="更换头像" @click="triggerAvatarFileSelect"/>
+    <!-- 隐藏的文件输入框 -->
+    <input
+        type="file"
+        ref="avatarInput"
+        accept="image/*"
+        style="display: none;"
+        @change="handleAvatarFileChange"
+    />
+    <image-popup-button label="保存头像" @click="saveBase64AsImage(user.avatar,'头像')"/>
+  </image-popup>
+
+  <image-popup :src="user.background" :show="showBackgroundPopup" @update:show="showBackgroundPopup=false">
+    <image-popup-button label="更换背景图" @click="triggerBackgroundFileSelect"/>
+    <!-- 隐藏的文件输入框 -->
+    <input
+        type="file"
+        ref="backgroundInput"
+        accept="image/*"
+        style="display: none;"
+        @change="handleBackgroundFileChange"
+    />
+    <image-popup-button label="保存背景图" @click="saveBase64AsImage(user.background,'背景图')"/>
+  </image-popup>
 
 </template>
 
@@ -71,17 +84,16 @@ import {useUserStore} from "@/store/user";
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import ImageWrapper from "@/components/ImageWrapper.vue";
-import {useUpdateAvatarApi, useUserInfoSubmitApi} from "@/api/sys/user";
+import {useUpdateAvatarApi, useUpdateBackgroundApi, useUserInfoSubmitApi} from "@/api/sys/user";
 import ImagePopup from "@/components/ImagePopup/index.vue";
 import ImagePopupButton from "@/components/ImagePopup/ImagePopupButton.vue";
+import {saveBase64AsImage} from "@/utlis/file";
 
 const userStore = useUserStore()
 
 const user = userStore.user
 
 const router = useRouter()
-
-const background = ref<string>();
 
 type GenderOption = {
   value: number;
@@ -131,16 +143,23 @@ const setGender = async (value: number) => {
 
 const showGenderPopup = ref(false);
 const showAvatarPopup = ref(false);
+const showBackgroundPopup = ref(false);
 
-const fileInput = ref<HTMLInputElement | null>(null);
+const avatarInput = ref<HTMLInputElement | null>(null);
+const backgroundInput = ref<HTMLInputElement | null>(null);
 
-// 触发文件选择框
-const triggerFileSelect = () => {
-  fileInput.value?.click();
+// 触发头像文件选择框
+const triggerAvatarFileSelect = () => {
+  avatarInput.value?.click();
 };
 
-// 处理文件选择事件
-const handleFileChange = async (event: Event) => {
+// 触发背景图文件选择框
+const triggerBackgroundFileSelect = () => {
+  backgroundInput.value?.click();
+};
+
+// 处理头像文件选择事件
+const handleAvatarFileChange = async (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (!input.files || input.files.length === 0) {
     return;
@@ -153,6 +172,23 @@ const handleFileChange = async (event: Event) => {
   await userStore.getUserInfoAction()
 
   user.avatar = userStore.user.avatar;
+
+};
+
+// 处理背景图文件选择事件
+const handleBackgroundFileChange = async (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+
+  const file = input.files[0];
+
+  await useUpdateBackgroundApi(file);
+
+  await userStore.getUserInfoAction()
+
+  user.background = userStore.user.background;
 
 };
 onMounted(() => {

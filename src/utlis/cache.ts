@@ -5,6 +5,7 @@ const key = {
     refreshTokenKey: 'loveRefreshToken',
     loginUsername: 'loveLoginUsername',
     theme: 'loveTheme',
+    background: 'loveBackground',
 }
 
 // 缓存
@@ -38,7 +39,6 @@ class Cache {
         }
         return themeConfig;
     };
-
 
     setTheme = (value: ThemeConfig) => {
         Storage.setItem(key.theme, value)
