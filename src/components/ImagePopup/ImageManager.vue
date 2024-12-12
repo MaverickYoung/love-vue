@@ -18,7 +18,7 @@ import ImagePopup from "@/components/ImagePopup/index.vue";
 import ImagePopupButton from "@/components/ImagePopup/ImagePopupButton.vue";
 
 const props = defineProps<{
-  src: string,
+  src?: string,
   show: boolean,
   updateShow: (val: boolean) => void,
   changeLabel: string,
