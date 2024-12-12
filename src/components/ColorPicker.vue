@@ -108,7 +108,7 @@ const blue = ref(0);
 const alpha = ref(1);
 
 onMounted(() => {
-  const parsedColor = parseColor(props.color);
+  const parsedColor = parseColor(props.color??'#FFFFFF');
   if (parsedColor) {
     const {r, g, b, a} = parsedColor;
     red.value = r;
