@@ -47,7 +47,7 @@ const handleConfirm = async () => {
 
   // 处理校验错误
   if (validationErrors.length == 0) {
-    await useUserInfoSubmitApi({'username': columns[0].value})
+    await useUserInfoSubmitApi({username: columns[0].value})
     await userStore.getUserInfoAction()
     router.back();
   }

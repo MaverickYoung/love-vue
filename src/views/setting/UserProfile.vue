@@ -1,6 +1,18 @@
 <template>
 
-  <avatar-wrapper :src="user.avatar" size="80px"/>
+  <avatar-wrapper :src="user.avatar" size="80px" @click="showAvatarPopup=true"/>
+  <image-popup :src="user.avatar" :show="showAvatarPopup" @update:show="showAvatarPopup=false">
+    <image-popup-button label="更换头像" @click="triggerFileSelect"/>
+    <!-- 隐藏的文件输入框 -->
+    <input
+        type="file"
+        ref="fileInput"
+        accept="image/*"
+        style="display: none;"
+        @change="handleFileChange"
+    />
+    <image-popup-button label="保存图片"/>
+  </image-popup>
 
   <div class="info-item" @click="router.push('/setting/edit-username')">
     <div class="label">用户名</div>
@@ -14,9 +26,9 @@
     <div class="label">密码</div>
     <div class="value"></div>
   </div>
-  <div class="info-item" @click="switchGender">
+  <div class="info-item" @click="showGenderPopup=true">
     <div class="label">性别</div>
-    <div class="value">{{ user.gender }}</div>
+    <div class="value">{{ genderLabel }}</div>
   </div>
 
   <br/>
@@ -30,13 +42,38 @@
     <div class="label">背景</div>
     <div class="value">{{ user.background }}</div>
   </div>
+
+  <van-popup :show="showGenderPopup" round teleport="body">
+    <div class="gender-form">
+      <h2>性别选择</h2>
+      <div class="gender-options">
+        <div
+            v-for="option in genderOptions"
+            :key="option.value"
+            class="gender-item"
+            :class="{ active: option.value === user.gender }"
+            :style="{ '--default-color': option.color }"
+            @click="setGender(option.value)"
+        >
+          <image-wrapper :src="option.image" class="icon-gender"/>
+          <p>{{ option.label }}</p>
+        </div>
+      </div>
+    </div>
+  </van-popup>
+
+
 </template>
 
 <script setup lang="ts">
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
+import ImageWrapper from "@/components/ImageWrapper.vue";
+import {useUpdateAvatarApi, useUserInfoSubmitApi} from "@/api/sys/user";
+import ImagePopup from "@/components/ImagePopup/index.vue";
+import ImagePopupButton from "@/components/ImagePopup/ImagePopupButton.vue";
 
 const userStore = useUserStore()
 
@@ -44,12 +81,83 @@ const user = userStore.user
 
 const router = useRouter()
 
-const gender = ref<number>();
 const background = ref<string>();
-const switchGender = () => {
 
+type GenderOption = {
+  value: number;
+  label: string;
+  color: string;
+  image: string;
+};
+
+const genderOptions: GenderOption[] = [
+  {
+    value: 1,
+    label: "大帅哥",
+    color: "#1296db",
+    image: "/src/assets/male.svg",
+  },
+  {
+    value: 0,
+    label: "神秘人",
+    color: "var(--van-text-color-2)",
+    image: "/src/assets/unknown.svg",
+  },
+  {
+    value: 2,
+    label: "小仙女",
+    color: "#fb73e5",
+    image: "/src/assets/female.svg",
+  },
+];
+
+const genderLabel = ref<string>('');
+
+const setGenderLabel = () => {
+  const genderOption = genderOptions.find(option => option.value === user.gender);
+  genderLabel.value = genderOption ? genderOption.label : "神秘人";
+};
+
+const setGender = async (value: number) => {
+  await useUserInfoSubmitApi({
+    gender: value,
+  })
+
+  await userStore.getUserInfoAction()
+  user.gender = userStore.user.gender
+  setGenderLabel()
+  showGenderPopup.value = false;
 }
 
+const showGenderPopup = ref(false);
+const showAvatarPopup = ref(false);
+
+const fileInput = ref<HTMLInputElement | null>(null);
+
+// 触发文件选择框
+const triggerFileSelect = () => {
+  fileInput.value?.click();
+};
+
+// 处理文件选择事件
+const handleFileChange = async (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+
+  const file = input.files[0];
+
+  await useUpdateAvatarApi(file);
+
+  await userStore.getUserInfoAction()
+
+  user.avatar = userStore.user.avatar;
+
+};
+onMounted(() => {
+  setGenderLabel();
+})
 </script>
 
 
@@ -102,6 +210,60 @@ avatar-wrapper {
       border-radius: 2px;
       border: 2px solid var(--van-text-color-3);
       background-color: var(--van-background);
+    }
+  }
+}
+
+.gender-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+
+  h2 {
+    margin-bottom: 12px;
+  }
+
+  .gender-options {
+    display: flex;
+    border-radius: 10px;
+
+    .gender-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      width: 75px; /* 圆的宽度 */
+      height: 75px; /* 圆的高度 */
+      border-radius: 50%; /* 圆形 */
+      overflow: hidden; /* 确保内容不超出圆形 */
+      padding: 10px;
+      margin: 5px;
+
+      font-size: 13px;
+      font-weight: bold;
+
+      --default-color: var(--van-text-color);
+      color: var(--default-color);
+
+      .icon-gender {
+        width: 35px;
+        height: 35px;
+        margin: 10px 20px;
+        transform: translateX(-1000px);
+        color: inherit;
+        filter: drop-shadow(1000px 0 0 currentColor);
+      }
+
+      p {
+        color: inherit;
+      }
+    }
+
+    .active {
+      color: white;
+      background-color: var(--default-color);
     }
   }
 }

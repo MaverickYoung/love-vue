@@ -12,7 +12,7 @@ import {reactive} from "vue";
 import EditFieldForm, {Column} from "@/components/EditFieldForm.vue";
 import {useRouter} from "vue-router";
 import {useUserStore} from "@/store/user";
-import {useUserInfoSubmitApi} from "@/api/sys/user";
+import {useUpdatePasswordApi, useUserInfoSubmitApi} from "@/api/sys/user";
 
 // 定义每一列的内容
 const columns = reactive([
@@ -68,9 +68,9 @@ const handleConfirm = async () => {
 
   // 处理校验错误
   if (validationErrors.length == 0) {
-    await useUserInfoSubmitApi({
-      'password': columns[0].value,
-      'newPassword': columns[1].value
+    await useUpdatePasswordApi({
+      password: columns[0].value,
+      newPassword: columns[1].value
     })
     await userStore.getUserInfoAction()
     router.back();

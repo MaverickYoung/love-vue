@@ -48,11 +48,11 @@ const handleConfirm = async () => {
 
   // 处理校验错误
   if (validationErrors.length == 0) {
-    await useUserInfoSubmitApi({'nickname': columns[0].value})
+    await useUserInfoSubmitApi({nickname: columns[0].value})
     await userStore.getUserInfoAction()
     router.back();
   }
 };
 
-const userStore=useUserStore();
+const userStore = useUserStore();
 </script>

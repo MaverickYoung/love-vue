@@ -28,7 +28,7 @@ const imgStyle = computed(() => {
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
-  height: 100%; /* 可根据需要调整容器高度 */
+  height: auto;
 }
 
 img {

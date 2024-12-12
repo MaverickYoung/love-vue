@@ -8,23 +8,23 @@ export const useUserInfoSubmitApi = (dataForm: any) => {
     return service.put('/sys/user/info', dataForm)
 }
 
-export const updatePasswordApi = (data: any) => {
+export const useUpdatePasswordApi = (data: any) => {
     return service.put('/sys/user/password', data)
-}
-
-export const useUserApi = (id: number) => {
-    return service.get(`/sys/user/${id}`)
-}
-
-export const useUserSubmitApi = (dataForm: any) => {
-    if (dataForm.id) {
-        return service.put('/sys/user', dataForm)
-    } else {
-        return service.post('/sys/user', dataForm)
-    }
 }
 
 export const useUserProfileApi = (idList: number[]) => {
     return service.get(`/sys/user/profile?idList=${idList}`)
+}
+
+export const useUpdateAvatarApi=(image: File) => {
+    const formData = new FormData();
+    formData.append('file', image);
+
+    // 发送 POST 请求，上传文件和月份
+    return service.put('/sys/user/avatar', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    });
 }
 
