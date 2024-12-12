@@ -64,6 +64,16 @@ export const useUserStore = defineStore('userStore', {
         // 获取用户信息
         async getUserInfoAction() {
             const {data} = await useUserInfoApi()
+            // 设置背景图
+            if (data?.background) {
+                const base64 = data.background;
+                if (base64 && base64 !== this.user.background) {
+                    document.body.style.backgroundImage = `url('${base64}')`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundRepeat = 'no-repeat';
+                    document.body.style.backgroundPosition = 'center';
+                }
+            }
             this.setUser(data)
         },
         // 用户退出

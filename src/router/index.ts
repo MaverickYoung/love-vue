@@ -2,7 +2,6 @@ import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import {useUserStore} from "@/store/user";
-import {useRefreshTokenApi} from "@/utlis/request";
 
 const routes: RouteRecordRaw[] = [
     {

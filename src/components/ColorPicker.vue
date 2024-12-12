@@ -61,7 +61,7 @@ import CustomButton from "@/components/CustomButton.vue";
 
 const props = defineProps({
   color: {
-    type: String as PropType<Rgba | string>,
+    type: [Object, String] as PropType<Rgba | string | null>,
     default() {
       return {
         r: 217,
@@ -83,7 +83,7 @@ const props = defineProps({
   },
   mode: {
     type: String as PropType<'hex6' | 'hex8' | 'rgb' | 'rgba'>,
-    default: 'hex6'
+    default: 'hex8'
   }
 })
 

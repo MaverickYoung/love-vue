@@ -8,7 +8,7 @@
         style="display: none;"
         @change="handleFileChange"
     />
-    <image-popup-button :label="saveLabel" @click="saveImage"/>
+    <image-popup-button v-if="src" :label="saveLabel" @click="saveImage"/>
   </image-popup>
 </template>
 
