@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
 
-const isChecked = ref(false);
+const isChecked = defineModel({type: Boolean});
+
 </script>
 
 <style scoped>
