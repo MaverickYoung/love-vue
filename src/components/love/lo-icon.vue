@@ -25,11 +25,23 @@ const props = defineProps({
 })
 
 const iconName = computed(() => `#icon-${props.icon}`)
-const svgStyle = computed(() => ({
-  color: props.color,
-  width: props.size,
-  height: props.size,
-}));
+const svgStyle = computed(() => {
+  const baseStyle = {
+    width: props.size,
+    height: props.size,
+  };
+
+  if (props.color) {
+    return {
+      ...baseStyle,
+      transform: 'translateX(-1000px)',
+      filter: `drop-shadow(1000px 0 0 ${props.color})`,
+    };
+  }
+
+  return baseStyle;
+});
+
 </script>
 
 <style scoped>
@@ -40,7 +52,6 @@ const svgStyle = computed(() => ({
     width: 1rem;
     height: 1rem;
     vertical-align: -0.15rem;
-    fill: currentColor;
     overflow: hidden;
     flex-shrink: 0;
   }
