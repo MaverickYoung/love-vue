@@ -13,7 +13,7 @@
            @focus="isFocused=true"
            @blur="isFocused=false"
            ref="input">
-    <div v-if="isPassword" class="eye-wrapper" ref="eye" @click="toggleShowPassword">
+    <div v-if="isPassword" class="eye-wrapper" ref="eye" @mousedown.prevent="toggleShowPassword">
       <lo-icon icon="eye"
                size="2rem"
                color="currentColor"
@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import LoIcon from "@/components/love/lo-icon.vue";
-import {computed, onBeforeUnmount, onMounted, PropType, ref, useAttrs} from "vue";
+import {computed, PropType, ref, useAttrs} from "vue";
 
 const props = defineProps({
   icon: String,
@@ -56,54 +56,19 @@ const isCheck = computed(() => attrs.check === '' || attrs.check === true);
 const inputType = computed(() => isPassword.value ? (showPassword.value ? 'text' : 'password') : 'text');
 
 const toggleShowPassword = () => {
+  // 聚焦到 body 元素，间接使其他输入框失去焦点
+  document.body.focus();
+
   showPassword.value = !showPassword.value
-  if (!isFocused.value) {
-    isFocused.value = true
-    input.value?.focus();
-  }
+  input.value?.focus();  // 重新聚焦到 input 元素
+  const length = input.value?.value.length ?? 0;
+  input.value?.setSelectionRange(length, length); // 设置光标位置到末尾
 }
-let isClickingEye = false;
+
 const input = ref<HTMLInputElement | null>()
 const eye = ref<HTMLDivElement | null>()
 
-const onMouseDown = (event: MouseEvent) => detectEyeClick(event.target as Node);
 
-const onTouchStart = (event: TouchEvent) => detectEyeClick(event.target as Node);
-
-const detectEyeClick = (target: Node | null) => {
-  isClickingEye = !!(eye.value && eye.value.contains(target));
-};
-
-const onBlur = (event: FocusEvent) => {
-  // 如果是点击了 eye，则阻止失去焦点
-  if (isClickingEye) {
-    event.preventDefault();  // 阻止焦点丧失
-    input.value?.focus();  // 重新聚焦到 input 元素
-  }
-};
-
-onMounted(() => {
-  // 监听鼠标点击事件
-  window.addEventListener('mousedown', onMouseDown);
-
-  // 监听触摸事件
-  window.addEventListener('touchstart', onTouchStart);
-
-  if (input.value) {
-    // 监听输入框的失去焦点事件
-    input.value.addEventListener('blur', onBlur);
-  }
-});
-
-onBeforeUnmount(() => {
-  // 清理事件监听
-  window.removeEventListener('mousedown', onMouseDown);
-  window.removeEventListener('touchstart', onTouchStart);
-
-  if (input.value) {
-    input.value.removeEventListener('blur', onBlur);
-  }
-});
 </script>
 
 <style scoped>
