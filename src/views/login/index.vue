@@ -1,36 +1,14 @@
 <template>
-  <div class="login-container">
-    <div class="form">
-      <image-wrapper src="/src/assets/love.svg" alt="logo" class="logo"/>
-      <span class="form-span"></span>
-      <input v-model="loginForm.username" placeholder="用户名" type="text" class="form-input"/>
-      <div class="input-container">
-        <input v-model="loginForm.password" placeholder="密码" :type="isPasswordVisible ? 'text' : 'password'"
-               class="form-input"/>
-        <div
-            class="eye-icon"
-            @click="togglePasswordVisibility"
-        >
-          <image-wrapper src="/src/assets/eye-show.svg" v-if="isPasswordVisible" class="eye"/>
-          <div v-else>
-            <div class="slash-background"></div>
-            <div class="slash"></div>
-            <image-wrapper src="/src/assets/eye-show.svg" class="eye"/>
-          </div>
-        </div>
+  <div>
+    <div class="lo-card login-form">
+      <lo-icon icon="love" size="12rem" color="red"/>
+      <lo-input v-model="loginForm.username" icon="user" placeholder="用户名"/>
+      <lo-input v-model="loginForm.password" icon="password" placeholder="密码" password/>
+      <div class="captcha-wrapper">
+        <lo-input v-model="loginForm.captcha" icon="captcha" placeholder="验证码" v-if="true"/>
+        <img :src="captchaBase64" alt="验证码" class="captcha" @click="onCaptcha"/>
       </div>
-
-      <van-row v-if="captchaVisible">
-        <van-col span="9">
-          <input v-model="loginForm.captcha" type="text" class="form-input captcha-input"
-                 placeholder="验证码"/>
-        </van-col>
-        <van-col span="2" style="width: 10px">
-        </van-col>
-        <van-col span="13">
-          <img :src="captchaBase64" alt="" class="captcha" @click="onCaptcha"/></van-col>
-      </van-row>
-      <custom-button @click="onLogin()" class="submit">登 录</custom-button>
+      <!--      <custom-button @click="onLogin()" class="submit">登 录</custom-button>-->
     </div>
   </div>
 </template>
@@ -42,7 +20,8 @@ import {router} from "@/router";
 import {useUserStore} from "@/store/user";
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import cache from "@/utlis/cache";
-import CustomButton from "@/components/CustomButton.vue";
+import LoIcon from "@/components/love/lo-icon.vue";
+import LoInput from "@/components/love/lo-input.vue";
 
 const userStore = useUserStore()
 
@@ -114,9 +93,38 @@ const onLogin = async () => {
 
 <style scoped>
 
+.login-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  & > * {
+    margin: 1rem 0;
+  }
+
+  .captcha-wrapper {
+    display: flex;
+
+    ::v-deep(input) {
+      width: 9rem !important;
+    }
+
+    .captcha {
+      border: none;
+      border-radius: 1rem;
+      margin-left: 1rem;
+      box-shadow: var(--shadow);
+      width: 8rem;
+    }
+  }
+
+}
+
+/*
+
 * {
-  box-sizing: border-box;
-  /* 字体无法选中 */
+  !* 字体无法选中 *!
   user-select: none;
 }
 
@@ -124,72 +132,8 @@ body {
   font-size: 12px;
 }
 
-.logo {
-  width: 80px;
-  height: 80px;
-}
-
-.form {
-  display: flex;
-
-  align-items: center;
-  flex-direction: column;
-
-  width: 300px;
-  padding: 30px 25px;
-  background-color: var(--van-background);
-  box-shadow: 10px 10px 10px var(--box-shadow-soft),
-    -10px -10px 10px var(--box-shadow-deep);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.form-input {
-  width: 200px;
-  height: 45px;
+.lo-card > * {
   margin: 10px 0;
-  padding-left: 16px;
-  padding-right: 30px;
-  font-size: 16px;
-  letter-spacing: 1px;
-  border: none;
-  background-color: var(--van-background);
-  transition: 0.25s ease;
-  border-radius: 8px;
-  box-shadow: inset 6px 6px 12px var(--box-shadow-bottom),
-    inset -6px -6px 12px var(--box-shadow-top);
-  color: var(--van-text-color);
-
-  &:focus {
-    box-shadow: inset 4px 4px 4px var(--box-shadow-soft),
-      inset -4px -4px 4px var(--box-shadow-deep);
-  }
-
-  &::placeholder {
-    color: var(--van-text-color-3);
-  }
-}
-
-.captcha-input {
-  width: 80px;
-  padding-left: 12px;
-  padding-right: 12px;
-}
-
-.submit {
-  width: 200px !important;
-  height: 45px !important;
-  margin-top: 20px;
-}
-
-.captcha {
-  width: 110px;
-  height: 45px;
-  margin: 10px 0;
-}
-
-.input-container {
-  position: relative;
 }
 
 .eye-icon {
@@ -228,14 +172,9 @@ body {
 
 @keyframes draw-slash {
   to {
-    width: 100%; /* 线条从中心向两边扩展 */
+    width: 100%; !* 线条从中心向两边扩展 *!
   }
 }
+*/
 
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
 </style>
