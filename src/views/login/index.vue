@@ -8,7 +8,7 @@
         <lo-input v-model="loginForm.captcha" icon="captcha" placeholder="验证码" v-if="true"/>
         <img :src="captchaBase64" alt="验证码" class="captcha" @click="onCaptcha"/>
       </div>
-      <!--      <custom-button @click="onLogin()" class="submit">登 录</custom-button>-->
+      <div class="lo-btn-primary submit" @click="onLogin()">登 录</div>
     </div>
   </div>
 </template>
@@ -36,13 +36,6 @@ const captchaBase64 = ref('')
 
 // 是否显示验证码
 const captchaVisible = ref(false)
-
-
-const isPasswordVisible = ref(false);
-
-const togglePasswordVisibility = () => {
-  isPasswordVisible.value = !isPasswordVisible.value;
-};
 
 onMounted(() => {
   onCaptchaEnabled()
@@ -118,62 +111,9 @@ const onLogin = async () => {
     }
   }
 
-}
-
-/*
-
-* {
-  !* 字体无法选中 *!
-  user-select: none;
-}
-
-body {
-  font-size: 12px;
-}
-
-.lo-card > * {
-  margin: 10px 0;
-}
-
-.eye-icon {
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.eye {
-  width: 20px;
-}
-
-.slash-background {
-  position: absolute;
-  width: 0;
-  height: 3px;
-  background-color: var(--van-background);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-  animation: draw-slash 0.3s forwards;
-}
-
-.slash {
-  position: absolute;
-  width: 0;
-  height: 1px;
-  background: #444444;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-  animation: draw-slash 0.3s forwards;
-}
-
-@keyframes draw-slash {
-  to {
-    width: 100%; !* 线条从中心向两边扩展 *!
+  .submit {
+    width: 18rem;
+    margin: 2rem 0 0 0;
   }
 }
-*/
-
 </style>
