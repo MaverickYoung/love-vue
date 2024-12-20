@@ -45,3 +45,52 @@ body {
     padding: 4rem;
     align-items: center;
 }
+
+.lo-btn-primary, .lo-btn-secondary {
+    width: 15rem;
+    height: 4rem;
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .3s ease;
+
+    font-size: 1.6rem;
+
+    /* 字体无法选中 */
+    user-select: none;
+    letter-spacing: 1rem;
+}
+
+.lo-btn-primary {
+    background: var(--primary);
+    box-shadow: inset .2rem .2rem 1rem var(--primary-light),
+    inset -.2rem -.2rem 1rem var(--primary-dark),
+    var(--shadow);
+    color: var(--greyLight-1);
+
+    &:hover {
+        color: var(--white);
+    }
+
+    &:active {
+        box-shadow: inset .2rem .2rem 1rem var(--primary-dark),
+        inset -.2rem -.2rem 1rem var(--primary-light);
+    }
+}
+
+.lo-btn-secondary {
+
+    color: var(--greyDark);
+
+    &:hover {
+        color: var(--primary);
+    }
+
+    &:active {
+        box-shadow: var(--inner-shadow);
+    }
+}
