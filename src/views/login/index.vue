@@ -18,7 +18,6 @@ import {onMounted, reactive, ref} from "vue";
 import {useCaptchaApi, useCaptchaEnabledApi} from "@/api/sys/auth";
 import {router} from "@/router";
 import {useUserStore} from "@/store/user";
-import ImageWrapper from "@/components/ImageWrapper.vue";
 import cache from "@/utlis/cache";
 import LoIcon from "@/components/love/lo-icon.vue";
 import LoInput from "@/components/love/lo-input.vue";
