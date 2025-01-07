@@ -12,6 +12,7 @@
            :style="isPassword?{paddingRight:'3.5rem'}:{paddingRight:'1rem'}"
            @focus="isFocused=true"
            @blur="isFocused=false"
+           v-model="value"
            ref="input">
     <div v-if="isPassword" class="eye-wrapper" ref="eye" @mousedown.prevent="toggleShowPassword">
       <lo-icon icon="eye"

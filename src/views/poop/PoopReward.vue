@@ -12,7 +12,7 @@
               <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
             </div>
             <!-- 头像 -->
-            <avatar-wrapper
+            <lo-avatar
                 class="avatar"
                 :src="getAvatar(reward.userId)"
                 size="30px"
@@ -52,7 +52,7 @@
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import {computed, onMounted, ref} from "vue";
 import {useRewardApi, useUpdateRewardApi} from "@/api/poop/summary";
-import AvatarWrapper from "@/components/AvatarWrapper.vue";
+import LoAvatar from "@/components/love/lo-avatar.vue";
 import {useUserStore} from "@/store/user";
 import {DatePickerColumnType, DatePickerInstance, showSuccessToast, showToast, UploaderFileListItem} from "vant";
 

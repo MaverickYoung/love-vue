@@ -4,7 +4,7 @@
       <lo-icon icon="love" size="12rem" color="red"/>
       <lo-input v-model="loginForm.username" icon="user" placeholder="用户名"/>
       <lo-input v-model="loginForm.password" icon="password" placeholder="密码" password/>
-      <div class="captcha-wrapper">
+      <div class="captcha-wrapper" v-if="captchaVisible">
         <lo-input v-model="loginForm.captcha" icon="captcha" placeholder="验证码" v-if="true"/>
         <img :src="captchaBase64" alt="验证码" class="captcha" @click="onCaptcha"/>
       </div>

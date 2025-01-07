@@ -27,3 +27,12 @@ export const useLogListApi = (start?: string, end?: string) => {
 
     return service.get(url);
 };
+
+export const useConnect = () => {
+    return service.get(`/poop/sse/connect`, {
+        headers: {
+            'Content-Type': 'text/event-stream',
+        },
+        timeout: 120000 // 120秒
+    })
+}

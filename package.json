@@ -24,7 +24,7 @@
     "@types/qs": "^6.9.17",
     "@vant/auto-import-resolver": "^1.2.1",
     "@vitejs/plugin-vue": "^5.1.4",
-    "less": "^4.2.0",
+    "less": "^4.2.1",
     "less-loader": "^12.2.0",
     "terser": "^5.37.0",
     "typescript": "~5.6.3",

@@ -16,7 +16,7 @@
         <div class="message-body">
           <!-- 接收消息：头像在左，消息内容在右 -->
           <div v-if="message.userId !== currentUserId" class="message-left">
-            <avatar-wrapper class="avatar" size="30px" :src="getAvatar(message.userId)"/>
+            <lo-avatar class="avatar" size="30px" :src="getAvatar(message.userId)"/>
             <div class="message-content-wrapper">
               <image-wrapper class="message-content" width="45px"
                              :src="getPoopSrc(message.type)"/>
@@ -29,7 +29,7 @@
               <image-wrapper class="message-content" width="45px"
                              :src="getPoopSrc(message.type)"/>
             </div>
-            <avatar-wrapper class="avatar" size="30px" :src="getAvatar(message.userId)"/>
+            <lo-avatar class="avatar" size="30px" :src="getAvatar(message.userId)"/>
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@
 
 <script lang="ts" setup>
 import {onMounted, reactive, ref} from 'vue';
-import AvatarWrapper from "@/components/AvatarWrapper.vue";
+import LoAvatar from "@/components/love/lo-avatar.vue";
 import {useLogPageApi, useLogSaveApi} from "@/api/poop/log";
 import {useUserStore} from "@/store/user";
 import {Poop, usePoopStore} from "@/store/poop";

@@ -1,6 +1,6 @@
 <template>
 
-  <avatar-wrapper :src="user.avatar" size="80px" @click="showAvatarPopup=true"/>
+  <lo-avatar :src="user.avatar" size="80px" @click="showAvatarPopup=true"/>
 
   <div class="info-item" @click="router.push('/setting/edit-username')">
     <div class="label">用户名</div>
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import AvatarWrapper from "@/components/AvatarWrapper.vue";
+import LoAvatar from "@/components/love/lo-avatar.vue";
 import {useUserStore} from "@/store/user";
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
@@ -172,7 +172,7 @@ onMounted(() => {
 
 <style scoped>
 /* 头像样式 */
-avatar-wrapper {
+lo-avatar {
   margin-bottom: 20px;
 }
 

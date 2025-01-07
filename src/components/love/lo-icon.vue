@@ -1,5 +1,5 @@
 <template>
-  <div v-if="icon" class="love-icon">
+  <div v-if="icon" class="lo-icon">
     <svg :style="svgStyle" aria-hidden="true">
       <use :xlink:href="iconName"/>
     </svg>
@@ -45,8 +45,10 @@ const svgStyle = computed(() => {
 </script>
 
 <style scoped>
-.love-icon {
-  display: inline-block;
+.lo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   svg {
     width: 1rem;
