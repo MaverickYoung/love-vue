@@ -51,7 +51,6 @@
     <div class="footer">
       <p>距离你上次便便：<b>{{ timeDifference }}</b></p>
       <p>上次便便时长：<b>{{ leftUser.lastPoopDuration }}</b></p>
-      <p>上次便便时长：<b>{{ message }}</b></p>
     </div>
   </div>
 </template>
@@ -150,43 +149,47 @@ const isPooping = ref(false);
 
 const message = ref();
 
+
+// 获取环境变量配置
+const apiUrl = import.meta.env.VITE_API_URL as string;
+const token = useUserStore().accessToken;
+
+const startSseConnection = () => {
+  // 创建一个 EventSource 实例，建立与服务器的连接
+  const eventSource = new EventSource(`${apiUrl}/poop/sse/connect/${token}`);
+
+  // 监听服务器推送的消息
+  eventSource.onmessage = (event) => {
+    if (event.data === "ping") {
+      console.log('收到心跳消息');
+      return;
+    }
+
+    const receivedData = JSON.parse(event.data); // 解析服务器发送的数据
+    console.log('接收到推送的消息：', receivedData);
+    // 你可以在这里更新 UI 或做其他操作
+  };
+
+  // 处理连接打开事件
+  eventSource.onopen = () => {
+    console.log('SSE 连接已打开');
+  };
+
+  // 处理错误事件
+  eventSource.onerror = (error) => {
+    console.error('SSE 连接发生错误：', error);
+  };
+}
+
+
 onMounted(() => {
   updateClock(); // 初始化
   setInterval(() => {
     calculateTimeDifference();
     updateClock();
   }, 1000);
-  // const eventSource = new EventSource(`localhost:8080/poop/sse/connect`, {});
-  // useConnect()
 
-  const token = useUserStore().accessToken;
-  // 创建一个 EventSource 实例
-  const eventSource = new EventSource(`http://localhost:8080/poop/sse/connect/${token}`);
-
-  // 监听服务器推送的消息
-  eventSource.onmessage = function (event) {
-
-    if (event.data === "heartbeat") {
-      console.log('心跳消息')
-      return;
-    }
-
-    const data = JSON.parse(event.data); // 服务器发送的数据
-    console.log('接收到推送消息：', data);
-    // 你可以在这里更新 UI 或做其他操作
-  };
-
-  // 处理连接打开事件
-  eventSource.onopen = function () {
-    console.log('连接已打开');
-  };
-
-
-  // 处理错误事件
-  eventSource.onerror = function (error) {
-    console.error('连接错误：', error);
-  };
-
+  startSseConnection()
 });
 </script>
 
