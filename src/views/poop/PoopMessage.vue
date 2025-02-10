@@ -1,12 +1,10 @@
 <template>
   <div class="poop-messages-container">
-    <div class="messages-container" ref="messagesContainer">
+    <div ref="messagesContainer" class="messages-container">
       <div
-          v-for="message in messages"
-          :key="message.id"
-          class="message-container"
-      >
-
+        v-for="message in messages"
+        :key="message.id"
+        class="message-container">
         <!-- 时间占据一整行 -->
         <div class="message-time-wrapper">
           <span class="message-time">{{ formatTime(message.time) }}</span>
@@ -16,52 +14,78 @@
         <div class="message-body">
           <!-- 接收消息：头像在左，消息内容在右 -->
           <div v-if="message.userId !== currentUserId" class="message-left">
-            <lo-avatar class="avatar" size="30px" :src="getAvatar(message.userId)"/>
+            <lo-avatar
+              :src="getAvatar(message.userId)"
+              class="avatar"
+              size="30px" />
             <div class="message-content-wrapper">
-              <image-wrapper class="message-content" width="45px"
-                             :src="getPoopSrc(message.type)"/>
+              <image-wrapper
+                :src="getPoopSrc(message.type)"
+                class="message-content"
+                width="45px" />
             </div>
           </div>
 
           <!-- 发送消息：头像在右，消息内容在左 -->
           <div v-else class="message-right">
             <div class="message-content-wrapper">
-              <image-wrapper class="message-content" width="45px"
-                             :src="getPoopSrc(message.type)"/>
+              <image-wrapper
+                :src="getPoopSrc(message.type)"
+                class="message-content"
+                width="45px" />
             </div>
-            <lo-avatar class="avatar" size="30px" :src="getAvatar(message.userId)"/>
+            <lo-avatar
+              :src="getAvatar(message.userId)"
+              class="avatar"
+              size="30px" />
           </div>
         </div>
       </div>
     </div>
 
-    <van-popover v-model:show="isPopoverVisible" actions-direction="horizontal"
-                 placement="top">
+    <van-popover
+      v-model:show="isPopoverVisible"
+      actions-direction="horizontal"
+      placement="top">
       <van-row style="width: 250px">
-        <van-col span="8" class="popover-item" v-for="poop in poopOptions" :key="poop.id">
-          <image-wrapper :src="poop.src" width="80%" @click="onOptionClick(poop)"/>
+        <van-col
+          v-for="poop in poopOptions"
+          :key="poop.id"
+          class="popover-item"
+          span="8">
+          <image-wrapper
+            :src="poop.src"
+            width="80%"
+            @click="onOptionClick(poop)" />
         </van-col>
       </van-row>
 
       <template #reference>
-        <image-wrapper :src="selectedType?.src?selectedType?.src:''" width="50%"/>
+        <image-wrapper
+          :src="selectedType?.src ? selectedType?.src : ''"
+          width="50%" />
       </template>
     </van-popover>
-    <br/>
-    <custom-button :backgroundColor="selectedType?.color" square @click="onSubmit" class="submit">发 射</custom-button>
+    <br />
+    <custom-button
+      :backgroundColor="selectedType?.color"
+      class="submit"
+      square
+      @click="onSubmit"
+      >发 射</custom-button
+    >
   </div>
 </template>
 
-
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from 'vue';
-import LoAvatar from "@/components/love/lo-avatar.vue";
-import {useLogPageApi, useLogSaveApi} from "@/api/poop/log";
-import {useUserStore} from "@/store/user";
-import {Poop, usePoopStore} from "@/store/poop";
-import ImageWrapper from "@/components/ImageWrapper.vue";
-import {showSuccessToast} from "vant";
-import CustomButton from "@/components/CustomButton.vue";
+import { onMounted, reactive, ref } from 'vue';
+import LoAvatar from '@/components/love/lo-avatar.vue';
+import { useLogPageApi, useLogSaveApi } from '@/api/poop/log';
+import { useUserStore } from '@/store/user';
+import { Poop, usePoopStore } from '@/store/poop';
+import ImageWrapper from '@/components/ImageWrapper.vue';
+import { showSuccessToast } from 'vant';
+import CustomButton from '@/components/CustomButton.vue';
 
 interface LogItem {
   id: number; // ID
@@ -70,8 +94,8 @@ interface LogItem {
   type: number; // 便便类型
 }
 
-const userStore = useUserStore()
-const poopStore = usePoopStore()
+const userStore = useUserStore();
+const poopStore = usePoopStore();
 
 // 当前用户ID
 const currentUserId = userStore.user.id;
@@ -124,13 +148,13 @@ const formatTime = (time: string) => {
 const pagePrams = reactive({
   size: 100,
   current: 1,
-})
+});
 
 /**
  * 获取便便日志
  */
 const onLogPage = async () => {
-  const {data} = (await useLogPageApi(pagePrams.size, pagePrams.current));
+  const { data } = await useLogPageApi(pagePrams.size, pagePrams.current);
 
   // 更新userIdList
   data?.list?.forEach((item: LogItem) => {
@@ -144,26 +168,26 @@ const onLogPage = async () => {
     id: item.id,
     userId: item.userId,
     time: item.logTime,
-    type: item.poopType
+    type: item.poopType,
   }));
-}
+};
 
 const getAvatar = (userId: number) => {
   return userStore.getUserProfile(userId)?.avatar;
-}
+};
 
 const getPoopSrc = (id: number): string => {
-  return poopStore.getPoop(id)?.src ?? ''
-}
+  return poopStore.getPoop(id)?.src ?? '';
+};
 
-const poopOptions = ref<Poop[]>([])
+const poopOptions = ref<Poop[]>([]);
 
 // 滚动到底部
 const scrollToBottom = (immediate = false) => {
   const container = messagesContainer.value;
   const lastMessage = container?.querySelector('.message-container:last-child');
   if (lastMessage) {
-    lastMessage.scrollIntoView({behavior: immediate ? 'auto' : 'smooth'});
+    lastMessage.scrollIntoView({ behavior: immediate ? 'auto' : 'smooth' });
   }
 };
 
@@ -173,8 +197,7 @@ const onSubmit = async () => {
 
   await onLogPage();
   scrollToBottom();
-}
-
+};
 
 const setInitialOption = () => {
   onOptionClick(poopOptions.value[0]);
@@ -187,8 +210,8 @@ onMounted(async () => {
 
   await onLogPage();
 
-  scrollToBottom(true)
-})
+  scrollToBottom(true);
+});
 </script>
 
 <style scoped>
@@ -254,7 +277,6 @@ onMounted(async () => {
           width: 100%; /* 确保消息部分占满整行 */
         }
 
-
         /* 头像 */
 
         .avatar {
@@ -287,7 +309,7 @@ onMounted(async () => {
     width: 75px !important;
     font-size: 14px;
     word-spacing: 2px;
-    padding: 10px 0
+    padding: 10px 0;
   }
 }
 </style>

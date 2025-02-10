@@ -1,75 +1,88 @@
 <template>
-  <div class="lo-input" :class="{'focused':isFocused,'showPassword':isPassword}">
-    <lo-icon v-if="icon"
-             :icon="icon"
-             size="2rem"
-             color="currentColor"
-             class="lo-input-icon"
-             style="left: .7rem;"/>
+  <div
+    :class="{ focused: isFocused, showPassword: isPassword }"
+    class="lo-input">
+    <lo-icon
+      v-if="icon"
+      :icon="icon"
+      class="lo-input-icon"
+      color="currentColor"
+      size="2rem"
+      style="left: 0.7rem" />
 
-    <input :type="inputType"
-           :placeholder="placeholder"
-           :style="isPassword?{paddingRight:'3.5rem'}:{paddingRight:'1rem'}"
-           @focus="isFocused=true"
-           @blur="isFocused=false"
-           v-model="value"
-           ref="input">
-    <div v-if="isPassword" class="eye-wrapper" ref="eye" @mousedown.prevent="toggleShowPassword">
-      <lo-icon icon="eye"
-               size="2rem"
-               color="currentColor"
-               class="lo-input-icon"
-      />
+    <input
+      ref="input"
+      v-model="value"
+      :placeholder="placeholder"
+      :style="
+        isPassword ? { paddingRight: '3.5rem' } : { paddingRight: '1rem' }
+      "
+      :type="inputType"
+      @blur="isFocused = false"
+      @focus="isFocused = true" />
+    <div
+      v-if="isPassword"
+      ref="eye"
+      class="eye-wrapper"
+      @mousedown.prevent="toggleShowPassword">
+      <lo-icon
+        class="lo-input-icon"
+        color="currentColor"
+        icon="eye"
+        size="2rem" />
       <div v-if="showPassword" class="eye-slash-wrapper">
-        <div class="eye-slash-background"/>
-        <div class="eye-slash"/>
+        <div class="eye-slash-background" />
+        <div class="eye-slash" />
       </div>
     </div>
 
-    <lo-icon v-if="isCheck&&!isFocused"
-             :icon="onCheck?'right':'wrong'"
-             size="2rem"
-             class="lo-input-icon"
-             style="right: -2.5rem;"/>
+    <lo-icon
+      v-if="isCheck && !isFocused"
+      :icon="onCheck ? 'right' : 'wrong'"
+      class="lo-input-icon"
+      size="2rem"
+      style="right: -2.5rem" />
   </div>
 </template>
 
-<script setup lang="ts">
-import LoIcon from "@/components/love/lo-icon.vue";
-import {computed, PropType, ref, useAttrs} from "vue";
+<script lang="ts" setup>
+import LoIcon from '@/components/love/lo-icon.vue';
+import { computed, PropType, ref, useAttrs } from 'vue';
 
 const props = defineProps({
   icon: String,
   onCheck: Function as PropType<(...args: any[]) => boolean>,
-  placeholder: String
-})
+  placeholder: String,
+});
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 const value = defineModel({
-  type: String
-})
+  type: String,
+});
 
-const isFocused = ref(false)
-const showPassword = ref(false)
+const isFocused = ref(false);
+const showPassword = ref(false);
 
-const isPassword = computed(() => attrs.password === '' || attrs.password === true);
+const isPassword = computed(
+  () => attrs.password === '' || attrs.password === true,
+);
 const isCheck = computed(() => attrs.check === '' || attrs.check === true);
-const inputType = computed(() => isPassword.value ? (showPassword.value ? 'text' : 'password') : 'text');
+const inputType = computed(() =>
+  isPassword.value ? (showPassword.value ? 'text' : 'password') : 'text',
+);
 
 const toggleShowPassword = () => {
   // 聚焦到 body 元素，间接使其他输入框失去焦点
   document.body.focus();
 
-  showPassword.value = !showPassword.value
-  input.value?.focus();  // 重新聚焦到 input 元素
+  showPassword.value = !showPassword.value;
+  input.value?.focus(); // 重新聚焦到 input 元素
   const length = input.value?.value.length ?? 0;
   input.value?.setSelectionRange(length, length); // 设置光标位置到末尾
-}
+};
 
-const input = ref<HTMLInputElement | null>()
-const eye = ref<HTMLDivElement | null>()
-
-
+const input = ref<HTMLInputElement | null>();
+const eye = ref<HTMLDivElement | null>();
 </script>
 
 <style scoped>
@@ -80,7 +93,6 @@ const eye = ref<HTMLDivElement | null>()
   color: var(--greyDark);
   /* 字体无法选中 */
   user-select: none;
-
 
   input {
     width: 18rem;
@@ -97,12 +109,11 @@ const eye = ref<HTMLDivElement | null>()
     &::placeholder {
       color: var(--greyLight-3);
     }
-
   }
 
   .lo-input-icon {
     position: absolute;
-    transition: .3s ease;
+    transition: 0.3s ease;
   }
 
   .eye-wrapper {
@@ -111,7 +122,6 @@ const eye = ref<HTMLDivElement | null>()
     display: flex;
     align-items: center;
     justify-content: center;
-
 
     .eye-slash-wrapper {
       width: 2rem;
@@ -138,9 +148,7 @@ const eye = ref<HTMLDivElement | null>()
         height: 1px;
         background: currentColor;
       }
-
     }
-
   }
 }
 

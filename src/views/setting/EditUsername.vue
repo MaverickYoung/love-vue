@@ -1,26 +1,25 @@
 <template>
   <EditFieldForm
-      title="修改用户名"
-      :columns="columns"
-      :validate="validateFields"
-      :on-confirm="handleConfirm"
-  />
+    :columns="columns"
+    :on-confirm="handleConfirm"
+    :validate="validateFields"
+    title="修改用户名" />
 </template>
 
-<script setup lang="ts">
-import {reactive} from "vue";
-import EditFieldForm, {Column} from "@/components/EditFieldForm.vue";
-import {useUserInfoSubmitApi} from "@/api/sys/user";
-import {useRouter} from "vue-router";
-import {useUserStore} from "@/store/user";
+<script lang="ts" setup>
+import { reactive } from 'vue';
+import EditFieldForm, { Column } from '@/components/EditFieldForm.vue';
+import { useUserInfoSubmitApi } from '@/api/sys/user';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/user';
 
 // 定义每一列的内容
 const columns = reactive([
   {
     label: '用户名',
     placeholder: '请输入用户名 2-50位',
-    value: ''
-  }
+    value: '',
+  },
 ] as Column[]);
 
 // 校验函数
@@ -32,7 +31,7 @@ const validateFields = (value: string, index: number) => {
   return '';
 };
 
-const router = useRouter()
+const router = useRouter();
 
 // 确认按钮处理
 const handleConfirm = async () => {
@@ -47,11 +46,11 @@ const handleConfirm = async () => {
 
   // 处理校验错误
   if (validationErrors.length == 0) {
-    await useUserInfoSubmitApi({username: columns[0].value})
-    await userStore.getUserInfoAction()
+    await useUserInfoSubmitApi({ username: columns[0].value });
+    await userStore.getUserInfoAction();
     router.back();
   }
 };
 
-const userStore=useUserStore();
+const userStore = useUserStore();
 </script>

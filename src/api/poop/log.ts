@@ -1,15 +1,14 @@
-import service from '@/utlis/request'
-
+import service from '@/utlis/request';
 
 export const useLogPageApi = (size: number, current: number) => {
-    return service.get(`/poop/log/page/${size}/${current}`);
-}
+  return service.get(`/poop/log/page/${size}/${current}`);
+};
 
 export const useLogSaveApi = (type: number | undefined) => {
-    if (type) {
-        return service.post(`/poop/log?type=${type}`)
-    }
-}
+  if (type) {
+    return service.post(`/poop/log?type=${type}`);
+  }
+};
 
 /**
  * 获取便便统计
@@ -18,21 +17,21 @@ export const useLogSaveApi = (type: number | undefined) => {
  * @returns
  */
 export const useLogListApi = (start?: string, end?: string) => {
-    const params = new URLSearchParams();
+  const params = new URLSearchParams();
 
-    if (start) params.append('start', start);
-    if (end) params.append('end', end);
+  if (start) params.append('start', start);
+  if (end) params.append('end', end);
 
-    const url = `/poop/log/list?${params.toString()}`;
+  const url = `/poop/log/list?${params.toString()}`;
 
-    return service.get(url);
+  return service.get(url);
 };
 
 export const useConnect = () => {
-    return service.get(`/poop/sse/connect`, {
-        headers: {
-            'Content-Type': 'text/event-stream',
-        },
-        timeout: 120000 // 120秒
-    })
-}
+  return service.get(`/poop/sse/connect`, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+    },
+    timeout: 120000, // 120秒
+  });
+};

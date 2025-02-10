@@ -1,18 +1,17 @@
 <template>
   <EditFieldForm
-      title="修改密码"
-      :columns="columns"
-      :validate="validateFields"
-      :on-confirm="handleConfirm"
-  />
+    :columns="columns"
+    :on-confirm="handleConfirm"
+    :validate="validateFields"
+    title="修改密码" />
 </template>
 
-<script setup lang="ts">
-import {reactive} from "vue";
-import EditFieldForm, {Column} from "@/components/EditFieldForm.vue";
-import {useRouter} from "vue-router";
-import {useUserStore} from "@/store/user";
-import {useUpdatePasswordApi, useUserInfoSubmitApi} from "@/api/sys/user";
+<script lang="ts" setup>
+import { reactive } from 'vue';
+import EditFieldForm, { Column } from '@/components/EditFieldForm.vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/user';
+import { useUpdatePasswordApi } from '@/api/sys/user';
 
 // 定义每一列的内容
 const columns = reactive([
@@ -20,22 +19,22 @@ const columns = reactive([
     label: '原密码',
     value: '',
     placeholder: '请输入原密码',
-    error: ''
+    error: '',
   },
   {
     label: '新密码',
     value: '',
     placeholder: '请输入新密码 4-20位',
-    error: ''
+    error: '',
   },
   {
     label: '确认密码',
     value: '',
     placeholder: '请再次输入新密码',
-    error: ''
-  }
+    error: '',
+  },
 ] as Column[]);
-const router = useRouter()
+const router = useRouter();
 
 // 校验函数：检查密码和确认密码是否一致
 const validateFields = (value: string, index: number) => {
@@ -70,9 +69,9 @@ const handleConfirm = async () => {
   if (validationErrors.length == 0) {
     await useUpdatePasswordApi({
       password: columns[0].value,
-      newPassword: columns[1].value
-    })
-    await userStore.getUserInfoAction()
+      newPassword: columns[1].value,
+    });
+    await userStore.getUserInfoAction();
     router.back();
   }
 };

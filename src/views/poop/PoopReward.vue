@@ -1,61 +1,83 @@
 <template>
   <div>
     <div class="poop-reward-container">
-      <div @click="datePickerVisible= true" class="date-container">{{ formatDate }}</div>
-      <hr class="divider">
+      <div class="date-container" @click="datePickerVisible = true">
+        {{ formatDate }}
+      </div>
+      <hr class="divider" />
       <div class="reward-container">
-        <div v-for="(reward,index) in rewardList" :key="index">
+        <div v-for="(reward, index) in rewardList" :key="index">
           <div class="photo-frame">
             <!-- 使用 image-wrapper 包裹图片 -->
-            <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" width="180px" class="reward-image"/>
+            <image-wrapper
+              v-if="reward.rewardImage"
+              :src="reward.rewardImage"
+              class="reward-image"
+              width="180px" />
             <div v-else class="reward-not">
-              <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
+              <span
+                ><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span
+              >
             </div>
             <!-- 头像 -->
             <lo-avatar
-                class="avatar"
-                :src="getAvatar(reward.userId)"
-                size="30px"
-            />
+              :src="getAvatar(reward.userId)"
+              class="avatar"
+              size="30px" />
             <!-- 王冠 -->
-            <image-wrapper src="/src/assets/crown.svg" width="15px" class="crown"/>
+            <image-wrapper
+              class="crown"
+              src="/src/assets/crown.svg"
+              width="15px" />
           </div>
         </div>
       </div>
-      <hr class="divider">
-      <van-uploader v-model="fileList" :max-count="1" :before-read="beforeRead" :disabled="!isUploadAllowed"/>
-      <van-button type="primary" @click="uploaderReward" :disabled="isUploadButtonDisabled">上 传</van-button>
-      <van-popup
-          v-model:show="datePickerVisible"
-          position="bottom"
-          :style="{ height: '40%'}"
-          style="margin: 0"
-          teleport="#app"
-          round
+      <hr class="divider" />
+      <van-uploader
+        v-model="fileList"
+        :before-read="beforeRead"
+        :disabled="!isUploadAllowed"
+        :max-count="1" />
+      <van-button
+        :disabled="isUploadButtonDisabled"
+        type="primary"
+        @click="uploaderReward"
+        >上 传</van-button
       >
+      <van-popup
+        v-model:show="datePickerVisible"
+        :style="{ height: '40%' }"
+        position="bottom"
+        round
+        style="margin: 0"
+        teleport="#app">
         <van-date-picker
-            v-model="currentDate"
-            title="选择年月"
-            :min-date="minDate"
-            :max-date="maxDate"
-            :formatter="formatter"
-            :columns-type="columnsType"
-            ref="datePickerRef"
-            @confirm="onConfirm"
-        />
+          ref="datePickerRef"
+          v-model="currentDate"
+          :columns-type="columnsType"
+          :formatter="formatter"
+          :max-date="maxDate"
+          :min-date="minDate"
+          title="选择年月"
+          @confirm="onConfirm" />
       </van-popup>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import ImageWrapper from "@/components/ImageWrapper.vue";
-import {computed, onMounted, ref} from "vue";
-import {useRewardApi, useUpdateRewardApi} from "@/api/poop/summary";
-import LoAvatar from "@/components/love/lo-avatar.vue";
-import {useUserStore} from "@/store/user";
-import {DatePickerColumnType, DatePickerInstance, showSuccessToast, showToast, UploaderFileListItem} from "vant";
-
+<script lang="ts" setup>
+import ImageWrapper from '@/components/ImageWrapper.vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRewardApi, useUpdateRewardApi } from '@/api/poop/summary';
+import LoAvatar from '@/components/love/lo-avatar.vue';
+import { useUserStore } from '@/store/user';
+import {
+  DatePickerColumnType,
+  DatePickerInstance,
+  showSuccessToast,
+  showToast,
+  UploaderFileListItem,
+} from 'vant';
 
 interface RewardItem {
   month: string;
@@ -68,32 +90,33 @@ const userStore = useUserStore();
 
 const getAvatar = (userId: number) => {
   return userStore.getUserProfile(userId)?.avatar;
-}
+};
 
 const getNickname = (userId: number) => {
   return userStore.getUserProfile(userId)?.nickname;
-}
+};
 
 const rewardList = ref<RewardItem[]>([]);
 
 const onGetReward = async (month: string) => {
-  const {data} = await useRewardApi(month);
+  const { data } = await useRewardApi(month);
   rewardList.value = data;
   const userIds = new Set<number>(data.map((item: RewardItem) => item.userId));
   await userStore.fetchUserProfilesAction(userIds);
-}
+};
 
 const datePickerVisible = ref(false);
 const columnsType: DatePickerColumnType[] = ['year', 'month'];
-
 
 const minDate = new Date(2024, 9); // 最小日期为 2024 年 10 月
 const maxDate = new Date(); // 获取当前日期
 maxDate.setMonth(maxDate.getMonth() - 1); // 当前月份减一个月
 
 // 格式为 [year,month] 值为maxDate
-const currentDate = ref([maxDate.getFullYear().toString(), (maxDate.getMonth() + 1).toString().padStart(2, '0')]);
-
+const currentDate = ref([
+  maxDate.getFullYear().toString(),
+  (maxDate.getMonth() + 1).toString().padStart(2, '0'),
+]);
 
 const formatter = (type: string, option: any) => {
   if (type === 'year') {
@@ -107,17 +130,22 @@ const formatter = (type: string, option: any) => {
 
 const formatDate = computed(() => {
   return `${currentDate.value[0]}-${currentDate.value[1]}`;
-})
+});
 
 // 上传的奖励列表
 const fileList = ref<UploaderFileListItem[]>([]);
 
 // 支持的图片格式
-const supportedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
+const supportedFormats = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/svg+xml',
+];
 
 onMounted(() => {
   onGetReward(formatDate.value);
-})
+});
 
 // 上传前的验证函数
 const beforeRead = (file: File | File[]): boolean => {
@@ -137,22 +165,22 @@ const beforeRead = (file: File | File[]): boolean => {
 
 const uploaderReward = async () => {
   await Promise.all(
-      fileList.value.map((fileItem) => {
-        if (fileItem.file) {
-          return useUpdateRewardApi(fileItem.file, formatDate.value);
-        }
-      })
+    fileList.value.map((fileItem) => {
+      if (fileItem.file) {
+        return useUpdateRewardApi(fileItem.file, formatDate.value);
+      }
+    }),
   );
-  showSuccessToast("上传完成")
+  showSuccessToast('上传完成');
 
-  fileList.value = []
+  fileList.value = [];
 
   await onGetReward(formatDate.value);
-}
+};
 
 // 允许上传
 const isUploadAllowed = computed(() => {
-  return rewardList.value.some(item => item.userId === userStore.user.id);
+  return rewardList.value.some((item) => item.userId === userStore.user.id);
 });
 
 // 上传按钮是否禁用
@@ -162,10 +190,9 @@ const isUploadButtonDisabled = computed(() => {
 
 const datePickerRef = ref<DatePickerInstance>();
 
-
 const onConfirm = () => {
   datePickerVisible.value = false; // 关闭弹窗
-  onGetReward(formatDate.value)
+  onGetReward(formatDate.value);
 };
 </script>
 
@@ -200,7 +227,8 @@ const onConfirm = () => {
       border: 2px solid var(--van-text-color-3);
       border-radius: 10px; /* 圆角效果 */
 
-      .reward-image, .reward-not {
+      .reward-image,
+      .reward-not {
         /* 内层细线相框 */
         border: 2px solid var(--van-text-color-3);
         border-radius: 8px; /* 圆角效果，与外框稍微小一点 */

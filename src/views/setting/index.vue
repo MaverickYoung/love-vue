@@ -1,12 +1,10 @@
 <template>
   <div class="profile-wrapper">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script lang="ts" setup></script>
 
 <style scoped>
 .profile-wrapper {

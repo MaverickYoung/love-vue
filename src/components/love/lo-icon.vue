@@ -1,30 +1,30 @@
 <template>
   <div v-if="icon" class="lo-icon">
     <svg :style="svgStyle" aria-hidden="true">
-      <use :xlink:href="iconName"/>
+      <use :xlink:href="iconName" />
     </svg>
   </div>
 </template>
 
-<script setup lang="ts">
-import {computed} from 'vue'
+<script lang="ts" setup>
+import { computed } from 'vue';
 
 const props = defineProps({
   icon: {
     type: String,
-    default: ''
+    default: '',
   },
   color: {
     type: String,
-    default: ''
+    default: '',
   },
   size: {
     type: String,
-    default: ''
-  }
-})
+    default: '',
+  },
+});
 
-const iconName = computed(() => `#icon-${props.icon}`)
+const iconName = computed(() => `#icon-${props.icon}`);
 const svgStyle = computed(() => {
   const baseStyle = {
     width: props.size,
@@ -41,7 +41,6 @@ const svgStyle = computed(() => {
 
   return baseStyle;
 });
-
 </script>
 
 <style scoped>

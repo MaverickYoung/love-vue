@@ -1,16 +1,15 @@
 <template>
   <form class="edit-field-form">
-    <back-button/>
+    <back-button />
     <h2>{{ title }}</h2>
     <div v-for="(column, index) in columns" :key="index" class="form-item">
       <div class="label">{{ column.label }}</div>
       <input
-          v-model="column.value"
-          :type="column.type || 'text'"
-          :placeholder="column.placeholder"
-          @blur="handleBlur(column, index)"
-          class="input-field"
-      />
+        v-model="column.value"
+        :placeholder="column.placeholder"
+        :type="column.type || 'text'"
+        class="input-field"
+        @blur="handleBlur(column, index)" />
       <p v-if="column.error" class="error">{{ column.error }}</p>
     </div>
 
@@ -20,17 +19,17 @@
   </form>
 </template>
 
-<script setup lang="ts">
-import {onMounted, PropType} from "vue";
-import CustomButton from "@/components/CustomButton.vue";
-import BackButton from "@/components/BackButton.vue";
+<script lang="ts" setup>
+import { onMounted, PropType } from 'vue';
+import CustomButton from '@/components/CustomButton.vue';
+import BackButton from '@/components/BackButton.vue';
 
 export interface Column {
   label: string;
   value: string;
   placeholder?: string;
   error?: string;
-  type?: "text" | "password";
+  type?: 'text' | 'password';
   allowSpace?: boolean;
 }
 
@@ -60,17 +59,17 @@ const initializeColumns = () => {
   props.columns.map((col) => ({
     label: col.label,
     value: col.value,
-    placeholder: col.placeholder ?? "",
-    error: col.error ?? "",
-    type: col.type ?? "text",
+    placeholder: col.placeholder ?? '',
+    error: col.error ?? '',
+    type: col.type ?? 'text',
     allowSpace: col.allowSpace ?? false,
-  }))
+  }));
 };
 
 // 输入框失去焦点时处理逻辑
 const handleBlur = (column: Column, index: number) => {
   if (!column.allowSpace) {
-    column.value = column.value.replace(/\s+/g, "");
+    column.value = column.value.replace(/\s+/g, '');
   }
 
   // 调用校验函数并设置错误信息
@@ -79,12 +78,12 @@ const handleBlur = (column: Column, index: number) => {
 
 onMounted(() => {
   initializeColumns();
-})
+});
 </script>
 
 <style scoped>
 .edit-field-form {
-  position: relative;;
+  position: relative;
 
   h2 {
     text-align: center;

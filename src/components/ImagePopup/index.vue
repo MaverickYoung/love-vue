@@ -1,20 +1,20 @@
 <template>
-  <div class="popup-container" v-if="show" @click="closePopup">
+  <div v-if="show" class="popup-container" @click="closePopup">
     <div class="popup-content" @click.stop>
-      <image-wrapper v-if="src" :src="src" width="80dvw"/>
+      <image-wrapper v-if="src" :src="src" width="80dvw" />
       <div v-else class="empty-image-placeholder">空</div>
       <slot></slot>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import ImageWrapper from "@/components/ImageWrapper.vue";
+<script lang="ts" setup>
+import ImageWrapper from '@/components/ImageWrapper.vue';
 
 const props = defineProps<{
   src?: string;
   show: boolean;
-}>()
+}>();
 
 // 定义 emit
 const emit = defineEmits(['update:show']);
