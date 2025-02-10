@@ -10,6 +10,54 @@ const service = axios.create({
   headers: { 'Content-Type': 'application/json;charset=UTF-8' },
 });
 
+interface Request {
+  url: string;
+  params: any;
+  timestamp: number;
+}
+
+let recentRequests: Request[] = [];
+
+const THROTTLE_ERROR = '请求被节流';
+
+/**
+ * 节流函数：检查是否有相同请求在 1 秒内发生
+ * @param url 请求的 URL
+ * @param params 请求的参数
+ * @param currentTimestamp 当前请求的时间戳
+ * @returns 是否应该抛出节流错误
+ */
+const isRequestThrottled = (
+  url: string,
+  params: any,
+  currentTimestamp: number,
+): boolean =>
+  recentRequests.some(
+    (request) =>
+      request.url === url &&
+      JSON.stringify(request.params) === JSON.stringify(params) &&
+      currentTimestamp - request.timestamp < 1000,
+  );
+
+/**
+ * 更新历史请求记录，保留最近 1 秒内的请求
+ * @param url 请求的 URL
+ * @param params 请求的参数
+ * @param timestamp 请求的时间戳
+ */
+const updateRecentRequests = (
+  url: string,
+  params: any,
+  timestamp: number,
+): void => {
+  recentRequests.push({ url, params, timestamp });
+
+  // 清理 1 秒前的请求
+  recentRequests = recentRequests.filter(
+    (request) => timestamp - request.timestamp < 1000,
+  );
+};
+
 // 请求拦截器
 service.interceptors.request.use(
   (config: any) => {
@@ -21,9 +69,20 @@ service.interceptors.request.use(
 
     config.headers['Accept-Language'] = 'zh-CN';
 
+    // 当前请求的时间戳
+    const currentTimestamp = Date.now();
+
+    // 判断是否触发节流
+    if (isRequestThrottled(config.url, config.params, currentTimestamp)) {
+      return Promise.reject(new Error(THROTTLE_ERROR));
+    }
+
+    // 更新请求记录
+    updateRecentRequests(config.url, config.params, currentTimestamp);
+
     // 追加时间戳，防止GET请求缓存
     if (config.method?.toUpperCase() === 'GET') {
-      config.params = { ...config.params, t: new Date().getTime() };
+      config.params = { ...config.params, t: currentTimestamp };
     }
 
     if (
@@ -124,6 +183,9 @@ service.interceptors.response.use(
       errorMessage = '网络错误，请检查您的网络连接';
     } else if (error.message.includes('timeout')) {
       errorMessage = '请求超时，请稍后再试';
+    } else if (error.message.includes(THROTTLE_ERROR)) {
+      // 如果是节流错误，则不提示
+      return Promise.reject(error);
     } else {
       errorMessage = '未知错误';
       console.log(error.message);
