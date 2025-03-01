@@ -1,26 +1,26 @@
 <template>
   <div class="container">
     <div class="card-item">
-      <image-wrapper src="/src/assets/poop-normal.svg" width="40%" alt="小便便图标"/>
+      <image-wrapper :src="PoopNormalIcon" width="40%" alt="小便便图标"/>
     </div>
 
     <div class="card-item">
-      <van-tabs v-model:active="activeTab" animated swipeable >
+      <van-tabs v-model:active="activeTab" animated swipeable>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
+            <image-wrapper :src="PoopNormalIcon" width="50%" alt="小便便图标"/>
           </template>
           <poop-message/>
         </van-tab>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
+            <image-wrapper :src="PoopNormalIcon" width="50%" alt="小便便图标"/>
           </template>
           <poop-reward/>
         </van-tab>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper src="/src/assets/poop-normal.svg" width="50%" alt="小便便图标"/>
+            <image-wrapper :src="PoopNormalIcon" width="50%" alt="小便便图标"/>
           </template>
           <poop-stats/>
         </van-tab>
@@ -35,6 +35,7 @@ import {ref} from "vue";
 import PoopMessage from "@/views/poop/PoopMessage.vue";
 import PoopReward from "@/views/poop/PoopReward.vue";
 import PoopStats from "@/views/poop/PoopStats.vue";
+import {PoopNormalIcon} from "@/assets"
 
 const activeTab = ref('');
 

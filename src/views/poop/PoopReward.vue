@@ -1,46 +1,46 @@
 <template>
   <div>
     <div class="poop-reward-container">
-      <div @click="datePickerVisible= true" class="date-container">{{ formatDate }}</div>
+      <div class="date-container" @click="datePickerVisible= true">{{ formatDate }}</div>
       <hr class="divider">
       <div class="reward-container">
         <div v-for="(reward,index) in rewardList" :key="index">
           <div class="photo-frame">
             <!-- 使用 image-wrapper 包裹图片 -->
-            <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" width="180px" class="reward-image"/>
+            <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" class="reward-image" width="180px"/>
             <div v-else class="reward-not">
               <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
             </div>
             <!-- 头像 -->
             <avatar-wrapper
-                class="avatar"
                 :src="getAvatar(reward.userId)"
+                class="avatar"
                 size="30px"
             />
             <!-- 王冠 -->
-            <image-wrapper src="/src/assets/crown.svg" width="15px" class="crown"/>
+            <image-wrapper :src="CrownIcon" class="crown" width="15px"/>
           </div>
         </div>
       </div>
       <hr class="divider">
-      <van-uploader v-model="fileList" :max-count="1" :before-read="beforeRead" :disabled="!isUploadAllowed"/>
-      <van-button type="primary" @click="uploaderReward" :disabled="isUploadButtonDisabled">上 传</van-button>
+      <van-uploader v-model="fileList" :before-read="beforeRead" :disabled="!isUploadAllowed" :max-count="1"/>
+      <van-button :disabled="isUploadButtonDisabled" type="primary" @click="uploaderReward">上 传</van-button>
       <van-popup
           v-model:show="datePickerVisible"
-          position="bottom"
           :style="{ height: '40%'}"
+          position="bottom"
+          round
           style="margin: 0"
           teleport="#app"
-          round
       >
         <van-date-picker
-            v-model="currentDate"
-            title="选择年月"
-            :min-date="minDate"
-            :max-date="maxDate"
-            :formatter="formatter"
-            :columns-type="columnsType"
             ref="datePickerRef"
+            v-model="currentDate"
+            :columns-type="columnsType"
+            :formatter="formatter"
+            :max-date="maxDate"
+            :min-date="minDate"
+            title="选择年月"
             @confirm="onConfirm"
         />
       </van-popup>
@@ -48,14 +48,14 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import {computed, onMounted, ref} from "vue";
 import {useRewardApi, useUpdateRewardApi} from "@/api/poop/summary";
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
 import {DatePickerColumnType, DatePickerInstance, showSuccessToast, showToast, UploaderFileListItem} from "vant";
-
+import {CrownIcon} from "@/assets"
 
 interface RewardItem {
   month: string;

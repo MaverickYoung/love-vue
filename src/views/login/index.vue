@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="form">
-      <image-wrapper src="/src/assets/love.svg" alt="logo" class="logo"/>
+      <image-wrapper :src="LoveIcon" alt="logo" class="logo"/>
       <span class="form-span"></span>
       <input v-model="loginForm.username" placeholder="用户名" type="text" class="form-input"/>
       <div class="input-container">
@@ -11,11 +11,11 @@
             class="eye-icon"
             @click="togglePasswordVisibility"
         >
-          <image-wrapper src="/src/assets/eye-show.svg" v-if="isPasswordVisible" class="eye"/>
+          <image-wrapper :src="EyeShowIcon" v-if="isPasswordVisible" class="eye"/>
           <div v-else>
             <div class="slash-background"></div>
             <div class="slash"></div>
-            <image-wrapper src="/src/assets/eye-show.svg" class="eye"/>
+            <image-wrapper :src="EyeShowIcon" class="eye"/>
           </div>
         </div>
       </div>
@@ -43,6 +43,7 @@ import {useUserStore} from "@/store/user";
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import cache from "@/utlis/cache";
 import CustomButton from "@/components/CustomButton.vue";
+import {LoveIcon,EyeShowIcon} from "@/assets"
 
 const userStore = useUserStore()
 
@@ -139,7 +140,7 @@ body {
   padding: 30px 25px;
   background-color: var(--van-background);
   box-shadow: 10px 10px 10px var(--box-shadow-soft),
-    -10px -10px 10px var(--box-shadow-deep);
+  -10px -10px 10px var(--box-shadow-deep);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -157,12 +158,12 @@ body {
   transition: 0.25s ease;
   border-radius: 8px;
   box-shadow: inset 6px 6px 12px var(--box-shadow-bottom),
-    inset -6px -6px 12px var(--box-shadow-top);
+  inset -6px -6px 12px var(--box-shadow-top);
   color: var(--van-text-color);
 
   &:focus {
     box-shadow: inset 4px 4px 4px var(--box-shadow-soft),
-      inset -4px -4px 4px var(--box-shadow-deep);
+    inset -4px -4px 4px var(--box-shadow-deep);
   }
 
   &::placeholder {

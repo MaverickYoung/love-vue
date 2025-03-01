@@ -1,6 +1,6 @@
 <template>
   <div class="back" @click="handleBack">
-    <ImageWrapper src="/src/assets/back.svg" class="icon-back"/>
+    <ImageWrapper :src="BackIcon" class="icon-back"/>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 import {useRouter} from 'vue-router';
 import ImageWrapper from "@/components/ImageWrapper.vue";
 import {PropType} from "vue";
+import {BackIcon} from "@/assets";
 
 // 获取路由实例
 const router = useRouter();

@@ -80,6 +80,7 @@ import ImageWrapper from "@/components/ImageWrapper.vue";
 import {useUpdateAvatarApi, useUpdateBackgroundApi, useUserInfoSubmitApi} from "@/api/sys/user";
 import {saveBase64AsImage} from "@/utlis/file";
 import ImageManager from "@/components/ImagePopup/ImageManager.vue";
+import {FemaleIcon, MaleIcon, UnknownIcon} from "@/assets";
 
 const userStore = useUserStore()
 
@@ -99,19 +100,19 @@ const genderOptions: GenderOption[] = [
     value: 1,
     label: "大帅哥",
     color: "#1296db",
-    image: "/src/assets/male.svg",
+    image: MaleIcon,
   },
   {
     value: 0,
     label: "神秘人",
     color: "var(--van-text-color-2)",
-    image: "/src/assets/unknown.svg",
+    image: FemaleIcon,
   },
   {
     value: 2,
     label: "小仙女",
     color: "#fb73e5",
-    image: "/src/assets/female.svg",
+    image: UnknownIcon,
   },
 ];
 
