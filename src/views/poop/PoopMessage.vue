@@ -1,12 +1,11 @@
 <template>
   <div class="poop-messages-container">
-    <div class="messages-container" ref="messagesContainer">
+    <div ref="messagesContainer" class="messages-container">
       <div
-          v-for="message in messages"
-          :key="message.id"
-          class="message-container"
+        v-for="message in messages"
+        :key="message.id"
+        class="message-container"
       >
-
         <!-- 时间占据一整行 -->
         <div class="message-time-wrapper">
           <span class="message-time">{{ formatTime(message.time) }}</span>
@@ -16,51 +15,85 @@
         <div class="message-body">
           <!-- 接收消息：头像在左，消息内容在右 -->
           <div v-if="message.userId !== currentUserId" class="message-left">
-            <avatar-wrapper class="avatar" size="30px" :src="getAvatar(message.userId)"/>
+            <avatar-wrapper
+              :src="getAvatar(message.userId)"
+              class="avatar"
+              size="30px"
+            />
             <div class="message-content-wrapper">
-              <image-wrapper class="message-content" width="45px"
-                             :src="getPoopSrc(message.type)"/>
+              <image-wrapper
+                :src="getPoopSrc(message.type)"
+                class="message-content"
+                width="45px"
+              />
             </div>
           </div>
 
           <!-- 发送消息：头像在右，消息内容在左 -->
           <div v-else class="message-right">
             <div class="message-content-wrapper">
-              <image-wrapper class="message-content" width="45px"
-                             :src="getPoopSrc(message.type)"/>
+              <image-wrapper
+                :src="getPoopSrc(message.type)"
+                class="message-content"
+                width="45px"
+              />
             </div>
-            <avatar-wrapper class="avatar" size="30px" :src="getAvatar(message.userId)"/>
+            <avatar-wrapper
+              :src="getAvatar(message.userId)"
+              class="avatar"
+              size="30px"
+            />
           </div>
         </div>
       </div>
     </div>
 
-    <van-popover v-model:show="isPopoverVisible" actions-direction="horizontal"
-                 placement="top">
+    <van-popover
+      v-model:show="isPopoverVisible"
+      actions-direction="horizontal"
+      placement="top"
+    >
       <van-row style="width: 250px">
-        <van-col span="8" class="popover-item" v-for="poop in poopOptions" :key="poop.id">
-          <image-wrapper :src="poop.src" width="80%" @click="onOptionClick(poop)"/>
+        <van-col
+          v-for="poop in poopOptions"
+          :key="poop.id"
+          class="popover-item"
+          span="8"
+        >
+          <image-wrapper
+            :src="poop.src"
+            width="80%"
+            @click="onOptionClick(poop)"
+          />
         </van-col>
       </van-row>
 
       <template #reference>
-        <image-wrapper :src="selectedType?.src?selectedType?.src:''" width="50%"/>
+        <image-wrapper
+          :src="selectedType?.src ? selectedType?.src : ''"
+          width="50%"
+        />
       </template>
     </van-popover>
-    <br/>
-    <custom-button :backgroundColor="selectedType?.color" square @click="onSubmit" class="submit">发 射</custom-button>
+    <br />
+    <custom-button
+      :backgroundColor="selectedType?.color"
+      class="submit"
+      square
+      @click="onSubmit"
+      >发 射</custom-button
+    >
   </div>
 </template>
 
-
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from 'vue';
+import { onMounted, reactive, ref } from "vue";
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
-import {useLogPageApi, useLogSaveApi} from "@/api/poop/log";
-import {useUserStore} from "@/store/user";
-import {Poop, usePoopStore} from "@/store/poop";
+import { useLogPageApi, useLogSaveApi } from "@/api/poop/log";
+import { useUserStore } from "@/store/user";
+import { Poop, usePoopStore } from "@/store/poop";
 import ImageWrapper from "@/components/ImageWrapper.vue";
-import {showSuccessToast} from "vant";
+import { showSuccessToast } from "vant";
 import CustomButton from "@/components/CustomButton.vue";
 
 interface LogItem {
@@ -70,8 +103,8 @@ interface LogItem {
   type: number; // 便便类型
 }
 
-const userStore = useUserStore()
-const poopStore = usePoopStore()
+const userStore = useUserStore();
+const poopStore = usePoopStore();
 
 // 当前用户ID
 const currentUserId = userStore.user.id;
@@ -94,29 +127,45 @@ const onOptionClick = (option: Poop) => {
 
 /**
  * 时间格式化
- * @param time 时间
+ * @param time 时间字符串
  */
 const formatTime = (time: string) => {
   const targetTime = new Date(time);
   const now = new Date();
-  const diffTime = now.getTime() - targetTime.getTime();
-  const diffDays = diffTime / (1000 * 60 * 60 * 24);
-  const isLessThan330Days = diffDays < 330;
-  const hours = targetTime.getHours().toString().padStart(2, '0');
-  const minutes = targetTime.getMinutes().toString().padStart(2, '0');
 
-  if (diffDays < 1) {
-    return `${hours}:${minutes}`;
-  } else if (diffDays < 2) {
-    return `昨天 ${hours}:${minutes}`;
-  } else if (isLessThan330Days) {
-    const month = (targetTime.getMonth() + 1).toString().padStart(2, '0');
-    const date = targetTime.getDate().toString().padStart(2, '0');
+  // 获取当前和目标日期的午夜时间（00:00:00），用于计算自然日差异
+  const nowMidnight = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+  const targetMidnight = new Date(
+    targetTime.getFullYear(),
+    targetTime.getMonth(),
+    targetTime.getDate(),
+  );
+
+  // 计算自然日差异
+  const diffDays =
+    (nowMidnight.getTime() - targetMidnight.getTime()) / (1000 * 60 * 60 * 24);
+
+  const hours = targetTime.getHours().toString().padStart(2, "0");
+  const minutes = targetTime.getMinutes().toString().padStart(2, "0");
+
+  if (diffDays === 0) {
+    return `${hours}:${minutes}`; // 今天
+  } else if (diffDays === 1) {
+    return `昨天 ${hours}:${minutes}`; // 昨天
+  } else if (diffDays < 330) {
+    // 今年内的日期显示月-日
+    const month = (targetTime.getMonth() + 1).toString().padStart(2, "0");
+    const date = targetTime.getDate().toString().padStart(2, "0");
     return `${month}-${date} ${hours}:${minutes}`;
   } else {
+    // 跨年日期显示年-月-日
     const year = targetTime.getFullYear();
-    const month = (targetTime.getMonth() + 1).toString().padStart(2, '0');
-    const date = targetTime.getDate().toString().padStart(2, '0');
+    const month = (targetTime.getMonth() + 1).toString().padStart(2, "0");
+    const date = targetTime.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${date} ${hours}:${minutes}`;
   }
 };
@@ -124,13 +173,13 @@ const formatTime = (time: string) => {
 const pagePrams = reactive({
   size: 100,
   current: 1,
-})
+});
 
 /**
  * 获取便便日志
  */
 const onLogPage = async () => {
-  const {data} = (await useLogPageApi(pagePrams.size, pagePrams.current));
+  const { data } = await useLogPageApi(pagePrams.size, pagePrams.current);
 
   // 更新userIdList
   data?.list?.forEach((item: LogItem) => {
@@ -144,37 +193,36 @@ const onLogPage = async () => {
     id: item.id,
     userId: item.userId,
     time: item.logTime,
-    type: item.poopType
+    type: item.poopType,
   }));
-}
+};
 
 const getAvatar = (userId: number) => {
   return userStore.getUserProfile(userId)?.avatar;
-}
+};
 
 const getPoopSrc = (id: number): string => {
-  return poopStore.getPoop(id)?.src ?? ''
-}
+  return poopStore.getPoop(id)?.src ?? "";
+};
 
-const poopOptions = ref<Poop[]>([])
+const poopOptions = ref<Poop[]>([]);
 
 // 滚动到底部
 const scrollToBottom = (immediate = false) => {
   const container = messagesContainer.value;
-  const lastMessage = container?.querySelector('.message-container:last-child');
+  const lastMessage = container?.querySelector(".message-container:last-child");
   if (lastMessage) {
-    lastMessage.scrollIntoView({behavior: immediate ? 'auto' : 'smooth'});
+    lastMessage.scrollIntoView({ behavior: immediate ? "auto" : "smooth" });
   }
 };
 
 const onSubmit = async () => {
   await useLogSaveApi(selectedType.value?.id);
-  showSuccessToast('发射成功');
+  showSuccessToast("发射成功");
 
   await onLogPage();
   scrollToBottom();
-}
-
+};
 
 const setInitialOption = () => {
   onOptionClick(poopOptions.value[0]);
@@ -187,8 +235,8 @@ onMounted(async () => {
 
   await onLogPage();
 
-  scrollToBottom(true)
-})
+  scrollToBottom(true);
+});
 </script>
 
 <style scoped>
@@ -254,7 +302,6 @@ onMounted(async () => {
           width: 100%; /* 确保消息部分占满整行 */
         }
 
-
         /* 头像 */
 
         .avatar {
@@ -287,7 +334,7 @@ onMounted(async () => {
     width: 75px !important;
     font-size: 14px;
     word-spacing: 2px;
-    padding: 10px 0
+    padding: 10px 0;
   }
 }
 </style>
