@@ -1,44 +1,43 @@
 <template>
   <div class="container">
     <div class="card-item">
-      <image-wrapper :src="PoopNormalIcon" width="40%" alt="小便便图标"/>
+      <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="40%" />
     </div>
 
     <div class="card-item">
       <van-tabs v-model:active="activeTab" animated swipeable>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="PoopNormalIcon" width="50%" alt="小便便图标"/>
+            <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="50%" />
           </template>
-          <poop-message/>
+          <poop-message />
         </van-tab>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="PoopNormalIcon" width="50%" alt="小便便图标"/>
+            <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="50%" />
           </template>
-          <poop-reward/>
+          <poop-reward />
         </van-tab>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="PoopNormalIcon" width="50%" alt="小便便图标"/>
+            <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="50%" />
           </template>
-          <poop-stats/>
+          <poop-stats />
         </van-tab>
       </van-tabs>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import ImageWrapper from "@/components/ImageWrapper.vue";
-import {ref} from "vue";
+import { ref } from "vue";
 import PoopMessage from "@/views/poop/PoopMessage.vue";
 import PoopReward from "@/views/poop/PoopReward.vue";
 import PoopStats from "@/views/poop/PoopStats.vue";
-import {PoopNormalIcon} from "@/assets"
+import { PoopNormalIcon } from "@/assets";
 
-const activeTab = ref('');
-
+const activeTab = ref("");
 </script>
 
 <style scoped>
@@ -62,5 +61,4 @@ const activeTab = ref('');
   height: 440px;
   position: relative;
 }
-
 </style>

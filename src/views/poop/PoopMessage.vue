@@ -81,8 +81,8 @@
       class="submit"
       square
       @click="onSubmit"
-      >发 射</custom-button
-    >
+      >发 射
+    </custom-button>
   </div>
 </template>
 
