@@ -2,9 +2,9 @@
   <div class="poop-messages-container">
     <div ref="messagesContainer" class="messages-container">
       <div
-        v-for="message in messages"
-        :key="message.id"
-        class="message-container"
+          v-for="message in messages"
+          :key="message.id"
+          class="message-container"
       >
         <!-- 时间占据一整行 -->
         <div class="message-time-wrapper">
@@ -16,15 +16,15 @@
           <!-- 接收消息：头像在左，消息内容在右 -->
           <div v-if="message.userId !== currentUserId" class="message-left">
             <avatar-wrapper
-              :src="getAvatar(message.userId)"
-              class="avatar"
-              size="30px"
+                :src="getAvatar(message.userId)"
+                class="avatar"
+                size="30px"
             />
             <div class="message-content-wrapper">
               <image-wrapper
-                :src="getPoopSrc(message.type)"
-                class="message-content"
-                width="45px"
+                  :src="getPoopSrc(message.type)"
+                  class="message-content"
+                  width="45px"
               />
             </div>
           </div>
@@ -33,15 +33,15 @@
           <div v-else class="message-right">
             <div class="message-content-wrapper">
               <image-wrapper
-                :src="getPoopSrc(message.type)"
-                class="message-content"
-                width="45px"
+                  :src="getPoopSrc(message.type)"
+                  class="message-content"
+                  width="45px"
               />
             </div>
             <avatar-wrapper
-              :src="getAvatar(message.userId)"
-              class="avatar"
-              size="30px"
+                :src="getAvatar(message.userId)"
+                class="avatar"
+                size="30px"
             />
           </div>
         </div>
@@ -49,51 +49,51 @@
     </div>
 
     <van-popover
-      v-model:show="isPopoverVisible"
-      actions-direction="horizontal"
-      placement="top"
+        v-model:show="isPopoverVisible"
+        actions-direction="horizontal"
+        placement="top"
     >
       <van-row style="width: 250px">
         <van-col
-          v-for="poop in poopOptions"
-          :key="poop.id"
-          class="popover-item"
-          span="8"
+            v-for="poop in poopOptions"
+            :key="poop.id"
+            class="popover-item"
+            span="8"
         >
           <image-wrapper
-            :src="poop.src"
-            width="80%"
-            @click="onOptionClick(poop)"
+              :src="poop.src"
+              width="80%"
+              @click="onOptionClick(poop)"
           />
         </van-col>
       </van-row>
 
       <template #reference>
         <image-wrapper
-          :src="selectedType?.src ? selectedType?.src : ''"
-          width="50%"
+            :src="selectedType?.src ? selectedType?.src : ''"
+            width="50%"
         />
       </template>
     </van-popover>
-    <br />
+    <br/>
     <custom-button
-      :backgroundColor="selectedType?.color"
-      class="submit"
-      square
-      @click="onSubmit"
-      >发 射
+        :backgroundColor="selectedType?.color"
+        class="submit"
+        square
+        @click="onSubmit"
+    >发 射
     </custom-button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
+import {onMounted, reactive, ref} from "vue";
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
-import { useLogPageApi, useLogSaveApi } from "@/api/poop/log";
-import { useUserStore } from "@/store/user";
-import { Poop, usePoopStore } from "@/store/poop";
+import {useLogPageApi, useLogSaveApi} from "@/api/poop/log";
+import {useUserStore} from "@/store/user";
+import {Poop, usePoopStore} from "@/store/poop";
 import ImageWrapper from "@/components/ImageWrapper.vue";
-import { showSuccessToast } from "vant";
+import {showSuccessToast} from "vant";
 import CustomButton from "@/components/CustomButton.vue";
 
 interface LogItem {
@@ -135,19 +135,19 @@ const formatTime = (time: string) => {
 
   // 获取当前和目标日期的午夜时间（00:00:00），用于计算自然日差异
   const nowMidnight = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
   );
   const targetMidnight = new Date(
-    targetTime.getFullYear(),
-    targetTime.getMonth(),
-    targetTime.getDate(),
+      targetTime.getFullYear(),
+      targetTime.getMonth(),
+      targetTime.getDate(),
   );
 
   // 计算自然日差异
   const diffDays =
-    (nowMidnight.getTime() - targetMidnight.getTime()) / (1000 * 60 * 60 * 24);
+      (nowMidnight.getTime() - targetMidnight.getTime()) / (1000 * 60 * 60 * 24);
 
   const hours = targetTime.getHours().toString().padStart(2, "0");
   const minutes = targetTime.getMinutes().toString().padStart(2, "0");
@@ -179,7 +179,7 @@ const pagePrams = reactive({
  * 获取便便日志
  */
 const onLogPage = async () => {
-  const { data } = await useLogPageApi(pagePrams.size, pagePrams.current);
+  const {data} = await useLogPageApi(pagePrams.size, pagePrams.current);
 
   // 更新userIdList
   data?.list?.forEach((item: LogItem) => {
@@ -194,7 +194,7 @@ const onLogPage = async () => {
     userId: item.userId,
     time: item.logTime,
     type: item.poopType,
-  }));
+  })).reverse();
 };
 
 const getAvatar = (userId: number) => {
@@ -212,14 +212,13 @@ const scrollToBottom = (immediate = false) => {
   const container = messagesContainer.value;
   const lastMessage = container?.querySelector(".message-container:last-child");
   if (lastMessage) {
-    lastMessage.scrollIntoView({ behavior: immediate ? "auto" : "smooth" });
+    lastMessage.scrollIntoView({behavior: immediate ? "auto" : "smooth"});
   }
 };
 
 const onSubmit = async () => {
   await useLogSaveApi(selectedType.value?.id);
   showSuccessToast("发射成功");
-
   await onLogPage();
   scrollToBottom();
 };
