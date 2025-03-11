@@ -30,14 +30,14 @@
 </template>
 
 <script lang="ts" setup>
-import ImageWrapper from "@/components/ImageWrapper.vue";
-import { ref } from "vue";
-import PoopMessage from "@/views/poop/PoopMessage.vue";
-import PoopReward from "@/views/poop/PoopReward.vue";
-import PoopStats from "@/views/poop/PoopStats.vue";
-import { PoopNormalIcon } from "@/assets";
+import ImageWrapper from '@/components/ImageWrapper.vue';
+import { ref } from 'vue';
+import PoopMessage from '@/views/poop/PoopMessage.vue';
+import PoopReward from '@/views/poop/PoopReward.vue';
+import PoopStats from '@/views/poop/PoopStats.vue';
+import { PoopNormalIcon } from '@/assets';
 
-const activeTab = ref("");
+const activeTab = ref('');
 </script>
 
 <style scoped>

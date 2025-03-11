@@ -1,25 +1,25 @@
 <template>
   <div class="color-picker-container">
     <div class="layout-flex">
-      <div class="saturation-value" ref="saturationValue" @mousedown="mousedownColorPalette"
+      <div ref="saturationValue" class="saturation-value" @mousedown="mousedownColorPalette"
            @touchstart="mousedownColorPalette">
         <div :style="`background-color: hsl(${hue}, 100%, 50%);`">
-          <div class="point" :style="pointStyle"></div>
+          <div :style="pointStyle" class="point"></div>
         </div>
         <div class="saturation-value-2"></div>
         <div class="saturation-value-3"></div>
       </div>
       <div class="color-picker-middle">
         <div class="color-slider">
-          <div class="hue-slider slider-item" ref="hueSlider" @mousedown="mousedownHue" @touchstart="mousedownHue">
-            <div class="slider" :style="hueSliderStyle"></div>
+          <div ref="hueSlider" class="hue-slider slider-item" @mousedown="mousedownHue" @touchstart="mousedownHue">
+            <div :style="hueSliderStyle" class="slider"></div>
           </div>
-          <div class="alpha-slider slider-item" ref="alphaSlider" @mousedown="mousedownAlpha"
-               @touchstart="mousedownAlpha"
-               v-if="props.hasAlpha">
-            <div class="slider" :style="alphaSliderStyle"></div>
+          <div v-if="props.hasAlpha" ref="alphaSlider" class="alpha-slider slider-item"
+               @mousedown="mousedownAlpha"
+               @touchstart="mousedownAlpha">
+            <div :style="alphaSliderStyle" class="slider"></div>
             <div
-                :style="`background: linear-gradient(to bottom, rgba(0,0,0,0), ${colorEnums.rgb});width: 100%;height: 100%`"/>
+              :style="`background: linear-gradient(to bottom, rgba(0,0,0,0), ${colorEnums.rgb});width: 100%;height: 100%`" />
           </div>
         </div>
       </div>
@@ -28,35 +28,35 @@
     <div class="color-value">
       <div class="hex">
         <p>HEX</p>
-        <input :value="colorEnums.hex8" @input="hexChange" spellcheck="false"/>
+        <input :value="colorEnums.hex8" spellcheck="false" @input="hexChange" />
       </div>
       <div class="rgba">
         <p v-if="props.hasAlpha">RGBA</p>
         <p v-else>RGB</p>
-        <input :value="red" @input="redChange"/>
-        <input :value="green" @input="greenChange"/>
-        <input :value="blue" @input="blueChange"/>
-        <input :value="alpha" @input="alphaChange" v-if="props.hasAlpha"/>
+        <input :value="red" @input="redChange" />
+        <input :value="green" @input="greenChange" />
+        <input :value="blue" @input="blueChange" />
+        <input v-if="props.hasAlpha" :value="alpha" @input="alphaChange" />
       </div>
     </div>
     <ul class="predefine">
-      <li class="predefine-item"
-          v-for="(item,index) in predefine"
+      <li v-for="(item,index) in predefine"
           :key="index"
           :style="`background-color: ${item}`"
-          @click="predefineChange(item)"/>
+          class="predefine-item"
+          @click="predefineChange(item)" />
     </ul>
     <div class="color-actions">
-      <custom-button square :color="'warning'" @click="emits('close')">取 消</custom-button>
+      <custom-button :color="'warning'" square @click="emits('close')">取 消</custom-button>
       <custom-button square @click="handleConfirm">确 认</custom-button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ref, computed, watch, onMounted, PropType} from 'vue'
-import {hex2rgba, hsv2rgb, parseColor, rgb2hsv, Rgba, rgba2hex} from "@/utlis/color";
-import CustomButton from "@/components/CustomButton.vue";
+import { computed, onMounted, PropType, ref, watch } from 'vue';
+import { hex2rgba, hsv2rgb, parseColor, rgb2hsv, Rgba, rgba2hex } from '@/utlis/color';
+import CustomButton from '@/components/CustomButton.vue';
 
 
 const props = defineProps({
@@ -68,13 +68,13 @@ const props = defineProps({
         g: 128,
         b: 95,
         a: 1
-      }
+      };
     }
   },
   predefine: {
     type: Array<string>,
     default() {
-      return ['#FF4D4F', '#FF7A45', '#FFC53D', '#73D13D', '#36CFC9', '#40A9FF', '#9254DE', '#000000', '#FFFFFF']
+      return ['#FF4D4F', '#FF7A45', '#FFC53D', '#73D13D', '#36CFC9', '#40A9FF', '#9254DE', '#000000', '#FFFFFF'];
     }
   },
   hasAlpha: {
@@ -85,9 +85,9 @@ const props = defineProps({
     type: String as PropType<'hex6' | 'hex8' | 'rgb' | 'rgba'>,
     default: 'hex8'
   }
-})
+});
 
-const emits = defineEmits(['update:color', 'close'])
+const emits = defineEmits(['update:color', 'close']);
 
 const saturationValue = ref<HTMLElement | null>(null);
 const hueSlider = ref<HTMLElement | null>(null);
@@ -108,9 +108,9 @@ const blue = ref(0);
 const alpha = ref(1);
 
 onMounted(() => {
-  const parsedColor = parseColor(props.color??'#FFFFFF');
+  const parsedColor = parseColor(props.color ?? '#FFFFFF');
   if (parsedColor) {
-    const {r, g, b, a} = parsedColor;
+    const { r, g, b, a } = parsedColor;
     red.value = r;
     green.value = g;
     blue.value = b;
@@ -119,7 +119,7 @@ onMounted(() => {
 });
 
 watch([red, green, blue], () => {
-  const {h, s, v} = rgb2hsv(red.value, green.value, blue.value);
+  const { h, s, v } = rgb2hsv(red.value, green.value, blue.value);
 
   hue.value = h;
   saturation.value = s;
@@ -131,7 +131,7 @@ watch([red, green, blue], () => {
 
 watch(alpha, () => {
   alphaSliderStyle.value = `top: ${
-      alpha.value >= 1 ? 'calc(100% - 6px)' : alpha.value * 100 + '%'
+    alpha.value >= 1 ? 'calc(100% - 6px)' : alpha.value * 100 + '%'
   };`;
 });
 
@@ -149,7 +149,7 @@ const colorEnums = computed(() => {
     rgba: `rgba(${r},${g},${b},${a})`,
     hex6: rgba2hex(r, g, b),
     hex8: rgba2hex(r, g, b, a),
-    hsv: `hsv(${h},${s},${v})`,
+    hsv: `hsv(${h},${s},${v})`
   };
 });
 
@@ -267,7 +267,7 @@ const handleChangeHue = (e: MouseEvent | TouchEvent): void => {
   hue.value = Math.floor((y / h) * 360 + 0.5);
 
   // hsv转化为rgb
-  const {r, g, b} = hsv2rgb(hue.value, saturation.value, value.value);
+  const { r, g, b } = hsv2rgb(hue.value, saturation.value, value.value);
 
   red.value = r;
   green.value = g;
@@ -305,7 +305,7 @@ const handleChangeAlpha = (e: MouseEvent | TouchEvent): void => {
 
   // 移动滑块
   alphaSliderStyle.value = `top: ${y >= h ? h : y}px;`;
-}
+};
 
 
 // 计算选中点的颜色值
@@ -339,7 +339,7 @@ const handleChangeColorPalette = (e: MouseEvent | TouchEvent): void => {
   value.value = Math.floor((1 - y / h) * 100 + 0.5) / 100;
 
   // hsv转化为rgb
-  const {r, g, b} = hsv2rgb(hue.value, saturation.value, value.value);
+  const { r, g, b } = hsv2rgb(hue.value, saturation.value, value.value);
 
   red.value = r;
   green.value = g;
@@ -353,7 +353,7 @@ const hexChange = (e: Event): void => {
   const target = e.target as HTMLInputElement;
   const v = target.value;
   if (/^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(v)) {
-    const {r, g, b, a} = hex2rgba(v);
+    const { r, g, b, a } = hex2rgba(v);
     red.value = r;
     green.value = g;
     blue.value = b;
@@ -428,7 +428,7 @@ const alphaChange = (e: Event): void => {
 // 点击预设方块事件
 const predefineChange = (item: string): void => {
   if (/^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(item)) {
-    const {r, g, b, a} = hex2rgba(item);
+    const { r, g, b, a } = hex2rgba(item);
     red.value = r;
     green.value = g;
     blue.value = b;

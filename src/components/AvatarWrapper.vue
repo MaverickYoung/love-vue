@@ -1,15 +1,15 @@
 <template>
   <van-image
-      round
-      :width="computedSize"
-      :height="computedSize"
-      fit="cover"
-      :src="avatar"
+    :height="computedSize"
+    :src="avatar"
+    :width="computedSize"
+    fit="cover"
+    round
   />
 </template>
 
-<script setup lang="ts">
-import {computed} from "vue";
+<script lang="ts" setup>
+import { computed } from 'vue';
 
 
 const props = defineProps<{
@@ -20,7 +20,7 @@ const props = defineProps<{
 // 计算大小
 const computedSize = computed(() => {
   return props.size || '50px';
-})
+});
 </script>
 
 <style scoped>

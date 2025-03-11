@@ -1,45 +1,45 @@
 <template>
   <div class="theme-manager-container">
-    <back-button/>
+    <back-button />
     <h2>主题配置</h2>
     <div class="info-item">
       <div class="label">主题切换</div>
       <label>
         <input
-            type="radio"
-            name="themeOptions"
-            value="light"
-            v-model="selectedTheme"
+          v-model="selectedTheme"
+          name="themeOptions"
+          type="radio"
+          value="light"
         />
         <span class="option">亮色</span>
       </label>
       <label>
         <input
-            type="radio"
-            name="themeOptions"
-            value="dark"
-            v-model="selectedTheme"
+          v-model="selectedTheme"
+          name="themeOptions"
+          type="radio"
+          value="dark"
         />
         <span class="option">暗色</span>
       </label>
       <div class="slider"></div>
     </div>
 
-    <br/>
+    <br />
     <div v-for="(config, key) in backgroundColors" :key="key" class="info-item">
       <div class="label">{{ config.label }}</div>
       <div class="value">
         <van-popover v-model:show="popoverStates[key]" placement="left">
           <color-picker
-              :color="theme.styles[config.key]"
-              @update:color="color => onUpdateBackground(key, color)"
-              @close="popoverStates[key] = false"
-              @reset="onUpdateBackground(key, '')"
+            :color="theme.styles[config.key]"
+            @close="popoverStates[key] = false"
+            @reset="onUpdateBackground(key, '')"
+            @update:color="color => onUpdateBackground(key, color)"
           />
           <template #reference>
             <div
-                class="color-box"
-                :style="{ backgroundColor: theme.styles[config.key] }"
+              :style="{ backgroundColor: theme.styles[config.key] }"
+              class="color-box"
             />
           </template>
         </van-popover>
@@ -49,30 +49,30 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import {useAppStore} from "@/store/app";
-import {reactive, ref, watch} from "vue";
-import ColorPicker from "@/components/ColorPicker.vue";
-import {Theme, ThemeConfig} from "@/utlis/theme";
-import BackButton from "@/components/BackButton.vue";
+import { useAppStore } from '@/store/app';
+import { reactive, ref, watch } from 'vue';
+import ColorPicker from '@/components/ColorPicker.vue';
+import { Theme, ThemeConfig } from '@/utlis/theme';
+import BackButton from '@/components/BackButton.vue';
 
-const appStore = useAppStore()
+const appStore = useAppStore();
 const selectedTheme = ref('light');
 type BackgroundKey = '--van-background' | '--van-background-2' | '--van-background-3';
 
 // 存储背景色弹窗状态和对应的标签
 const backgroundColors = {
-  background: {key: '--van-background' as BackgroundKey, label: '主要背景色'},
-  background2: {key: '--van-background-2' as BackgroundKey, label: '次要背景色'},
-  background3: {key: '--van-background-3' as BackgroundKey, label: '辅助背景色'},
+  background: { key: '--van-background' as BackgroundKey, label: '主要背景色' },
+  background2: { key: '--van-background-2' as BackgroundKey, label: '次要背景色' },
+  background3: { key: '--van-background-3' as BackgroundKey, label: '辅助背景色' }
 };
 
 const theme = reactive<ThemeConfig>(appStore.theme);
 
 // 动态生成弹窗状态
 const popoverStates = reactive(
-    Object.fromEntries(Object.keys(backgroundColors).map(key => [key, false]))
+  Object.fromEntries(Object.keys(backgroundColors).map(key => [key, false]))
 );
 
 // 通用更新方法
@@ -85,13 +85,13 @@ const onUpdateBackground = (key: keyof typeof backgroundColors, color: string) =
 
 const onApplyTheme = () => {
   appStore.setTheme(theme);
-}
+};
 
 watch(selectedTheme, () => {
-  theme.styles = {} as Theme
-  theme.isLight = selectedTheme.value === "light"
+  theme.styles = {} as Theme;
+  theme.isLight = selectedTheme.value === 'light';
   appStore.setTheme(theme);
-})
+});
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
 
-  <avatar-wrapper :src="user.avatar" size="80px" @click="showAvatarPopup=true"/>
+  <avatar-wrapper :src="user.avatar" size="80px" @click="showAvatarPopup=true" />
 
   <div class="info-item" @click="router.push('/setting/edit-username')">
     <div class="label">用户名</div>
@@ -19,11 +19,11 @@
     <div class="value">{{ genderLabel }}</div>
   </div>
 
-  <br/>
+  <br />
   <div class="info-item" @click="router.push('/setting/theme-manager')">
     <div class="label">主题</div>
     <div class="value">
-      <div class="color-box"/>
+      <div class="color-box" />
     </div>
   </div>
   <div class="info-item" @click="showBackgroundPopup=true">
@@ -36,14 +36,14 @@
       <h2>性别选择</h2>
       <div class="gender-options">
         <div
-            v-for="option in genderOptions"
-            :key="option.value"
-            class="gender-item"
-            :class="{ active: option.value === user.gender }"
-            :style="{ '--default-color': option.color }"
-            @click="setGender(option.value)"
+          v-for="option in genderOptions"
+          :key="option.value"
+          :class="{ active: option.value === user.gender }"
+          :style="{ '--default-color': option.color }"
+          class="gender-item"
+          @click="setGender(option.value)"
         >
-          <image-wrapper :src="option.image" class="icon-gender"/>
+          <image-wrapper :src="option.image" class="icon-gender" />
           <p>{{ option.label }}</p>
         </div>
       </div>
@@ -51,42 +51,42 @@
   </van-popup>
 
   <image-manager
-      :src="user.avatar"
-      :show="showAvatarPopup"
-      :updateShow="(val) => (showAvatarPopup = val)"
-      changeLabel="更换头像"
-      saveLabel="保存头像"
-      :onFileChange="handleAvatarFileChange"
-      :onSave="() => saveBase64AsImage(user.avatar, '头像')"
+    :onFileChange="handleAvatarFileChange"
+    :onSave="() => saveBase64AsImage(user.avatar, '头像')"
+    :show="showAvatarPopup"
+    :src="user.avatar"
+    :updateShow="(val) => (showAvatarPopup = val)"
+    changeLabel="更换头像"
+    saveLabel="保存头像"
   />
   <image-manager
-      :src="user.background"
-      :show="showBackgroundPopup"
-      :updateShow="(val) => (showBackgroundPopup = val)"
-      changeLabel="更换背景图"
-      saveLabel="保存背景图"
-      :onFileChange="handleBackgroundFileChange"
-      :onSave="() => saveBase64AsImage(user.background, '背景图')"
+    :onFileChange="handleBackgroundFileChange"
+    :onSave="() => saveBase64AsImage(user.background, '背景图')"
+    :show="showBackgroundPopup"
+    :src="user.background"
+    :updateShow="(val) => (showBackgroundPopup = val)"
+    changeLabel="更换背景图"
+    saveLabel="保存背景图"
   />
 
 </template>
 
-<script setup lang="ts">
-import AvatarWrapper from "@/components/AvatarWrapper.vue";
-import {useUserStore} from "@/store/user";
-import {onMounted, ref} from "vue";
-import {useRouter} from "vue-router";
-import ImageWrapper from "@/components/ImageWrapper.vue";
-import {useUpdateAvatarApi, useUpdateBackgroundApi, useUserInfoSubmitApi} from "@/api/sys/user";
-import {saveBase64AsImage} from "@/utlis/file";
-import ImageManager from "@/components/ImagePopup/ImageManager.vue";
-import {FemaleIcon, MaleIcon, UnknownIcon} from "@/assets";
+<script lang="ts" setup>
+import AvatarWrapper from '@/components/AvatarWrapper.vue';
+import { useUserStore } from '@/store/user';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import ImageWrapper from '@/components/ImageWrapper.vue';
+import { useUpdateAvatarApi, useUpdateBackgroundApi, useUserInfoSubmitApi } from '@/api/sys/user';
+import { saveBase64AsImage } from '@/utlis/file';
+import ImageManager from '@/components/ImagePopup/ImageManager.vue';
+import { FemaleIcon, MaleIcon, UnknownIcon } from '@/assets';
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 
-const user = userStore.user
+const user = userStore.user;
 
-const router = useRouter()
+const router = useRouter();
 
 type GenderOption = {
   value: number;
@@ -98,41 +98,41 @@ type GenderOption = {
 const genderOptions: GenderOption[] = [
   {
     value: 1,
-    label: "大帅哥",
-    color: "#1296db",
-    image: MaleIcon,
+    label: '大帅哥',
+    color: '#1296db',
+    image: MaleIcon
   },
   {
     value: 0,
-    label: "神秘人",
-    color: "var(--van-text-color-2)",
-    image: FemaleIcon,
+    label: '神秘人',
+    color: 'var(--van-text-color-2)',
+    image: FemaleIcon
   },
   {
     value: 2,
-    label: "小仙女",
-    color: "#fb73e5",
-    image: UnknownIcon,
-  },
+    label: '小仙女',
+    color: '#fb73e5',
+    image: UnknownIcon
+  }
 ];
 
 const genderLabel = ref<string>('');
 
 const setGenderLabel = () => {
   const genderOption = genderOptions.find(option => option.value === user.gender);
-  genderLabel.value = genderOption ? genderOption.label : "神秘人";
+  genderLabel.value = genderOption ? genderOption.label : '神秘人';
 };
 
 const setGender = async (value: number) => {
   await useUserInfoSubmitApi({
-    gender: value,
-  })
+    gender: value
+  });
 
-  await userStore.getUserInfoAction()
-  user.gender = userStore.user.gender
-  setGenderLabel()
+  await userStore.getUserInfoAction();
+  user.gender = userStore.user.gender;
+  setGenderLabel();
   showGenderPopup.value = false;
-}
+};
 
 const showGenderPopup = ref(false);
 const showAvatarPopup = ref(false);
@@ -167,7 +167,7 @@ const handleBackgroundFileChange = (event: Event) => handleFileChange('backgroun
 
 onMounted(() => {
   setGenderLabel();
-})
+});
 </script>
 
 

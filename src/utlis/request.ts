@@ -1,13 +1,13 @@
-import axios, { AxiosResponse } from "axios";
-import qs from "qs";
-import { useUserStore } from "@/store/user";
-import { showDialog, showNotify } from "vant";
+import axios, { AxiosResponse } from 'axios';
+import qs from 'qs';
+import { useUserStore } from '@/store/user';
+import { showDialog, showNotify } from 'vant';
 
 // axios实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_URL as any,
   timeout: 60000,
-  headers: { "Content-Type": "application/json;charset=UTF-8" },
+  headers: { 'Content-Type': 'application/json;charset=UTF-8' }
 });
 
 // 请求拦截器
@@ -19,16 +19,16 @@ service.interceptors.request.use(
       config.headers.Authorization = userStore.accessToken;
     }
 
-    config.headers["Accept-Language"] = "zh-CN";
+    config.headers['Accept-Language'] = 'zh-CN';
 
     // 追加时间戳，防止GET请求缓存
-    if (config.method?.toUpperCase() === "GET") {
+    if (config.method?.toUpperCase() === 'GET') {
       config.params = { ...config.params, t: new Date().getTime() };
     }
 
     if (
       Object.values(config.headers).includes(
-        "application/x-www-form-urlencoded",
+        'application/x-www-form-urlencoded'
       )
     ) {
       config.data = qs.stringify(config.data);
@@ -38,7 +38,7 @@ service.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 // 是否刷新
@@ -57,11 +57,11 @@ service.interceptors.response.use(
     const userStore = useUserStore();
 
     if (response.status !== 200) {
-      return Promise.reject(new Error(response.statusText || "Error"));
+      return Promise.reject(new Error(response.statusText || 'Error'));
     }
 
     const res = response.data;
-    if (Object.prototype.toString.call(res) === "[object Blob]") {
+    if (Object.prototype.toString.call(res) === '[object Blob]') {
       return response;
     }
 
@@ -97,7 +97,7 @@ service.interceptors.response.use(
           return service(config);
         } catch (e) {
           // 刷新 accessToken 失败，但不清除 refreshToken
-          showNotify({ type: "warning", message: "服务器异常，请稍后重试" });
+          showNotify({ type: 'warning', message: '服务器异常，请稍后重试' });
           requests.forEach((cb: any) => cb());
           return Promise.reject(e);
         } finally {
@@ -115,38 +115,38 @@ service.interceptors.response.use(
     }
 
     // 其他错误提示
-    showNotify({ type: "danger", message: res.msg });
-    return Promise.reject(new Error(res.msg || "Error"));
+    showNotify({ type: 'danger', message: res.msg });
+    return Promise.reject(new Error(res.msg || 'Error'));
   },
   (error) => {
     let errorMessage;
-    if (error.message.includes("Network Error")) {
-      errorMessage = "网络错误，请检查您的网络连接";
-    } else if (error.message.includes("timeout")) {
-      errorMessage = "请求超时，请稍后再试";
+    if (error.message.includes('Network Error')) {
+      errorMessage = '网络错误，请检查您的网络连接';
+    } else if (error.message.includes('timeout')) {
+      errorMessage = '请求超时，请稍后再试';
     } else {
-      errorMessage = "未知错误";
+      errorMessage = '未知错误';
       console.log(error.message);
     }
 
-    showNotify({ type: "danger", message: errorMessage });
+    showNotify({ type: 'danger', message: errorMessage });
     return Promise.reject(error);
-  },
+  }
 );
 
 const handleAuthorized = () => {
   showDialog({
-    title: "提示",
-    message: "登录超时，请重新登录",
-    confirmButtonText: "重新登录",
-    theme: "round-button", // 圆角按钮样式
+    title: '提示',
+    message: '登录超时，请重新登录',
+    confirmButtonText: '重新登录',
+    theme: 'round-button' // 圆角按钮样式
   }).then(() => {
     const userStore = useUserStore();
 
     userStore.clearTokens();
     location.reload();
 
-    return Promise.reject("登录超时，请重新登录");
+    return Promise.reject('登录超时，请重新登录');
   });
 };
 

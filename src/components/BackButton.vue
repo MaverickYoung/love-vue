@@ -1,14 +1,14 @@
 <template>
   <div class="back" @click="handleBack">
-    <ImageWrapper :src="BackIcon" class="icon-back"/>
+    <ImageWrapper :src="BackIcon" class="icon-back" />
   </div>
 </template>
 
-<script setup lang="ts">
-import {useRouter} from 'vue-router';
-import ImageWrapper from "@/components/ImageWrapper.vue";
-import {PropType} from "vue";
-import {BackIcon} from "@/assets";
+<script lang="ts" setup>
+import { useRouter } from 'vue-router';
+import ImageWrapper from '@/components/ImageWrapper.vue';
+import { PropType } from 'vue';
+import { BackIcon } from '@/assets';
 
 // 获取路由实例
 const router = useRouter();

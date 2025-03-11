@@ -3,70 +3,70 @@
     <div class="date-container" @click="datePickerVisible= true">{{ formatDate }}</div>
     <hr class="divider">
     <div class="reward-container">
-      <div v-for="(reward,index) in rewards" :key="index" v-if="rewards.length > 0">
+      <div v-for="(reward,index) in rewards" v-if="rewards.length > 0" :key="index">
         <div class="photo-frame">
           <!-- 使用 image-wrapper 包裹图片 -->
           <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" class="reward-image" width="180px"
-                         @click="showImage(reward.rewardImage)"/>
+                         @click="showImage(reward.rewardImage)" />
           <div v-else class="reward-not">
             <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
           </div>
 
           <!-- 头像 -->
           <avatar-wrapper
-              :src="getAvatar(reward.userId)"
-              class="avatar"
-              size="30px"
+            :src="getAvatar(reward.userId)"
+            class="avatar"
+            size="30px"
           />
           <!-- 王冠 -->
-          <image-wrapper :src="CrownIcon" class="crown" width="15px"/>
+          <image-wrapper :src="CrownIcon" class="crown" width="15px" />
         </div>
       </div>
 
       <div v-else class="empty">
-        <image-wrapper :src="EmptyIcon" width="70%"/>
+        <image-wrapper :src="EmptyIcon" width="70%" />
       </div>
 
     </div>
     <hr class="divider">
-    <van-uploader v-model="pendingUploads" :before-read="beforeRead" :disabled="!canUpload" :max-count="1"/>
+    <van-uploader v-model="pendingUploads" :before-read="beforeRead" :disabled="!canUpload" :max-count="1" />
     <van-button :disabled="canSubmitUpload" type="primary" @click="handleUpload">上 传</van-button>
     <van-popup
-        v-model:show="datePickerVisible"
-        :style="{ height: '40%'}"
-        position="bottom"
-        round
-        style="margin: 0"
-        teleport="#app"
+      v-model:show="datePickerVisible"
+      :style="{ height: '40%'}"
+      position="bottom"
+      round
+      style="margin: 0"
+      teleport="#app"
     >
       <van-date-picker
-          ref="datePickerRef"
-          v-model="currentDate"
-          :columns-type="columnsType"
-          :formatter="formatter"
-          :max-date="maxDate"
-          :min-date="minDate"
-          title="选择年月"
-          @confirm="onConfirm"
+        ref="datePickerRef"
+        v-model="currentDate"
+        :columns-type="columnsType"
+        :formatter="formatter"
+        :max-date="maxDate"
+        :min-date="minDate"
+        title="选择年月"
+        @confirm="onConfirm"
       />
     </van-popup>
     <Teleport to="#app">
-      <div class="image-preview-container" v-if="previewImage">
+      <div v-if="previewImage" class="image-preview-container">
         <div class="image-preview-overlay" @click="previewImage =''"></div>
-        <image-wrapper :src="previewImage" class="image-preview" width="80dvw"/>
+        <image-wrapper :src="previewImage" class="image-preview" width="80dvw" />
       </div>
     </Teleport>
   </div>
 </template>
 
 <script lang="ts" setup>
-import ImageWrapper from "@/components/ImageWrapper.vue";
-import {computed, onMounted, ref} from "vue";
-import {useRewardApi, useUpdateRewardApi} from "@/api/poop/summary";
-import AvatarWrapper from "@/components/AvatarWrapper.vue";
-import {useUserStore} from "@/store/user";
-import {DatePickerColumnType, DatePickerInstance, showSuccessToast, showToast, UploaderFileListItem} from "vant";
-import {CrownIcon, EmptyIcon} from "@/assets"
+import ImageWrapper from '@/components/ImageWrapper.vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRewardApi, useUpdateRewardApi } from '@/api/poop/summary';
+import AvatarWrapper from '@/components/AvatarWrapper.vue';
+import { useUserStore } from '@/store/user';
+import { DatePickerColumnType, DatePickerInstance, showSuccessToast, showToast, UploaderFileListItem } from 'vant';
+import { CrownIcon, EmptyIcon } from '@/assets';
 
 interface RewardItem {
   month: string;
@@ -79,20 +79,20 @@ const userStore = useUserStore();
 
 const getAvatar = (userId: number) => {
   return userStore.getUserProfile(userId)?.avatar;
-}
+};
 
 const getNickname = (userId: number) => {
   return userStore.getUserProfile(userId)?.nickname;
-}
+};
 
 const rewards = ref<RewardItem[]>([]);
 
 const fetchRewards = async (month: string) => {
-  const {data} = await useRewardApi(month);
+  const { data } = await useRewardApi(month);
   rewards.value = data;
   const userIds = new Set<number>(data.map((item: RewardItem) => item.userId));
   await userStore.fetchUserProfilesAction(userIds);
-}
+};
 
 const datePickerVisible = ref(false);
 const columnsType: DatePickerColumnType[] = ['year', 'month'];
@@ -118,7 +118,7 @@ const formatter = (type: string, option: any) => {
 
 const formatDate = computed(() => {
   return `${currentDate.value[0]}-${currentDate.value[1]}`;
-})
+});
 
 // 上传的奖励列表
 const pendingUploads = ref<UploaderFileListItem[]>([]);
@@ -128,7 +128,7 @@ const supportedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml
 
 onMounted(() => {
   fetchRewards(formatDate.value);
-})
+});
 
 // 上传前的验证函数
 const beforeRead = (file: File | File[]): boolean => {
@@ -148,18 +148,18 @@ const beforeRead = (file: File | File[]): boolean => {
 
 const handleUpload = async () => {
   await Promise.all(
-      pendingUploads.value.map((fileItem) => {
-        if (fileItem.file) {
-          return useUpdateRewardApi(fileItem.file, formatDate.value);
-        }
-      })
+    pendingUploads.value.map((fileItem) => {
+      if (fileItem.file) {
+        return useUpdateRewardApi(fileItem.file, formatDate.value);
+      }
+    })
   );
-  showSuccessToast("上传完成")
+  showSuccessToast('上传完成');
 
-  pendingUploads.value = []
+  pendingUploads.value = [];
 
   await fetchRewards(formatDate.value);
-}
+};
 
 // 允许上传
 const canUpload = computed(() => {
@@ -176,13 +176,13 @@ const datePickerRef = ref<DatePickerInstance>();
 
 const onConfirm = () => {
   datePickerVisible.value = false; // 关闭弹窗
-  fetchRewards(formatDate.value)
+  fetchRewards(formatDate.value);
 };
 
-const previewImage = ref('')
+const previewImage = ref('');
 const showImage = (image: string) => {
   previewImage.value = image;
-}
+};
 
 </script>
 
@@ -283,7 +283,7 @@ const showImage = (image: string) => {
   z-index: 1; /* 确保图片在遮罩之上 */
 }
 
-.empty{
+.empty {
   width: 100%;
   height: 100%;
   display: flex;

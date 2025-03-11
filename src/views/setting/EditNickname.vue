@@ -1,18 +1,18 @@
 <template>
   <EditFieldForm
-      title="修改昵称"
-      :columns="columns"
-      :validate="validateUsername"
-      :on-confirm="handleConfirm"
+    :columns="columns"
+    :on-confirm="handleConfirm"
+    :validate="validateUsername"
+    title="修改昵称"
   />
 </template>
 
-<script setup lang="ts">
-import {reactive} from "vue";
-import EditFieldForm, {Column} from "@/components/EditFieldForm.vue";
-import {useRouter} from "vue-router";
-import {useUserInfoSubmitApi} from "@/api/sys/user";
-import {useUserStore} from "@/store/user";
+<script lang="ts" setup>
+import { reactive } from 'vue';
+import EditFieldForm, { Column } from '@/components/EditFieldForm.vue';
+import { useRouter } from 'vue-router';
+import { useUserInfoSubmitApi } from '@/api/sys/user';
+import { useUserStore } from '@/store/user';
 
 // 定义每一列的内容
 const columns = reactive([
@@ -24,7 +24,7 @@ const columns = reactive([
   }
 ] as Column[]);
 
-const router = useRouter()
+const router = useRouter();
 
 // 校验函数
 const validateUsername = (value: string, index: number) => {
@@ -48,8 +48,8 @@ const handleConfirm = async () => {
 
   // 处理校验错误
   if (validationErrors.length == 0) {
-    await useUserInfoSubmitApi({nickname: columns[0].value})
-    await userStore.getUserInfoAction()
+    await useUserInfoSubmitApi({ nickname: columns[0].value });
+    await userStore.getUserInfoAction();
     router.back();
   }
 };

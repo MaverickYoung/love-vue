@@ -1,18 +1,18 @@
 <template>
   <EditFieldForm
-      title="修改密码"
-      :columns="columns"
-      :validate="validateFields"
-      :on-confirm="handleConfirm"
+    :columns="columns"
+    :on-confirm="handleConfirm"
+    :validate="validateFields"
+    title="修改密码"
   />
 </template>
 
-<script setup lang="ts">
-import {reactive} from "vue";
-import EditFieldForm, {Column} from "@/components/EditFieldForm.vue";
-import {useRouter} from "vue-router";
-import {useUserStore} from "@/store/user";
-import {useUpdatePasswordApi, useUserInfoSubmitApi} from "@/api/sys/user";
+<script lang="ts" setup>
+import { reactive } from 'vue';
+import EditFieldForm, { Column } from '@/components/EditFieldForm.vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/user';
+import { useUpdatePasswordApi } from '@/api/sys/user';
 
 // 定义每一列的内容
 const columns = reactive([
@@ -35,7 +35,7 @@ const columns = reactive([
     error: ''
   }
 ] as Column[]);
-const router = useRouter()
+const router = useRouter();
 
 // 校验函数：检查密码和确认密码是否一致
 const validateFields = (value: string, index: number) => {
@@ -71,8 +71,8 @@ const handleConfirm = async () => {
     await useUpdatePasswordApi({
       password: columns[0].value,
       newPassword: columns[1].value
-    })
-    await userStore.getUserInfoAction()
+    });
+    await userStore.getUserInfoAction();
     router.back();
   }
 };

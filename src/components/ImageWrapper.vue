@@ -1,11 +1,11 @@
 <template>
   <div class="image-container">
-    <img :src="src" :alt="alt" :style="imgStyle"/>
+    <img :alt="alt" :src="src" :style="imgStyle" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import {computed} from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
   src: string;     // 图片
@@ -18,7 +18,7 @@ const props = defineProps<{
 const imgStyle = computed(() => {
   return {
     width: props.width || '100%',  // 默认宽度为100%
-    height: props.height || 'auto', // 默认高度自适应
+    height: props.height || 'auto' // 默认高度自适应
   };
 });
 </script>

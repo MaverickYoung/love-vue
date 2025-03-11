@@ -1,64 +1,64 @@
 <template>
   <div class="login-container">
     <div class="form">
-      <image-wrapper :src="LoveIcon" alt="logo" class="logo"/>
+      <image-wrapper :src="LoveIcon" alt="logo" class="logo" />
       <span class="form-span"></span>
-      <input v-model="loginForm.username" placeholder="用户名" type="text" class="form-input"/>
+      <input v-model="loginForm.username" class="form-input" placeholder="用户名" type="text" />
       <div class="input-container">
-        <input v-model="loginForm.password" placeholder="密码" :type="isPasswordVisible ? 'text' : 'password'"
-               class="form-input"/>
+        <input v-model="loginForm.password" :type="isPasswordVisible ? 'text' : 'password'" class="form-input"
+               placeholder="密码" />
         <div
-            class="eye-icon"
-            @click="togglePasswordVisibility"
+          class="eye-icon"
+          @click="togglePasswordVisibility"
         >
-          <image-wrapper :src="EyeShowIcon" v-if="isPasswordVisible" class="eye"/>
+          <image-wrapper v-if="isPasswordVisible" :src="EyeShowIcon" class="eye" />
           <div v-else>
             <div class="slash-background"></div>
             <div class="slash"></div>
-            <image-wrapper :src="EyeShowIcon" class="eye"/>
+            <image-wrapper :src="EyeShowIcon" class="eye" />
           </div>
         </div>
       </div>
 
       <van-row v-if="captchaVisible">
         <van-col span="9">
-          <input v-model="loginForm.captcha" type="text" class="form-input captcha-input"
-                 placeholder="验证码"/>
+          <input v-model="loginForm.captcha" class="form-input captcha-input" placeholder="验证码"
+                 type="text" />
         </van-col>
         <van-col span="2" style="width: 10px">
         </van-col>
         <van-col span="13">
-          <img :src="captchaBase64" alt="" class="captcha" @click="onCaptcha"/></van-col>
+          <img :src="captchaBase64" alt="" class="captcha" @click="onCaptcha" /></van-col>
       </van-row>
-      <custom-button @click="onLogin()" class="submit">登 录</custom-button>
+      <custom-button class="submit" @click="onLogin()">登 录</custom-button>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import {onMounted, reactive, ref} from "vue";
-import {useCaptchaApi, useCaptchaEnabledApi} from "@/api/sys/auth";
-import {router} from "@/router";
-import {useUserStore} from "@/store/user";
-import ImageWrapper from "@/components/ImageWrapper.vue";
-import cache from "@/utlis/cache";
-import CustomButton from "@/components/CustomButton.vue";
-import {LoveIcon,EyeShowIcon} from "@/assets"
+<script lang="ts" setup>
+import { onMounted, reactive, ref } from 'vue';
+import { useCaptchaApi, useCaptchaEnabledApi } from '@/api/sys/auth';
+import { router } from '@/router';
+import { useUserStore } from '@/store/user';
+import ImageWrapper from '@/components/ImageWrapper.vue';
+import cache from '@/utlis/cache';
+import CustomButton from '@/components/CustomButton.vue';
+import { EyeShowIcon, LoveIcon } from '@/assets';
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 const loginForm = reactive({
   username: cache.getLoginUsername() as string,
-  password: "" as string,
-  key: "" as string,
-  captcha: "" as string
-})
+  password: '' as string,
+  key: '' as string,
+  captcha: '' as string
+});
 
 
-const captchaBase64 = ref('')
+const captchaBase64 = ref('');
 
 // 是否显示验证码
-const captchaVisible = ref(false)
+const captchaVisible = ref(false);
 
 
 const isPasswordVisible = ref(false);
@@ -68,26 +68,26 @@ const togglePasswordVisibility = () => {
 };
 
 onMounted(() => {
-  onCaptchaEnabled()
-})
+  onCaptchaEnabled();
+});
 
 const onCaptchaEnabled = async () => {
-  const {data} = await useCaptchaEnabledApi()
-  captchaVisible.value = data
+  const { data } = await useCaptchaEnabledApi();
+  captchaVisible.value = data;
 
   if (data) {
-    await onCaptcha()
+    await onCaptcha();
   }
-}
+};
 
 const onCaptcha = async () => {
-  const {data} = await useCaptchaApi()
+  const { data } = await useCaptchaApi();
   if (data.enabled) {
-    captchaVisible.value = true
+    captchaVisible.value = true;
   }
-  loginForm.key = data.key
-  captchaBase64.value = data.image
-}
+  loginForm.key = data.key;
+  captchaBase64.value = data.image;
+};
 
 const onLogin = async () => {
   // 重新封装登录数据
@@ -96,21 +96,21 @@ const onLogin = async () => {
     password: loginForm.password.trim(),
     key: loginForm.key,
     captcha: loginForm.captcha.trim()
-  }
+  };
 
   // 用户登录
   userStore
-      .accountLoginAction(loginData)
-      .then(() => {
-        router.push({path: '/poop'})
-        cache.setLoginUsername(loginData.username)
-      })
-      .catch(() => {
-        if (captchaVisible.value) {
-          onCaptcha()
-        }
-      })
-}
+    .accountLoginAction(loginData)
+    .then(() => {
+      router.push({ path: '/poop' });
+      cache.setLoginUsername(loginData.username);
+    })
+    .catch(() => {
+      if (captchaVisible.value) {
+        onCaptcha();
+      }
+    });
+};
 </script>
 
 <style scoped>

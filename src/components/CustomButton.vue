@@ -1,35 +1,35 @@
 <template>
   <button
-      class="custom-button"
-      :class="{ square }"
-      :style="buttonStyle"
-      @click="handleClick"
+    :class="{ square }"
+    :style="buttonStyle"
+    class="custom-button"
+    @click="handleClick"
   >
     <slot></slot> <!-- 插槽，用来传递按钮文字 -->
   </button>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 
 // 定义按钮颜色的枚举值
-import {computed, PropType} from "vue";
+import { computed, PropType } from 'vue';
 
 const colorMap = {
   primary: '--van-primary-color',
   success: '--van-success-color',
   danger: '--van-danger-color',
-  warning: '--van-warning-color',
-}
+  warning: '--van-warning-color'
+};
 
 // 接受外部传递的属性
 const props = defineProps({
   color: {
     type: String as PropType<'primary' | 'success' | 'danger' | 'warning'>,
-    default: 'primary', // 默认颜色
+    default: 'primary' // 默认颜色
   },
   backgroundColor: {
     type: String,
-    default: '', // 自定义颜色
+    default: '' // 自定义颜色
   },
   width: {
     type: String,
@@ -41,25 +41,25 @@ const props = defineProps({
   },
   square: {
     type: Boolean,
-    default: false, // 默认不是方形按钮
-  },
-})
+    default: false // 默认不是方形按钮
+  }
+});
 
 // 计算按钮的背景颜色
 const buttonStyle = computed(() => {
-  const backgroundColor = props.backgroundColor || `var(${colorMap[props.color]})`
+  const backgroundColor = props.backgroundColor || `var(${colorMap[props.color]})`;
 
   return {
     backgroundColor: backgroundColor,
     width: props.width,
     height: props.height,
-    borderRadius: props.square ? '4px' : '50px', // 动态设置圆角值
-  }
-})
+    borderRadius: props.square ? '4px' : '50px' // 动态设置圆角值
+  };
+});
 
 const handleClick = (event: any) => {
-  event.preventDefault() // 阻止表单提交
-}
+  event.preventDefault(); // 阻止表单提交
+};
 </script>
 
 <style scoped>
