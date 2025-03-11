@@ -48,6 +48,7 @@
       </div>
     </div>
 
+    <div style="height: 16px"></div>
     <van-popover
         v-model:show="isPopoverVisible"
         actions-direction="horizontal"
@@ -87,7 +88,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from "vue";
+import {nextTick, onMounted, reactive, ref} from "vue";
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useLogPageApi, useLogSaveApi} from "@/api/poop/log";
 import {useUserStore} from "@/store/user";
@@ -234,6 +235,8 @@ onMounted(async () => {
 
   await onLogPage();
 
+  await nextTick();
+
   scrollToBottom(true);
 });
 </script>
@@ -253,19 +256,18 @@ onMounted(async () => {
     max-height: 240px;
     min-height: 240px;
     width: 250px;
-    margin-bottom: 16px;
 
     .message-container {
       display: flex;
       flex-direction: column;
       align-items: center; /* 保证时间部分垂直居中 */
       width: 100%;
-      margin: 5px 0;
+      margin-top: 8px;
 
       .message-time-wrapper {
         width: 100%;
         text-align: center; /* 使时间居中 */
-        margin-bottom: 5px; /* 让时间和消息内容之间有间距 */
+        margin-bottom: 1px; /* 让时间和消息内容之间有间距 */
 
         .message-time {
           font-size: 0.8em;
@@ -280,7 +282,6 @@ onMounted(async () => {
         flex-direction: row;
         align-items: center;
         width: 100%;
-        margin-bottom: 10px; /* 让每条消息之间有间距 */
 
         /* 接收消息：头像左对齐，消息内容右对齐 */
 
