@@ -3,7 +3,7 @@
     <div class="date-container" @click="datePickerVisible= true">{{ formatDate }}</div>
     <hr class="divider">
     <div class="reward-container">
-      <div v-for="(reward,index) in rewardList" :key="index">
+      <div v-for="(reward,index) in rewardList" :key="index" v-if="rewardList.length > 0">
         <div class="photo-frame">
           <!-- 使用 image-wrapper 包裹图片 -->
           <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" class="reward-image" width="180px"
@@ -22,6 +22,11 @@
           <image-wrapper :src="CrownIcon" class="crown" width="15px"/>
         </div>
       </div>
+
+      <div v-else class="empty">
+        <image-wrapper :src="EmptyIcon" width="60%" />
+      </div>
+
     </div>
     <hr class="divider">
     <van-uploader v-model="fileList" :before-read="beforeRead" :disabled="!isUploadAllowed" :max-count="1"/>
@@ -61,7 +66,7 @@ import {useRewardApi, useUpdateRewardApi} from "@/api/poop/summary";
 import AvatarWrapper from "@/components/AvatarWrapper.vue";
 import {useUserStore} from "@/store/user";
 import {DatePickerColumnType, DatePickerInstance, showSuccessToast, showToast, UploaderFileListItem} from "vant";
-import {CrownIcon} from "@/assets"
+import {CrownIcon, EmptyIcon} from "@/assets"
 
 interface RewardItem {
   month: string;
@@ -277,7 +282,13 @@ const showImage = (image: string) => {
 .image-preview {
   z-index: 1; /* 确保图片在遮罩之上 */
 }
-
+.empty{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+}
 /* 覆盖默认样式*/
 ::v-deep(.van-uploader__upload) {
   margin: 16px;
