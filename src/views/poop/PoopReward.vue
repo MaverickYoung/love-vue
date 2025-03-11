@@ -3,7 +3,7 @@
     <div class="date-container" @click="datePickerVisible= true">{{ formatDate }}</div>
     <hr class="divider">
     <div class="reward-container">
-      <div v-for="(reward,index) in rewardList" :key="index" v-if="rewardList.length > 0">
+      <div v-for="(reward,index) in rewards" :key="index" v-if="rewards.length > 0">
         <div class="photo-frame">
           <!-- 使用 image-wrapper 包裹图片 -->
           <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" class="reward-image" width="180px"
@@ -24,13 +24,13 @@
       </div>
 
       <div v-else class="empty">
-        <image-wrapper :src="EmptyIcon" width="60%" />
+        <image-wrapper :src="EmptyIcon" width="70%"/>
       </div>
 
     </div>
     <hr class="divider">
-    <van-uploader v-model="fileList" :before-read="beforeRead" :disabled="!isUploadAllowed" :max-count="1"/>
-    <van-button :disabled="isUploadButtonDisabled" type="primary" @click="uploaderReward">上 传</van-button>
+    <van-uploader v-model="pendingUploads" :before-read="beforeRead" :disabled="!canUpload" :max-count="1"/>
+    <van-button :disabled="canSubmitUpload" type="primary" @click="handleUpload">上 传</van-button>
     <van-popup
         v-model:show="datePickerVisible"
         :style="{ height: '40%'}"
@@ -85,11 +85,11 @@ const getNickname = (userId: number) => {
   return userStore.getUserProfile(userId)?.nickname;
 }
 
-const rewardList = ref<RewardItem[]>([]);
+const rewards = ref<RewardItem[]>([]);
 
-const onGetReward = async (month: string) => {
+const fetchRewards = async (month: string) => {
   const {data} = await useRewardApi(month);
-  rewardList.value = data;
+  rewards.value = data;
   const userIds = new Set<number>(data.map((item: RewardItem) => item.userId));
   await userStore.fetchUserProfilesAction(userIds);
 }
@@ -98,7 +98,7 @@ const datePickerVisible = ref(false);
 const columnsType: DatePickerColumnType[] = ['year', 'month'];
 
 
-const minDate = new Date(2024, 9); // 最小日期为 2024 年 10 月
+const minDate = new Date(2024, 10); // 最小日期为 2024 年 11 月
 const maxDate = new Date(); // 获取当前日期
 maxDate.setMonth(maxDate.getMonth() - 1); // 当前月份减一个月
 
@@ -121,13 +121,13 @@ const formatDate = computed(() => {
 })
 
 // 上传的奖励列表
-const fileList = ref<UploaderFileListItem[]>([]);
+const pendingUploads = ref<UploaderFileListItem[]>([]);
 
 // 支持的图片格式
 const supportedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'];
 
 onMounted(() => {
-  onGetReward(formatDate.value);
+  fetchRewards(formatDate.value);
 })
 
 // 上传前的验证函数
@@ -146,9 +146,9 @@ const beforeRead = (file: File | File[]): boolean => {
   return true;
 };
 
-const uploaderReward = async () => {
+const handleUpload = async () => {
   await Promise.all(
-      fileList.value.map((fileItem) => {
+      pendingUploads.value.map((fileItem) => {
         if (fileItem.file) {
           return useUpdateRewardApi(fileItem.file, formatDate.value);
         }
@@ -156,19 +156,19 @@ const uploaderReward = async () => {
   );
   showSuccessToast("上传完成")
 
-  fileList.value = []
+  pendingUploads.value = []
 
-  await onGetReward(formatDate.value);
+  await fetchRewards(formatDate.value);
 }
 
 // 允许上传
-const isUploadAllowed = computed(() => {
-  return rewardList.value.some(item => item.userId === userStore.user.id);
+const canUpload = computed(() => {
+  return rewards.value.some(item => item.userId === userStore.user.id);
 });
 
 // 上传按钮是否禁用
-const isUploadButtonDisabled = computed(() => {
-  return !isUploadAllowed.value || fileList.value.length === 0;
+const canSubmitUpload = computed(() => {
+  return !canUpload.value || pendingUploads.value.length === 0;
 });
 
 const datePickerRef = ref<DatePickerInstance>();
@@ -176,7 +176,7 @@ const datePickerRef = ref<DatePickerInstance>();
 
 const onConfirm = () => {
   datePickerVisible.value = false; // 关闭弹窗
-  onGetReward(formatDate.value)
+  fetchRewards(formatDate.value)
 };
 
 const previewImage = ref('')
@@ -258,7 +258,7 @@ const showImage = (image: string) => {
 
 .image-preview-container {
   position: absolute; /* 现在基于 #app 定位 */
-  z-index: 999;       /* 确保显示在最上层 */
+  z-index: 999; /* 确保显示在最上层 */
   top: 0;
   left: 0;
   height: 100dvh;
@@ -282,6 +282,7 @@ const showImage = (image: string) => {
 .image-preview {
   z-index: 1; /* 确保图片在遮罩之上 */
 }
+
 .empty{
   width: 100%;
   height: 100%;
@@ -289,6 +290,7 @@ const showImage = (image: string) => {
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
 }
+
 /* 覆盖默认样式*/
 ::v-deep(.van-uploader__upload) {
   margin: 16px;
