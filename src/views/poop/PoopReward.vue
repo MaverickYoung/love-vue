@@ -1,50 +1,56 @@
 <template>
-  <div>
-    <div class="poop-reward-container">
-      <div class="date-container" @click="datePickerVisible= true">{{ formatDate }}</div>
-      <hr class="divider">
-      <div class="reward-container">
-        <div v-for="(reward,index) in rewardList" :key="index">
-          <div class="photo-frame">
-            <!-- 使用 image-wrapper 包裹图片 -->
-            <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" class="reward-image" width="180px"/>
-            <div v-else class="reward-not">
-              <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
-            </div>
-            <!-- 头像 -->
-            <avatar-wrapper
-                :src="getAvatar(reward.userId)"
-                class="avatar"
-                size="30px"
-            />
-            <!-- 王冠 -->
-            <image-wrapper :src="CrownIcon" class="crown" width="15px"/>
+  <div class="poop-reward-container">
+    <div class="date-container" @click="datePickerVisible= true">{{ formatDate }}</div>
+    <hr class="divider">
+    <div class="reward-container">
+      <div v-for="(reward,index) in rewardList" :key="index">
+        <div class="photo-frame">
+          <!-- 使用 image-wrapper 包裹图片 -->
+          <image-wrapper v-if="reward.rewardImage" :src="reward.rewardImage" class="reward-image" width="180px"
+                         @click="showImage(reward.rewardImage)"/>
+          <div v-else class="reward-not">
+            <span><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span>
           </div>
+
+          <!-- 头像 -->
+          <avatar-wrapper
+              :src="getAvatar(reward.userId)"
+              class="avatar"
+              size="30px"
+          />
+          <!-- 王冠 -->
+          <image-wrapper :src="CrownIcon" class="crown" width="15px"/>
         </div>
       </div>
-      <hr class="divider">
-      <van-uploader v-model="fileList" :before-read="beforeRead" :disabled="!isUploadAllowed" :max-count="1"/>
-      <van-button :disabled="isUploadButtonDisabled" type="primary" @click="uploaderReward">上 传</van-button>
-      <van-popup
-          v-model:show="datePickerVisible"
-          :style="{ height: '40%'}"
-          position="bottom"
-          round
-          style="margin: 0"
-          teleport="#app"
-      >
-        <van-date-picker
-            ref="datePickerRef"
-            v-model="currentDate"
-            :columns-type="columnsType"
-            :formatter="formatter"
-            :max-date="maxDate"
-            :min-date="minDate"
-            title="选择年月"
-            @confirm="onConfirm"
-        />
-      </van-popup>
     </div>
+    <hr class="divider">
+    <van-uploader v-model="fileList" :before-read="beforeRead" :disabled="!isUploadAllowed" :max-count="1"/>
+    <van-button :disabled="isUploadButtonDisabled" type="primary" @click="uploaderReward">上 传</van-button>
+    <van-popup
+        v-model:show="datePickerVisible"
+        :style="{ height: '40%'}"
+        position="bottom"
+        round
+        style="margin: 0"
+        teleport="#app"
+    >
+      <van-date-picker
+          ref="datePickerRef"
+          v-model="currentDate"
+          :columns-type="columnsType"
+          :formatter="formatter"
+          :max-date="maxDate"
+          :min-date="minDate"
+          title="选择年月"
+          @confirm="onConfirm"
+      />
+    </van-popup>
+    <Teleport to="#app">
+      <div class="image-preview-container" v-if="previewImage">
+        <div class="image-preview-overlay" @click="previewImage =''"></div>
+        <image-wrapper :src="previewImage" class="image-preview" width="80dvw"/>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -167,6 +173,12 @@ const onConfirm = () => {
   datePickerVisible.value = false; // 关闭弹窗
   onGetReward(formatDate.value)
 };
+
+const previewImage = ref('')
+const showImage = (image: string) => {
+  previewImage.value = image;
+}
+
 </script>
 
 <style scoped>
@@ -210,6 +222,7 @@ const onConfirm = () => {
         display: flex;
         width: 180px;
         text-align: left;
+        min-height: 50px;
 
         span {
           margin-left: auto; /* 将 span 推到右边 */
@@ -236,6 +249,33 @@ const onConfirm = () => {
       }
     }
   }
+}
+
+.image-preview-container {
+  position: absolute; /* 现在基于 #app 定位 */
+  z-index: 999;       /* 确保显示在最上层 */
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: 100dvw;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+}
+
+.image-preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 0; /* 遮罩在底层 */
+  pointer-events: all; /* 遮罩可点击 */
+}
+
+.image-preview {
+  z-index: 1; /* 确保图片在遮罩之上 */
 }
 
 /* 覆盖默认样式*/

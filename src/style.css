@@ -29,6 +29,9 @@ body {
     background-color: var(--van-background);
 }
 
+#app {
+    position: relative;
+}
 
 button, button * {
     color: var(--button-text-color);
