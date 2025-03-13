@@ -1,6 +1,12 @@
-import { onBeforeUnmount, onDeactivated, onMounted, Ref, shallowRef, unref } from 'vue';
+import {
+  onBeforeUnmount,
+  onDeactivated,
+  onMounted,
+  Ref,
+  shallowRef,
+  unref,
+} from 'vue';
 import echarts from './echarts';
-
 
 export type EChartsCoreOption = echarts.EChartsCoreOption;
 
@@ -17,7 +23,9 @@ const useEcharts = (elRef: Ref<HTMLDivElement>, options: EChartsCoreOption) => {
     if (!el || !unref(el)) {
       return;
     }
-    isLight ? charts.value = echarts.init(el) : charts.value = echarts.init(el, 'dark');
+    isLight
+      ? (charts.value = echarts.init(el))
+      : (charts.value = echarts.init(el, 'dark'));
     if (themeColor) {
       options.color = themeColor;
     }
@@ -45,7 +53,7 @@ const useEcharts = (elRef: Ref<HTMLDivElement>, options: EChartsCoreOption) => {
   return {
     initCharts,
     setOptions,
-    resize
+    resize,
   };
 };
 

@@ -1,8 +1,11 @@
 <template>
   <div class="color-picker-container">
     <div class="layout-flex">
-      <div ref="saturationValue" class="saturation-value" @mousedown="mousedownColorPalette"
-           @touchstart="mousedownColorPalette">
+      <div
+        ref="saturationValue"
+        class="saturation-value"
+        @mousedown="mousedownColorPalette"
+        @touchstart="mousedownColorPalette">
         <div :style="`background-color: hsl(${hue}, 100%, 50%);`">
           <div :style="pointStyle" class="point"></div>
         </div>
@@ -11,12 +14,19 @@
       </div>
       <div class="color-picker-middle">
         <div class="color-slider">
-          <div ref="hueSlider" class="hue-slider slider-item" @mousedown="mousedownHue" @touchstart="mousedownHue">
+          <div
+            ref="hueSlider"
+            class="hue-slider slider-item"
+            @mousedown="mousedownHue"
+            @touchstart="mousedownHue">
             <div :style="hueSliderStyle" class="slider"></div>
           </div>
-          <div v-if="props.hasAlpha" ref="alphaSlider" class="alpha-slider slider-item"
-               @mousedown="mousedownAlpha"
-               @touchstart="mousedownAlpha">
+          <div
+            v-if="props.hasAlpha"
+            ref="alphaSlider"
+            class="alpha-slider slider-item"
+            @mousedown="mousedownAlpha"
+            @touchstart="mousedownAlpha">
             <div :style="alphaSliderStyle" class="slider"></div>
             <div
               :style="`background: linear-gradient(to bottom, rgba(0,0,0,0), ${colorEnums.rgb});width: 100%;height: 100%`" />
@@ -40,14 +50,17 @@
       </div>
     </div>
     <ul class="predefine">
-      <li v-for="(item,index) in predefine"
-          :key="index"
-          :style="`background-color: ${item}`"
-          class="predefine-item"
-          @click="predefineChange(item)" />
+      <li
+        v-for="(item, index) in predefine"
+        :key="index"
+        :style="`background-color: ${item}`"
+        class="predefine-item"
+        @click="predefineChange(item)" />
     </ul>
     <div class="color-actions">
-      <custom-button :color="'warning'" square @click="emits('close')">取 消</custom-button>
+      <custom-button :color="'warning'" square @click="emits('close')"
+        >取 消</custom-button
+      >
       <custom-button square @click="handleConfirm">确 认</custom-button>
     </div>
   </div>
@@ -55,9 +68,15 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, watch } from 'vue';
-import { hex2rgba, hsv2rgb, parseColor, rgb2hsv, Rgba, rgba2hex } from '@/utlis/color';
+import {
+  hex2rgba,
+  hsv2rgb,
+  parseColor,
+  rgb2hsv,
+  Rgba,
+  rgba2hex,
+} from '@/utlis/color';
 import CustomButton from '@/components/CustomButton.vue';
-
 
 const props = defineProps({
   color: {
@@ -67,24 +86,34 @@ const props = defineProps({
         r: 217,
         g: 128,
         b: 95,
-        a: 1
+        a: 1,
       };
-    }
+    },
   },
   predefine: {
     type: Array<string>,
     default() {
-      return ['#FF4D4F', '#FF7A45', '#FFC53D', '#73D13D', '#36CFC9', '#40A9FF', '#9254DE', '#000000', '#FFFFFF'];
-    }
+      return [
+        '#FF4D4F',
+        '#FF7A45',
+        '#FFC53D',
+        '#73D13D',
+        '#36CFC9',
+        '#40A9FF',
+        '#9254DE',
+        '#000000',
+        '#FFFFFF',
+      ];
+    },
   },
   hasAlpha: {
     type: Boolean,
-    default: true
+    default: true,
   },
   mode: {
     type: String as PropType<'hex6' | 'hex8' | 'rgb' | 'rgba'>,
-    default: 'hex8'
-  }
+    default: 'hex8',
+  },
 });
 
 const emits = defineEmits(['update:color', 'close']);
@@ -149,7 +178,7 @@ const colorEnums = computed(() => {
     rgba: `rgba(${r},${g},${b},${a})`,
     hex6: rgba2hex(r, g, b),
     hex8: rgba2hex(r, g, b, a),
-    hsv: `hsv(${h},${s},${v})`
+    hsv: `hsv(${h},${s},${v})`,
   };
 });
 
@@ -239,7 +268,6 @@ const mouseupColorPalette = (e: MouseEvent | TouchEvent): void => {
   }
 };
 
-
 // 色调变化处理函数
 const handleChangeHue = (e: MouseEvent | TouchEvent): void => {
   if (!hueSlider.value || !saturationValue.value) {
@@ -307,7 +335,6 @@ const handleChangeAlpha = (e: MouseEvent | TouchEvent): void => {
   alphaSliderStyle.value = `top: ${y >= h ? h : y}px;`;
 };
 
-
 // 计算选中点的颜色值
 const handleChangeColorPalette = (e: MouseEvent | TouchEvent): void => {
   if (!saturationValue.value) {
@@ -364,7 +391,7 @@ const hexChange = (e: Event): void => {
 const redChange = (e: Event): void => {
   const target = e.target as HTMLInputElement;
   const v = target.value;
-  const numValue = parseInt(v);  // 转换字符串为数字
+  const numValue = parseInt(v); // 转换字符串为数字
 
   if (v !== '') {
     if (numValue > 255) {
@@ -380,7 +407,7 @@ const redChange = (e: Event): void => {
 const greenChange = (e: Event): void => {
   const target = e.target as HTMLInputElement;
   const v = target.value;
-  const numValue = parseInt(v);  // 转换字符串为数字
+  const numValue = parseInt(v); // 转换字符串为数字
 
   if (v !== '') {
     if (numValue > 255) {
@@ -396,7 +423,7 @@ const greenChange = (e: Event): void => {
 const blueChange = (e: Event): void => {
   const target = e.target as HTMLInputElement;
   const v = target.value;
-  const numValue = parseInt(v);  // 转换字符串为数字
+  const numValue = parseInt(v); // 转换字符串为数字
 
   if (v !== '') {
     if (numValue > 255) {
@@ -412,7 +439,7 @@ const blueChange = (e: Event): void => {
 const alphaChange = (e: Event): void => {
   const target = e.target as HTMLInputElement;
   const v = target.value;
-  const numValue = parseInt(v);  // 转换字符串为数字
+  const numValue = parseInt(v); // 转换字符串为数字
 
   if (v !== '') {
     if (numValue > 255) {
@@ -435,12 +462,9 @@ const predefineChange = (item: string): void => {
     alpha.value = a ?? 1;
   }
 };
-
-
 </script>
 
 <style scoped>
-
 .color-picker-container {
   position: relative;
   user-select: none;
@@ -509,7 +533,16 @@ const predefineChange = (item: string): void => {
 .hue-slider {
   position: relative;
   width: 16px;
-  background: linear-gradient(180deg, red 0, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, red);
+  background: linear-gradient(
+    180deg,
+    red 0,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    red
+  );
   box-shadow: 1px 1px 1px var(--box-shadow-top);
   height: 100%;
 }
@@ -519,7 +552,8 @@ const predefineChange = (item: string): void => {
   position: relative;
   width: 16px;
   box-shadow: 1px 1px 1px var(--box-shadow-top);
-  background: #fff url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWElEQVRIiWM8fubkfwYygKWJOSM5+mCAhRLNoxaPWjxq8ajFoxbTyeL/DAfJ0Xjs3Cl7Siwmu4Yht1aDgZEYx6MWj1o8avGoxaMWD3qLya5X//4nqx6HAQC7RBGFzolqTAAAAABJRU5ErkJggg==');
+  background: #fff
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAWElEQVRIiWM8fubkfwYygKWJOSM5+mCAhRLNoxaPWjxq8ajFoxbTyeL/DAfJ0Xjs3Cl7Siwmu4Yht1aDgZEYx6MWj1o8avGoxaMWD3qLya5X//4nqx6HAQC7RBGFzolqTAAAAABJRU5ErkJggg==');
   background-size: 10px 10px;
   height: 100%;
 }
@@ -583,7 +617,6 @@ const predefineChange = (item: string): void => {
     }
   }
 }
-
 
 /* 预设颜色  */
 .predefine {

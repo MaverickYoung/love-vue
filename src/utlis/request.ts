@@ -7,7 +7,7 @@ import { showDialog, showNotify } from 'vant';
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_URL as any,
   timeout: 60000,
-  headers: { 'Content-Type': 'application/json;charset=UTF-8' }
+  headers: { 'Content-Type': 'application/json;charset=UTF-8' },
 });
 
 // 请求拦截器
@@ -28,7 +28,7 @@ service.interceptors.request.use(
 
     if (
       Object.values(config.headers).includes(
-        'application/x-www-form-urlencoded'
+        'application/x-www-form-urlencoded',
       )
     ) {
       config.data = qs.stringify(config.data);
@@ -38,7 +38,7 @@ service.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // 是否刷新
@@ -131,7 +131,7 @@ service.interceptors.response.use(
 
     showNotify({ type: 'danger', message: errorMessage });
     return Promise.reject(error);
-  }
+  },
 );
 
 const handleAuthorized = () => {
@@ -139,7 +139,7 @@ const handleAuthorized = () => {
     title: '提示',
     message: '登录超时，请重新登录',
     confirmButtonText: '重新登录',
-    theme: 'round-button' // 圆角按钮样式
+    theme: 'round-button', // 圆角按钮样式
   }).then(() => {
     const userStore = useUserStore();
 

@@ -3,8 +3,7 @@
     :columns="columns"
     :on-confirm="handleConfirm"
     :validate="validateFields"
-    title="修改用户名"
-  />
+    title="修改用户名" />
 </template>
 
 <script lang="ts" setup>
@@ -19,8 +18,8 @@ const columns = reactive([
   {
     label: '用户名',
     placeholder: '请输入用户名 2-50位',
-    value: ''
-  }
+    value: '',
+  },
 ] as Column[]);
 
 // 校验函数

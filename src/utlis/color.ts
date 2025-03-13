@@ -14,7 +14,11 @@ export interface Hsv {
 export const parseColor = (color: string | Rgba): Rgba | null => {
   if (color) {
     if (typeof color === 'string') {
-      if (/^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8}|[0-9a-fA-F]{3}|[0-9a-fA-F]{4})$/.test(color)) {
+      if (
+        /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8}|[0-9a-fA-F]{3}|[0-9a-fA-F]{4})$/.test(
+          color,
+        )
+      ) {
         return hex2rgba(color);
       } else if (color.includes('linear-gradient')) {
         const matchColors = color.match(/#[0-9a-fA-F]{6}/g);
@@ -42,7 +46,9 @@ export const hsv2rgb = (h: number, s: number, v: number): Rgba => {
   const q = v * (1 - s * f);
   const t = v * (1 - s * (1 - f));
 
-  let r: number = 0, g: number = 0, b: number = 0;
+  let r: number = 0,
+    g: number = 0,
+    b: number = 0;
   switch (i) {
     case 0:
       r = v;
@@ -80,7 +86,7 @@ export const hsv2rgb = (h: number, s: number, v: number): Rgba => {
     r: Math.floor(r * 255 + 0.5),
     g: Math.floor(g * 255 + 0.5),
     b: Math.floor(b * 255 + 0.5),
-    a: 1
+    a: 1,
   };
 };
 
@@ -111,11 +117,16 @@ export const rgb2hsv = (r: number, g: number, b: number): Hsv => {
   return {
     h: Math.round(hue),
     s: Math.round(saturation * 100) / 100,
-    v: Math.round(value * 100) / 100
+    v: Math.round(value * 100) / 100,
   };
 };
 
-export const rgba2hex = (r: number, g: number, b: number, a: number = 1): string => {
+export const rgba2hex = (
+  r: number,
+  g: number,
+  b: number,
+  a: number = 1,
+): string => {
   const toHex = (n: number): string =>
     n.toString(16).padStart(2, '0').toUpperCase();
 
@@ -125,7 +136,10 @@ export const rgba2hex = (r: number, g: number, b: number, a: number = 1): string
 
 export const hex2rgba = (hex: string): Rgba => {
   if (/^#?[0-9a-fA-F]{3}$/.test(hex)) {
-    const [r, g, b] = hex.slice(1).split('').map(s => parseInt(s + s, 16));
+    const [r, g, b] = hex
+      .slice(1)
+      .split('')
+      .map((s) => parseInt(s + s, 16));
     return { r, g, b, a: 1 };
   }
 
@@ -148,24 +162,20 @@ export const hex2rgba = (hex: string): Rgba => {
 };
 
 export const getAvgColor = (colors: string[]): string => {
-  const sum = colors
-    .map(hex2rgba)
-    .reduce(
-      (acc, { r, g, b }) => ({
-        r: acc.r + r,
-        g: acc.g + g,
-        b: acc.b + b
-      }),
-      { r: 0, g: 0, b: 0 }
-    );
+  const sum = colors.map(hex2rgba).reduce(
+    (acc, { r, g, b }) => ({
+      r: acc.r + r,
+      g: acc.g + g,
+      b: acc.b + b,
+    }),
+    { r: 0, g: 0, b: 0 },
+  );
 
   const avg = {
     r: Math.round(sum.r / colors.length),
     g: Math.round(sum.g / colors.length),
-    b: Math.round(sum.b / colors.length)
+    b: Math.round(sum.b / colors.length),
   };
 
   return rgba2hex(avg.r, avg.g, avg.b);
 };
-
-

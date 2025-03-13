@@ -8,17 +8,17 @@
 import { computed } from 'vue';
 
 const props = defineProps<{
-  src: string;     // 图片
-  alt?: string;     // 图片描述
-  width?: string;   // 自定义宽度
-  height?: string;  // 自定义高度
+  src: string; // 图片
+  alt?: string; // 图片描述
+  width?: string; // 自定义宽度
+  height?: string; // 自定义高度
 }>();
 
 // 计算样式
 const imgStyle = computed(() => {
   return {
-    width: props.width || '100%',  // 默认宽度为100%
-    height: props.height || 'auto' // 默认高度自适应
+    width: props.width || '100%', // 默认宽度为100%
+    height: props.height || 'auto', // 默认高度自适应
   };
 });
 </script>

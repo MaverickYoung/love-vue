@@ -21,7 +21,7 @@ export const Storage = {
   },
   clear() {
     window.localStorage.clear();
-  }
+  },
 };
 
 /**
@@ -47,5 +47,5 @@ export const SessionStorage = {
   },
   clear() {
     window.sessionStorage.clear();
-  }
+  },
 };

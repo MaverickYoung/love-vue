@@ -6,7 +6,9 @@
   <!-- 判断当前路由是否为登录页面，不是登录页时显示 tabbar -->
   <van-tabbar v-if="!isLoginPage" class="tab-bar" route>
     <van-tabbar-item icon="home-o" replace to="/poop">便便</van-tabbar-item>
-    <van-tabbar-item icon="setting-o" replace to="/setting/user-profile">设置</van-tabbar-item>
+    <van-tabbar-item icon="setting-o" replace to="/setting/user-profile"
+      >设置</van-tabbar-item
+    >
   </van-tabbar>
 </template>
 

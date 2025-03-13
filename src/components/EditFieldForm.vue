@@ -9,8 +9,7 @@
         :placeholder="column.placeholder"
         :type="column.type || 'text'"
         class="input-field"
-        @blur="handleBlur(column, index)"
-      />
+        @blur="handleBlur(column, index)" />
       <p v-if="column.error" class="error">{{ column.error }}</p>
     </div>
 
@@ -38,21 +37,21 @@ export interface Column {
 const props = defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   columns: {
     type: Array as PropType<Column[]>, // 明确类型
     required: true,
-    default: () => [] // 提供默认值（空数组，避免 null 引起的问题）
+    default: () => [], // 提供默认值（空数组，避免 null 引起的问题）
   },
   validate: {
     type: Function as PropType<(value: string, index: number) => string>,
-    required: true
+    required: true,
   },
   onConfirm: {
     type: Function,
-    required: true
-  }
+    required: true,
+  },
 });
 
 // 初始化列数据，仅将需要响应的字段提取出来
@@ -63,7 +62,7 @@ const initializeColumns = () => {
     placeholder: col.placeholder ?? '',
     error: col.error ?? '',
     type: col.type ?? 'text',
-    allowSpace: col.allowSpace ?? false
+    allowSpace: col.allowSpace ?? false,
   }));
 };
 
@@ -84,7 +83,7 @@ onMounted(() => {
 
 <style scoped>
 .edit-field-form {
-  position: relative;;
+  position: relative;
 
   h2 {
     text-align: center;

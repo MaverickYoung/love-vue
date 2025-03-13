@@ -3,15 +3,22 @@
     <div class="form">
       <image-wrapper :src="LoveIcon" alt="logo" class="logo" />
       <span class="form-span"></span>
-      <input v-model="loginForm.username" class="form-input" placeholder="用户名" type="text" />
+      <input
+        v-model="loginForm.username"
+        class="form-input"
+        placeholder="用户名"
+        type="text" />
       <div class="input-container">
-        <input v-model="loginForm.password" :type="isPasswordVisible ? 'text' : 'password'" class="form-input"
-               placeholder="密码" />
-        <div
-          class="eye-icon"
-          @click="togglePasswordVisibility"
-        >
-          <image-wrapper v-if="isPasswordVisible" :src="EyeShowIcon" class="eye" />
+        <input
+          v-model="loginForm.password"
+          :type="isPasswordVisible ? 'text' : 'password'"
+          class="form-input"
+          placeholder="密码" />
+        <div class="eye-icon" @click="togglePasswordVisibility">
+          <image-wrapper
+            v-if="isPasswordVisible"
+            :src="EyeShowIcon"
+            class="eye" />
           <div v-else>
             <div class="slash-background"></div>
             <div class="slash"></div>
@@ -22,13 +29,16 @@
 
       <van-row v-if="captchaVisible">
         <van-col span="9">
-          <input v-model="loginForm.captcha" class="form-input captcha-input" placeholder="验证码"
-                 type="text" />
+          <input
+            v-model="loginForm.captcha"
+            class="form-input captcha-input"
+            placeholder="验证码"
+            type="text" />
         </van-col>
-        <van-col span="2" style="width: 10px">
-        </van-col>
+        <van-col span="2" style="width: 10px"> </van-col>
         <van-col span="13">
-          <img :src="captchaBase64" alt="" class="captcha" @click="onCaptcha" /></van-col>
+          <img :src="captchaBase64" alt="" class="captcha" @click="onCaptcha"
+        /></van-col>
       </van-row>
       <custom-button class="submit" @click="onLogin()">登 录</custom-button>
     </div>
@@ -51,15 +61,13 @@ const loginForm = reactive({
   username: cache.getLoginUsername() as string,
   password: '' as string,
   key: '' as string,
-  captcha: '' as string
+  captcha: '' as string,
 });
-
 
 const captchaBase64 = ref('');
 
 // 是否显示验证码
 const captchaVisible = ref(false);
-
 
 const isPasswordVisible = ref(false);
 
@@ -95,7 +103,7 @@ const onLogin = async () => {
     username: loginForm.username.trim(),
     password: loginForm.password.trim(),
     key: loginForm.key,
-    captcha: loginForm.captcha.trim()
+    captcha: loginForm.captcha.trim(),
   };
 
   // 用户登录
@@ -114,7 +122,6 @@ const onLogin = async () => {
 </script>
 
 <style scoped>
-
 * {
   box-sizing: border-box;
   /* 字体无法选中 */
@@ -139,8 +146,9 @@ body {
   width: 300px;
   padding: 30px 25px;
   background-color: var(--van-background);
-  box-shadow: 10px 10px 10px var(--box-shadow-soft),
-  -10px -10px 10px var(--box-shadow-deep);
+  box-shadow:
+    10px 10px 10px var(--box-shadow-soft),
+    -10px -10px 10px var(--box-shadow-deep);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -157,13 +165,15 @@ body {
   background-color: var(--van-background);
   transition: 0.25s ease;
   border-radius: 8px;
-  box-shadow: inset 6px 6px 12px var(--box-shadow-bottom),
-  inset -6px -6px 12px var(--box-shadow-top);
+  box-shadow:
+    inset 6px 6px 12px var(--box-shadow-bottom),
+    inset -6px -6px 12px var(--box-shadow-top);
   color: var(--van-text-color);
 
   &:focus {
-    box-shadow: inset 4px 4px 4px var(--box-shadow-soft),
-    inset -4px -4px 4px var(--box-shadow-deep);
+    box-shadow:
+      inset 4px 4px 4px var(--box-shadow-soft),
+      inset -4px -4px 4px var(--box-shadow-deep);
   }
 
   &::placeholder {

@@ -6,13 +6,13 @@ import { useUserStore } from '@/store/user';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    redirect: '/poop'
+    redirect: '/poop',
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/index.vue'),
-    meta: { description: '登陆' }
+    meta: { description: '登陆' },
   },
   {
     path: '/setting',
@@ -24,59 +24,57 @@ const routes: RouteRecordRaw[] = [
         path: 'user-profile',
         name: 'user-profile',
         component: () => import('@/views/setting/UserProfile.vue'),
-        meta: { description: '个人资料' }
+        meta: { description: '个人资料' },
       },
       {
         path: 'edit-username',
         name: 'edit-username',
         component: () => import('@/views/setting/EditUsername.vue'),
-        meta: { description: '修改用户名' }
+        meta: { description: '修改用户名' },
       },
       {
         path: 'edit-password',
         name: 'edit-password',
         component: () => import('@/views/setting/EditPassword.vue'),
-        meta: { description: '修改密码' }
+        meta: { description: '修改密码' },
       },
       {
         path: 'edit-nickname',
         name: 'edit-nickname',
         component: () => import('@/views/setting/EditNickname.vue'),
-        meta: { description: '修改昵称' }
+        meta: { description: '修改昵称' },
       },
       {
         path: 'theme-manager',
         name: 'theme-manager',
         component: () => import('@/views/setting/ThemeManager.vue'),
-        meta: { description: '主题管理' }
-      }
-    ]
+        meta: { description: '主题管理' },
+      },
+    ],
   },
   {
     path: '/poop',
     name: 'poop',
     component: () => import('@/views/poop/index.vue'),
-    meta: { description: '便便' }
+    meta: { description: '便便' },
   },
   {
     path: '/404',
     name: '404',
     component: () => import('@/views/404.vue'),
-    meta: { description: '404' }
-
-  }
+    meta: { description: '404' },
+  },
 ];
 
 export const errorRoute: RouteRecordRaw = {
   path: '/:pathMatch(.*)',
-  redirect: '/404'
+  redirect: '/404',
 };
 
 export const router = createRouter({
   history: createWebHashHistory(),
-  routes: routes
+  routes: routes,
 });
-
 
 // 白名单列表
 const whiteList = ['/login'];
@@ -90,7 +88,8 @@ router.beforeEach(async (to, from, next) => {
   if (whiteList.includes(to.path)) {
     // 前往白名单直接放行
     next();
-  } else if (userStore.refreshToken) { // 检查是否存在刷新令牌
+  } else if (userStore.refreshToken) {
+    // 检查是否存在刷新令牌
     // 用户信息不存在时重新拉取
     if (!userStore.user || !userStore.user.id) {
       try {
@@ -114,11 +113,7 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
-
 // 路由加载后
 router.afterEach(() => {
   NProgress.done();
 });
-
-
-

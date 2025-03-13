@@ -18,14 +18,14 @@ export const useUserStore = defineStore('userStore', {
       nickname: '',
       gender: 0,
       avatar: '',
-      background: ''
+      background: '',
     },
     // 访问token
     accessToken: '',
     // 刷新token
     refreshToken: cache.getRefreshToken(),
     // 用户头像和昵称
-    userProfiles: new Map<number, UserProfile>()
+    userProfiles: new Map<number, UserProfile>(),
   }),
   getters: {
     getUserProfile: (state) => {
@@ -34,14 +34,13 @@ export const useUserStore = defineStore('userStore', {
           return {
             id: state.user.id,
             nickname: state.user.nickname,
-            avatar: state.user.avatar
+            avatar: state.user.avatar,
           };
         }
 
         return state.userProfiles.get(id)!;
       };
-    }
-
+    },
   },
   actions: {
     setUser(val: any) {
@@ -104,6 +103,6 @@ export const useUserStore = defineStore('userStore', {
           this.userProfiles.set(userProfile.id, userProfile);
         });
       }
-    }
-  }
+    },
+  },
 });

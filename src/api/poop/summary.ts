@@ -1,6 +1,5 @@
 import service from '@/utlis/request';
 
-
 export const useUpdateRewardApi = (image: File, month: string) => {
   const formData = new FormData();
   formData.append('file', image);
@@ -9,8 +8,8 @@ export const useUpdateRewardApi = (image: File, month: string) => {
   // 发送 POST 请求，上传文件和月份
   return service.post('/poop/summary/reward', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
 

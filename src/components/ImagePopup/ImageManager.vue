@@ -4,10 +4,9 @@
     <input
       ref="fileInput"
       accept="image/*"
-      style="display: none;"
+      style="display: none"
       type="file"
-      @change="handleFileChange"
-    />
+      @change="handleFileChange" />
     <image-popup-button v-if="src" :label="saveLabel" @click="saveImage" />
   </image-popup>
 </template>
@@ -18,13 +17,13 @@ import ImagePopup from '@/components/ImagePopup/index.vue';
 import ImagePopupButton from '@/components/ImagePopup/ImagePopupButton.vue';
 
 const props = defineProps<{
-  src?: string,
-  show: boolean,
-  updateShow: (val: boolean) => void,
-  changeLabel: string,
-  saveLabel: string,
-  onFileChange: (event: Event) => void,
-  onSave: () => void,
+  src?: string;
+  show: boolean;
+  updateShow: (val: boolean) => void;
+  changeLabel: string;
+  saveLabel: string;
+  onFileChange: (event: Event) => void;
+  onSave: () => void;
 }>();
 
 const fileInput = ref<HTMLInputElement | null>(null);

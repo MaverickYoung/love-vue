@@ -4,8 +4,7 @@
     :style="{
       width: width,
       height: height,
-    }"
-  />
+    }" />
 </template>
 
 <script lang="ts" setup>
@@ -17,7 +16,7 @@ const props = defineProps({
   options: { type: Object as PropType<EChartsCoreOption>, required: true },
   height: { type: String, default: '100%' },
   width: { type: String, default: '100%' },
-  themeColors: { type: Array as PropType<string[]>, default: () => [] }
+  themeColors: { type: Array as PropType<string[]>, default: () => [] },
 });
 
 const echartsRef = ref();
@@ -35,7 +34,7 @@ watch(
       targetOptions = { ...nVal };
     }
     setOptions(targetOptions);
-  }
+  },
 );
 
 const appStore = useAppStore();

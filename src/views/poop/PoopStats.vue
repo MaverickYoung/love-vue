@@ -24,7 +24,7 @@ const statsList = ref<StatsItem[]>();
 const statsData = {
   months: new Set<string>(),
   users: new Map<number, string>(),
-  poopTypes: new Set<number>()
+  poopTypes: new Set<number>(),
 };
 
 const chartOptions = ref<EChartsOption>({});
@@ -38,7 +38,7 @@ const getData = async (start?: string, end?: string) => {
   statsData.users.clear();
   statsData.poopTypes.clear();
 
-  statsList.value?.forEach(item => {
+  statsList.value?.forEach((item) => {
     statsData.months.add(item.month);
     statsData.poopTypes.add(item.poopType);
     if (!statsData.users.has(item.userId)) {
@@ -56,12 +56,16 @@ const updateChartOptions = () => {
   // 数据预处理
   const { months, users, poopTypes } = statsData;
   const poopTypeMap = new Map<number, string>();
-  const statsByUserAndMonth = new Map<number, Map<string, Map<number, number>>>();
+  const statsByUserAndMonth = new Map<
+    number,
+    Map<string, Map<number, number>>
+  >();
 
-  statsList.value?.forEach(item => {
+  statsList.value?.forEach((item) => {
     // 初始化便便类型映射
     if (!poopTypeMap.has(item.poopType)) {
-      const poopName = poops.get(item.poopType)?.name ?? `便便 ${item.poopType}`;
+      const poopName =
+        poops.get(item.poopType)?.name ?? `便便 ${item.poopType}`;
       poopTypeMap.set(item.poopType, poopName);
     }
 
@@ -79,36 +83,40 @@ const updateChartOptions = () => {
   chartOptions.value = {
     tooltip: {
       trigger: 'axis',
-      axisPointer: { type: 'shadow' }
+      axisPointer: { type: 'shadow' },
     },
     grid: {
       top: '10%',
       left: '3%',
       right: '3%',
       bottom: '2%',
-      containLabel: true
+      containLabel: true,
     },
     legend: {
       itemWidth: 14,
       itemHeight: 14,
-      data: Array.from(users.values()).flatMap(user =>
-        Array.from(poopTypes).map(poopType => `${user} - ${poopTypeMap.get(poopType)}`)
+      data: Array.from(users.values()).flatMap((user) =>
+        Array.from(poopTypes).map(
+          (poopType) => `${user} - ${poopTypeMap.get(poopType)}`,
+        ),
       ),
       type: 'scroll',
-      formatter: name => name.length > 15 ? `${name.substring(0, 15)}...` : name // 控制名称长度
+      formatter: (name) =>
+        name.length > 15 ? `${name.substring(0, 15)}...` : name, // 控制名称长度
     },
     xAxis: { type: 'value' },
     yAxis: { type: 'category', data: Array.from(months) },
-    series: Array.from(poopTypes).flatMap(poopType =>
+    series: Array.from(poopTypes).flatMap((poopType) =>
       Array.from(users.entries()).map(([userId, user]) => ({
         name: `${user} - ${poopTypeMap.get(poopType)}`,
         type: 'bar',
         stack: userId.toString(),
         emphasis: { focus: 'series' },
-        data: Array.from(months).map(month =>
-          statsByUserAndMonth.get(userId)?.get(month)?.get(poopType) || 0
-        )
-      }))
+        data: Array.from(months).map(
+          (month) =>
+            statsByUserAndMonth.get(userId)?.get(month)?.get(poopType) || 0,
+        ),
+      })),
     ),
     dataZoom: [
       {
@@ -116,9 +124,9 @@ const updateChartOptions = () => {
         startValue: 100,
         maxValueSpan: 8,
         type: 'inside',
-        zoomLock: true
-      }
-    ]
+        zoomLock: true,
+      },
+    ],
   };
 };
 

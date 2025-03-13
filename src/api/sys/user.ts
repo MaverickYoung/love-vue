@@ -23,8 +23,8 @@ export const useUpdateAvatarApi = (image: File) => {
   // 发送 PUT 请求，上传文件
   return service.put('/sys/user/avatar', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
 
@@ -35,10 +35,7 @@ export const useUpdateBackgroundApi = (image: File) => {
   // 发送 POST 请求，上传文件和月份
   return service.put('/sys/user/background', formData, {
     headers: {
-      'Content-Type': 'multipart/form-data'
-    }
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
-
-
-

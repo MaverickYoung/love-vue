@@ -4,17 +4,15 @@
     :src="avatar"
     :width="computedSize"
     fit="cover"
-    round
-  />
+    round />
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-
 const props = defineProps<{
-  avatar?: string;     // 头像
-  size?: string;   // 自定义大小
+  avatar?: string; // 头像
+  size?: string; // 自定义大小
 }>();
 
 // 计算大小
@@ -23,5 +21,4 @@ const computedSize = computed(() => {
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

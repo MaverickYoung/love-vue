@@ -1,6 +1,8 @@
 <template>
-
-  <avatar-wrapper :src="user.avatar" size="80px" @click="showAvatarPopup=true" />
+  <avatar-wrapper
+    :src="user.avatar"
+    size="80px"
+    @click="showAvatarPopup = true" />
 
   <div class="info-item" @click="router.push('/setting/edit-username')">
     <div class="label">用户名</div>
@@ -14,7 +16,7 @@
     <div class="label">密码</div>
     <div class="value"></div>
   </div>
-  <div class="info-item" @click="showGenderPopup=true">
+  <div class="info-item" @click="showGenderPopup = true">
     <div class="label">性别</div>
     <div class="value">{{ genderLabel }}</div>
   </div>
@@ -26,7 +28,7 @@
       <div class="color-box" />
     </div>
   </div>
-  <div class="info-item" @click="showBackgroundPopup=true">
+  <div class="info-item" @click="showBackgroundPopup = true">
     <div class="label">背景</div>
     <div class="value"></div>
   </div>
@@ -41,8 +43,7 @@
           :class="{ active: option.value === user.gender }"
           :style="{ '--default-color': option.color }"
           class="gender-item"
-          @click="setGender(option.value)"
-        >
+          @click="setGender(option.value)">
           <image-wrapper :src="option.image" class="icon-gender" />
           <p>{{ option.label }}</p>
         </div>
@@ -57,8 +58,7 @@
     :src="user.avatar"
     :updateShow="(val) => (showAvatarPopup = val)"
     changeLabel="更换头像"
-    saveLabel="保存头像"
-  />
+    saveLabel="保存头像" />
   <image-manager
     :onFileChange="handleBackgroundFileChange"
     :onSave="() => saveBase64AsImage(user.background, '背景图')"
@@ -66,9 +66,7 @@
     :src="user.background"
     :updateShow="(val) => (showBackgroundPopup = val)"
     changeLabel="更换背景图"
-    saveLabel="保存背景图"
-  />
-
+    saveLabel="保存背景图" />
 </template>
 
 <script lang="ts" setup>
@@ -77,7 +75,11 @@ import { useUserStore } from '@/store/user';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ImageWrapper from '@/components/ImageWrapper.vue';
-import { useUpdateAvatarApi, useUpdateBackgroundApi, useUserInfoSubmitApi } from '@/api/sys/user';
+import {
+  useUpdateAvatarApi,
+  useUpdateBackgroundApi,
+  useUserInfoSubmitApi,
+} from '@/api/sys/user';
 import { saveBase64AsImage } from '@/utlis/file';
 import ImageManager from '@/components/ImagePopup/ImageManager.vue';
 import { FemaleIcon, MaleIcon, UnknownIcon } from '@/assets';
@@ -100,32 +102,34 @@ const genderOptions: GenderOption[] = [
     value: 1,
     label: '大帅哥',
     color: '#1296db',
-    image: MaleIcon
+    image: MaleIcon,
   },
   {
     value: 0,
     label: '神秘人',
     color: 'var(--van-text-color-2)',
-    image: FemaleIcon
+    image: FemaleIcon,
   },
   {
     value: 2,
     label: '小仙女',
     color: '#fb73e5',
-    image: UnknownIcon
-  }
+    image: UnknownIcon,
+  },
 ];
 
 const genderLabel = ref<string>('');
 
 const setGenderLabel = () => {
-  const genderOption = genderOptions.find(option => option.value === user.gender);
+  const genderOption = genderOptions.find(
+    (option) => option.value === user.gender,
+  );
   genderLabel.value = genderOption ? genderOption.label : '神秘人';
 };
 
 const setGender = async (value: number) => {
   await useUserInfoSubmitApi({
-    gender: value
+    gender: value,
   });
 
   await userStore.getUserInfoAction();
@@ -138,7 +142,10 @@ const showGenderPopup = ref(false);
 const showAvatarPopup = ref(false);
 const showBackgroundPopup = ref(false);
 
-const handleFileChange = async (type: 'avatar' | 'background', event: Event) => {
+const handleFileChange = async (
+  type: 'avatar' | 'background',
+  event: Event,
+) => {
   const input = event.target as HTMLInputElement;
   if (!input.files || input.files.length === 0) {
     return;
@@ -162,14 +169,15 @@ const handleFileChange = async (type: 'avatar' | 'background', event: Event) => 
 };
 
 // 调用
-const handleAvatarFileChange = (event: Event) => handleFileChange('avatar', event);
-const handleBackgroundFileChange = (event: Event) => handleFileChange('background', event);
+const handleAvatarFileChange = (event: Event) =>
+  handleFileChange('avatar', event);
+const handleBackgroundFileChange = (event: Event) =>
+  handleFileChange('background', event);
 
 onMounted(() => {
   setGenderLabel();
 });
 </script>
-
 
 <style scoped>
 /* 头像样式 */
@@ -210,7 +218,7 @@ avatar-wrapper {
     /* 添加 ">" 符号 */
 
     &::after {
-      content: ">";
+      content: '>';
       margin-left: 8px;
     }
 

@@ -3,8 +3,7 @@
     :columns="columns"
     :on-confirm="handleConfirm"
     :validate="validateUsername"
-    title="修改昵称"
-  />
+    title="修改昵称" />
 </template>
 
 <script lang="ts" setup>
@@ -20,8 +19,8 @@ const columns = reactive([
     label: '昵称',
     value: '',
     placeholder: '请输入昵称 1-50位',
-    error: ''
-  }
+    error: '',
+  },
 ] as Column[]);
 
 const router = useRouter();

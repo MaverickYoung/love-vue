@@ -9,8 +9,7 @@
           v-model="selectedTheme"
           name="themeOptions"
           type="radio"
-          value="light"
-        />
+          value="light" />
         <span class="option">亮色</span>
       </label>
       <label>
@@ -18,8 +17,7 @@
           v-model="selectedTheme"
           name="themeOptions"
           type="radio"
-          value="dark"
-        />
+          value="dark" />
         <span class="option">暗色</span>
       </label>
       <div class="slider"></div>
@@ -34,23 +32,19 @@
             :color="theme.styles[config.key]"
             @close="popoverStates[key] = false"
             @reset="onUpdateBackground(key, '')"
-            @update:color="color => onUpdateBackground(key, color)"
-          />
+            @update:color="(color) => onUpdateBackground(key, color)" />
           <template #reference>
             <div
               :style="{ backgroundColor: theme.styles[config.key] }"
-              class="color-box"
-            />
+              class="color-box" />
           </template>
         </van-popover>
       </div>
     </div>
-
   </div>
 </template>
 
 <script lang="ts" setup>
-
 import { useAppStore } from '@/store/app';
 import { reactive, ref, watch } from 'vue';
 import ColorPicker from '@/components/ColorPicker.vue';
@@ -59,29 +53,40 @@ import BackButton from '@/components/BackButton.vue';
 
 const appStore = useAppStore();
 const selectedTheme = ref('light');
-type BackgroundKey = '--van-background' | '--van-background-2' | '--van-background-3';
+type BackgroundKey =
+  | '--van-background'
+  | '--van-background-2'
+  | '--van-background-3';
 
 // 存储背景色弹窗状态和对应的标签
 const backgroundColors = {
   background: { key: '--van-background' as BackgroundKey, label: '主要背景色' },
-  background2: { key: '--van-background-2' as BackgroundKey, label: '次要背景色' },
-  background3: { key: '--van-background-3' as BackgroundKey, label: '辅助背景色' }
+  background2: {
+    key: '--van-background-2' as BackgroundKey,
+    label: '次要背景色',
+  },
+  background3: {
+    key: '--van-background-3' as BackgroundKey,
+    label: '辅助背景色',
+  },
 };
 
 const theme = reactive<ThemeConfig>(appStore.theme);
 
 // 动态生成弹窗状态
 const popoverStates = reactive(
-  Object.fromEntries(Object.keys(backgroundColors).map(key => [key, false]))
+  Object.fromEntries(Object.keys(backgroundColors).map((key) => [key, false])),
 );
 
 // 通用更新方法
-const onUpdateBackground = (key: keyof typeof backgroundColors, color: string) => {
+const onUpdateBackground = (
+  key: keyof typeof backgroundColors,
+  color: string,
+) => {
   popoverStates[key] = false; // 关闭对应弹窗
   theme.styles[backgroundColors[key].key] = color; // 更新样式
   onApplyTheme();
 };
-
 
 const onApplyTheme = () => {
   appStore.setTheme(theme);
@@ -95,8 +100,6 @@ watch(selectedTheme, () => {
 </script>
 
 <style scoped>
-
-
 .theme-manager-container {
   display: flex;
   justify-content: center;
@@ -141,7 +144,7 @@ watch(selectedTheme, () => {
       /* 添加 ">" 符号 */
 
       &::after {
-        content: ">";
+        content: '>';
         margin-left: 8px;
       }
 
@@ -157,5 +160,4 @@ watch(selectedTheme, () => {
     }
   }
 }
-
 </style>

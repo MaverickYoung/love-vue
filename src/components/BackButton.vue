@@ -16,12 +16,11 @@ const router = useRouter();
 // 接收父组件传递的 handleBack 方法
 const props = defineProps({
   handleBack: {
-    type: Function as PropType<() => void>
-  }
+    type: Function as PropType<() => void>,
+  },
 });
 const handleBack = props.handleBack || (() => router.back());
 </script>
-
 
 <style scoped>
 .back {

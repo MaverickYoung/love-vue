@@ -3,8 +3,7 @@
     :columns="columns"
     :on-confirm="handleConfirm"
     :validate="validateFields"
-    title="修改密码"
-  />
+    title="修改密码" />
 </template>
 
 <script lang="ts" setup>
@@ -20,20 +19,20 @@ const columns = reactive([
     label: '原密码',
     value: '',
     placeholder: '请输入原密码',
-    error: ''
+    error: '',
   },
   {
     label: '新密码',
     value: '',
     placeholder: '请输入新密码 4-20位',
-    error: ''
+    error: '',
   },
   {
     label: '确认密码',
     value: '',
     placeholder: '请再次输入新密码',
-    error: ''
-  }
+    error: '',
+  },
 ] as Column[]);
 const router = useRouter();
 
@@ -70,7 +69,7 @@ const handleConfirm = async () => {
   if (validationErrors.length == 0) {
     await useUpdatePasswordApi({
       password: columns[0].value,
-      newPassword: columns[1].value
+      newPassword: columns[1].value,
     });
     await userStore.getUserInfoAction();
     router.back();

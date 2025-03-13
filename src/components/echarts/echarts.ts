@@ -9,7 +9,7 @@ import {
   LegendComponent,
   TitleComponent,
   ToolboxComponent,
-  TooltipComponent
+  TooltipComponent,
 } from 'echarts/components';
 
 // 引入渲染器：echarts默认使用canvas渲染，引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
@@ -37,7 +37,7 @@ echarts.use([
   LabelLayout,
   UniversalTransition,
   // 图表
-  BarChart
+  BarChart,
 ]);
 
 export default echarts;

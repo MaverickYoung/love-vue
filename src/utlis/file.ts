@@ -3,7 +3,10 @@
  * @param base64String Base64 字符串
  * @param fileName 文件名
  */
-export const saveBase64AsImage = (base64String: string, fileName: string): void => {
+export const saveBase64AsImage = (
+  base64String: string,
+  fileName: string,
+): void => {
   // 匹配图片类型的正则表达式，支持 jpeg、png、gif 和 svg+xml
   const regex = /^data:image\/(jpeg|png|gif|svg\+xml);base64,/;
 
@@ -17,7 +20,6 @@ export const saveBase64AsImage = (base64String: string, fileName: string): void 
   // 获取图片类型（jpeg、png、gif 或 svg+xml）
   const imageType = match[1];
 
-
   // 去除前缀部分，提取Base64编码数据
   const base64Data = base64String.replace(regex, '');
 
@@ -29,7 +31,11 @@ export const saveBase64AsImage = (base64String: string, fileName: string): void 
     // 将解码后的字符转换为Uint8Array
     for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
       const byteArray = [];
-      for (let i = offset; i < Math.min(offset + 1024, byteCharacters.length); i++) {
+      for (
+        let i = offset;
+        i < Math.min(offset + 1024, byteCharacters.length);
+        i++
+      ) {
         byteArray.push(byteCharacters.charCodeAt(i));
       }
       byteArrays.push(new Uint8Array(byteArray));
