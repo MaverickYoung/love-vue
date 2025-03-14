@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="card-item">
-      <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="40%" />
+      <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="40%" />
     </div>
 
     <div class="card-item">
       <van-tabs v-model:active="activeTab" animated swipeable>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="50%" />
+            <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="50%" />
           </template>
           <keep-alive>
             <poop-message v-if="loadedTabs.includes(0) || activeTab === 0" />
@@ -17,7 +17,7 @@
 
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="50%" />
+            <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="50%" />
           </template>
           <keep-alive>
             <poop-reward v-if="loadedTabs.includes(1) || activeTab === 1" />
@@ -26,7 +26,7 @@
 
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="PoopNormalIcon" alt="小便便图标" width="50%" />
+            <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="50%" />
           </template>
           <keep-alive>
             <poop-stats v-if="loadedTabs.includes(2) || activeTab === 2" />
@@ -43,7 +43,7 @@ import { ref, watch } from 'vue';
 import PoopMessage from '@/views/poop/PoopMessage.vue';
 import PoopReward from '@/views/poop/PoopReward.vue';
 import PoopStats from '@/views/poop/PoopStats.vue';
-import { PoopNormalIcon } from '@/assets';
+import { NormalPoopIcon } from '@/assets';
 
 // 默认加载第一个tab
 const activeTab = ref<number>(0);

@@ -1,10 +1,10 @@
 <template>
-  <image-wrapper :src="NotFoundIcon" />
+  <image-wrapper :src="_404Icon" />
 </template>
 
 <script lang="ts" setup>
 import ImageWrapper from '@/components/ImageWrapper.vue';
-import { NotFoundIcon } from '@/assets';
+import { _404Icon } from '@/assets';
 </script>
 
 <style scoped></style>
