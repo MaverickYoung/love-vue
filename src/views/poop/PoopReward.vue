@@ -7,7 +7,7 @@
     <div class="reward-container">
       <ImageLoading v-if="isLoading" />
       <!-- 空数据提示 -->
-      <div v-else-if="rewards.length === 0" class="empty">
+      <div v-else-if="rewards.length === 0" class="tips-empty">
         <image-wrapper :src="EmptyIcon" width="70%" />
       </div>
       <div v-for="(reward, index) in rewards" :key="index">
@@ -60,6 +60,14 @@
         :min-date="minDate"
         title="选择年月"
         @confirm="onConfirm" />
+    </van-popup>
+    <van-popup
+      :show="isCompressing"
+      round
+      teleport="#app"
+      class="tips-compress">
+      <p>图片压缩中</p>
+      <ImageLoading />
     </van-popup>
     <Teleport to="#app">
       <div v-if="previewImage" class="image-preview-container">
@@ -189,7 +197,13 @@ const beforeRead = (file: File | File[]): boolean => {
   return true;
 };
 
+const isCompressing = ref(false);
+
 const handleUpload = async () => {
+  if (pendingUploads.value.length === 0) return;
+
+  isCompressing.value = true;
+
   await Promise.all(
     pendingUploads.value.map(async (fileItem) => {
       if (fileItem.file) {
@@ -197,7 +211,9 @@ const handleUpload = async () => {
         try {
           // 使用 await 调用 compressToAvif，并获取压缩后的文件
           newFile = await ImageUtils.compressToAvif(fileItem.file);
+          isCompressing.value = false;
         } catch (error) {
+          isCompressing.value = false;
           showToast('图片压缩失败');
           return;
         }
@@ -333,12 +349,21 @@ const showImage = (image: string) => {
   z-index: 1; /* 确保图片在遮罩之上 */
 }
 
-.empty {
+.tips-empty {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
+}
+
+.tips-compress {
+  padding: 32px;
+
+  p {
+    font-size: 20px;
+    margin: 16px 0;
+  }
 }
 
 /* 覆盖默认样式*/
