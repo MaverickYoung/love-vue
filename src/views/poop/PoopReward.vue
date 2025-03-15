@@ -44,8 +44,8 @@
       :disabled="!canUpload"
       :max-count="1" />
     <van-button :disabled="canSubmitUpload" type="primary" @click="handleUpload"
-      >上 传</van-button
-    >
+      >上 传
+    </van-button>
     <van-popup
       v-model:show="datePickerVisible"
       :style="{ height: '40%' }"
@@ -110,6 +110,15 @@ const getNickname = (userId: number) => {
 const rewards = ref<RewardItem[]>([]);
 
 const fetchRewards = async (month: string) => {
+  // 清空
+  rewards.value = [
+    {
+      month: month,
+      userId: 0,
+      isRewarded: true,
+      rewardImage: '',
+    },
+  ];
   const { data } = await useRewardApi(month);
   rewards.value = data;
   const userIds = new Set<number>(data.map((item: RewardItem) => item.userId));

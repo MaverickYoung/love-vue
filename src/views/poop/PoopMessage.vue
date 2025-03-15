@@ -4,8 +4,7 @@
       <div
         v-for="message in messages"
         :key="message.id"
-        class="message-container"
-      >
+        class="message-container">
         <!-- 时间占据一整行 -->
         <div class="message-time-wrapper">
           <span class="message-time">{{ formatTime(message.time) }}</span>
@@ -18,14 +17,13 @@
             <avatar-wrapper
               :src="getAvatar(message.userId)"
               class="avatar"
-              size="30px"
-            />
+              size="30px" />
             <div class="message-content-wrapper">
               <image-wrapper
                 :src="getPoopSrc(message.type)"
                 class="message-content"
                 width="45px"
-              />
+                :lazy="true" />
             </div>
           </div>
 
@@ -36,13 +34,12 @@
                 :src="getPoopSrc(message.type)"
                 class="message-content"
                 width="45px"
-              />
+                :lazy="true" />
             </div>
             <avatar-wrapper
               :src="getAvatar(message.userId)"
               class="avatar"
-              size="30px"
-            />
+              size="30px" />
           </div>
         </div>
       </div>
@@ -52,28 +49,24 @@
     <van-popover
       v-model:show="isPopoverVisible"
       actions-direction="horizontal"
-      placement="top"
-    >
+      placement="top">
       <van-row style="width: 250px">
         <van-col
           v-for="poop in poopOptions"
           :key="poop.id"
           class="popover-item"
-          span="8"
-        >
+          span="8">
           <image-wrapper
             :src="poop.src"
             width="80%"
-            @click="onOptionClick(poop)"
-          />
+            @click="onOptionClick(poop)" />
         </van-col>
       </van-row>
 
       <template #reference>
         <image-wrapper
           :src="selectedType?.src ? selectedType?.src : ''"
-          width="50%"
-        />
+          width="50%" />
       </template>
     </van-popover>
     <br />
@@ -82,7 +75,7 @@
       class="submit"
       square
       @click="onSubmit"
-    >发 射
+      >发 射
     </custom-button>
   </div>
 </template>
@@ -138,12 +131,12 @@ const formatTime = (time: string) => {
   const nowMidnight = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate()
+    now.getDate(),
   );
   const targetMidnight = new Date(
     targetTime.getFullYear(),
     targetTime.getMonth(),
-    targetTime.getDate()
+    targetTime.getDate(),
   );
 
   // 计算自然日差异
@@ -173,7 +166,7 @@ const formatTime = (time: string) => {
 
 const pagePrams = reactive({
   size: 100,
-  current: 1
+  current: 1,
 });
 
 /**
@@ -190,12 +183,14 @@ const onLogPage = async () => {
   await userStore.fetchUserProfilesAction(userIdList.value);
 
   // 填充数据
-  messages.value = data.list.map((item: any) => ({
-    id: item.id,
-    userId: item.userId,
-    time: item.logTime,
-    type: item.poopType
-  })).reverse();
+  messages.value = data.list
+    .map((item: any) => ({
+      id: item.id,
+      userId: item.userId,
+      time: item.logTime,
+      type: item.poopType,
+    }))
+    .reverse();
 };
 
 const getAvatar = (userId: number) => {

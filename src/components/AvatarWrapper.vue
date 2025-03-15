@@ -4,6 +4,7 @@
     :src="avatar"
     :width="computedSize"
     fit="cover"
+    :lazy-load="lazy"
     round />
 </template>
 
@@ -13,6 +14,7 @@ import { computed } from 'vue';
 const props = defineProps<{
   avatar?: string; // 头像
   size?: string; // 自定义大小
+  lazy?: boolean; //是否懒加载
 }>();
 
 // 计算大小

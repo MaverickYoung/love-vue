@@ -1,14 +1,18 @@
 <template>
   <div class="container">
     <div class="card-item">
-      <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="40%" />
+      <image-wrapper
+        :src="NormalPoopIcon"
+        alt="小便便图标"
+        width="120px"
+        height="120px" />
     </div>
 
     <div class="card-item">
       <van-tabs v-model:active="activeTab" animated swipeable>
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="50%" />
+            <image-wrapper :src="MessageIcon" alt="消息图标" width="30px" />
           </template>
           <keep-alive>
             <poop-message v-if="loadedTabs.includes(0) || activeTab === 0" />
@@ -17,7 +21,7 @@
 
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="50%" />
+            <image-wrapper :src="RewardIcon" alt="记录图标" width="30px" />
           </template>
           <keep-alive>
             <poop-reward v-if="loadedTabs.includes(1) || activeTab === 1" />
@@ -26,7 +30,7 @@
 
         <van-tab class="tab-content">
           <template #title>
-            <image-wrapper :src="NormalPoopIcon" alt="小便便图标" width="50%" />
+            <image-wrapper :src="StatsIcon" alt="日志图标" width="30px" />
           </template>
           <keep-alive>
             <poop-stats v-if="loadedTabs.includes(2) || activeTab === 2" />
@@ -39,11 +43,11 @@
 
 <script lang="ts" setup>
 import ImageWrapper from '@/components/ImageWrapper.vue';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import PoopMessage from '@/views/poop/PoopMessage.vue';
 import PoopReward from '@/views/poop/PoopReward.vue';
 import PoopStats from '@/views/poop/PoopStats.vue';
-import { NormalPoopIcon } from '@/assets';
+import { MessageIcon, NormalPoopIcon, RewardIcon, StatsIcon } from '@/assets';
 
 // 默认加载第一个tab
 const activeTab = ref<number>(0);
@@ -53,6 +57,12 @@ watch(activeTab, (newVal) => {
   if (!loadedTabs.value.includes(newVal)) {
     loadedTabs.value.push(newVal);
   }
+});
+
+onMounted(() => {
+  const img = new Image();
+  img.src = NormalPoopIcon;
+  img.decode().catch(() => {});
 });
 </script>
 

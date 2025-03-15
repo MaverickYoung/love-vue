@@ -13,7 +13,7 @@ const CONFIG = {
   },
   outputDir: 'src/assets', // 文件输出目录
   conversion: {
-    sizeThreshold: 1024, // 1KB阈值（小于此值保留SVG）
+    sizeThreshold: 2 * 1024, // 2KB阈值（小于此值保留SVG）
     maxDimension: 512, // 最大输出尺寸
     defaultQuality: 55, // AVIF默认质量（1-100）
     compressionEffort: 6, // 压缩强度（0-9）
@@ -25,7 +25,7 @@ const CONFIG = {
 const PATHS = {
   inputDir: path.join(CONFIG.projectRoot, CONFIG.input.dir),
   outputDir: path.join(CONFIG.projectRoot, CONFIG.outputDir),
-  outputIconDir: path.join(CONFIG.projectRoot, CONFIG.outputDir + '/icons'),
+  outputIconDir: path.join(CONFIG.projectRoot, CONFIG.outputDir, 'icons'),
 };
 
 /* *********************** 核心逻辑 *********************** */
