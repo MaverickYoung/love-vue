@@ -5,22 +5,23 @@
     </div>
     <hr class="divider" />
     <div class="reward-container">
-      <div
-        v-for="(reward, index) in rewards"
-        v-if="rewards.length > 0"
-        :key="index">
+      <ImageLoading v-if="isLoading" />
+      <!-- 空数据提示 -->
+      <div v-else-if="rewards.length === 0" class="empty">
+        <image-wrapper :src="EmptyIcon" width="70%" />
+      </div>
+      <div v-for="(reward, index) in rewards" :key="index">
         <div class="photo-frame">
           <!-- 使用 image-wrapper 包裹图片 -->
           <image-wrapper
-            v-if="reward.rewardImage"
             :src="reward.rewardImage"
             class="reward-image"
             width="180px"
             @click="showImage(reward.rewardImage)" />
-          <div v-else class="reward-not">
-            <span
-              ><b>{{ getNickname(reward.userId) }}</b> 的奖励呢？</span
-            >
+          <div v-if="!reward.rewardImage" class="reward-not">
+            <span>
+              <b>{{ getNickname(reward.userId) }}</b> 的奖励呢？
+            </span>
           </div>
 
           <!-- 头像 -->
@@ -31,10 +32,6 @@
           <!-- 王冠 -->
           <image-wrapper :src="CrownIcon" class="crown" width="15px" />
         </div>
-      </div>
-
-      <div v-else class="empty">
-        <image-wrapper :src="EmptyIcon" width="70%" />
       </div>
     </div>
     <hr class="divider" />
@@ -89,6 +86,7 @@ import {
   UploaderFileListItem,
 } from 'vant';
 import { CrownIcon, EmptyIcon } from '@/assets';
+import ImageLoading from '@/components/ImageLoading.vue';
 
 interface RewardItem {
   month: string;
@@ -109,20 +107,21 @@ const getNickname = (userId: number) => {
 
 const rewards = ref<RewardItem[]>([]);
 
+const isLoading = ref(false); // 新增加载状态变量
+
 const fetchRewards = async (month: string) => {
-  // 清空
-  rewards.value = [
-    {
-      month: month,
-      userId: 0,
-      isRewarded: true,
-      rewardImage: '',
-    },
-  ];
-  const { data } = await useRewardApi(month);
-  rewards.value = data;
-  const userIds = new Set<number>(data.map((item: RewardItem) => item.userId));
-  await userStore.fetchUserProfilesAction(userIds);
+  isLoading.value = true; // 开始加载
+  rewards.value = []; //清空数据
+  try {
+    const { data } = await useRewardApi(month);
+    rewards.value = data;
+    const userIds = new Set<number>(
+      data.map((item: RewardItem) => item.userId),
+    );
+    await userStore.fetchUserProfilesAction(userIds);
+  } finally {
+    isLoading.value = false; // 加载完成
+  }
 };
 
 const datePickerVisible = ref(false);

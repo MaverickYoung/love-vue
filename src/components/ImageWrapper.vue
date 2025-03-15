@@ -1,9 +1,7 @@
 <template>
   <div class="image-container">
     <!-- 加载动画 -->
-    <div v-if="isLoading" class="loader">
-      <div class="ring"></div>
-    </div>
+    <ImageLoading v-if="isLoading" />
 
     <img
       v-show="!isLoading"
@@ -18,6 +16,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { ErrorPlaceholderIcon } from '@/assets';
+import ImageLoading from '@/components/ImageLoading.vue';
 
 const props = defineProps<{
   src: string | undefined; // 图片地址
@@ -64,7 +63,7 @@ const handleError = () => {
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 100%;
+  width: auto;
   height: auto;
 }
 
@@ -73,32 +72,5 @@ img {
   display: block;
   background: rgba(240, 240, 240, 0);
   transition: opacity 0.3s ease-in-out;
-}
-
-/* 加载动画 */
-.loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loader .ring {
-  width: 20px;
-  height: 20px;
-  border: 3px dashed #4b9cdb;
-  border-radius: 50%;
-  animation: loadingD 1.5s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
-}
-
-@keyframes loadingD {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 </style>
