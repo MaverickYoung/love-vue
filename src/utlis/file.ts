@@ -18,6 +18,7 @@ class ImageUtils {
   ): Promise<File> {
     // 配置压缩选项
     const options = {
+      maxSizeMB: 2, // 限制最大 2MB，浏览器端压缩通常需要设置这个值
       maxWidthOrHeight: Math.max(maxWidth, maxHeight),
       useWebWorker: true, // 使用 Web Worker 以提高性能
       fileType: 'image/avif', // 输出格式为 AVIF
