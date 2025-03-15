@@ -53,7 +53,7 @@
 
   <image-manager
     :onFileChange="handleAvatarFileChange"
-    :onSave="() => saveBase64AsImage(user.avatar, '头像')"
+    :onSave="() => ImageUtils.saveBase64AsImage(user.avatar, '头像')"
     :show="showAvatarPopup"
     :src="user.avatar"
     :updateShow="(val) => (showAvatarPopup = val)"
@@ -61,7 +61,7 @@
     saveLabel="保存头像" />
   <image-manager
     :onFileChange="handleBackgroundFileChange"
-    :onSave="() => saveBase64AsImage(user.background, '背景图')"
+    :onSave="() => ImageUtils.saveBase64AsImage(user.background, '背景图')"
     :show="showBackgroundPopup"
     :src="user.background"
     :updateShow="(val) => (showBackgroundPopup = val)"
@@ -80,9 +80,9 @@ import {
   useUpdateBackgroundApi,
   useUserInfoSubmitApi,
 } from '@/api/sys/user';
-import { saveBase64AsImage } from '@/utlis/file';
 import ImageManager from '@/components/ImagePopup/ImageManager.vue';
 import { FemaleIcon, MaleIcon, UnknownIcon } from '@/assets';
+import ImageUtils from '@/utlis/file';
 
 const userStore = useUserStore();
 

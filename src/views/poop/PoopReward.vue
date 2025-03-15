@@ -14,11 +14,12 @@
         <div class="photo-frame">
           <!-- 使用 image-wrapper 包裹图片 -->
           <image-wrapper
+            v-if="reward.rewardImage"
             :src="reward.rewardImage"
             class="reward-image"
             width="180px"
             @click="showImage(reward.rewardImage)" />
-          <div v-if="!reward.rewardImage" class="reward-not">
+          <div v-else class="reward-not">
             <span>
               <b>{{ getNickname(reward.userId) }}</b> 的奖励呢？
             </span>
@@ -87,6 +88,7 @@ import {
 } from 'vant';
 import { CrownIcon, EmptyIcon } from '@/assets';
 import ImageLoading from '@/components/ImageLoading.vue';
+import ImageUtils from '@/utlis/file';
 
 interface RewardItem {
   month: string;
@@ -127,7 +129,7 @@ const fetchRewards = async (month: string) => {
 const datePickerVisible = ref(false);
 const columnsType: DatePickerColumnType[] = ['year', 'month'];
 
-const minDate = new Date(2024, 10); // 最小日期为 2024 年 11 月
+const minDate = new Date(2024, 9); // 最小日期为 2024 年 10 月
 const maxDate = new Date(); // 获取当前日期
 maxDate.setMonth(maxDate.getMonth() - 1); // 当前月份减一个月
 
@@ -156,10 +158,15 @@ const pendingUploads = ref<UploaderFileListItem[]>([]);
 
 // 支持的图片格式
 const supportedFormats = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'image/svg+xml',
+  'image/jpeg', // JPEG/JPG
+  'image/png', // PNG
+  'image/webp', // WebP
+  'image/gif', // GIF（包括动态）
+  'image/svg+xml', // SVG（将被栅格化）
+  'image/tiff', // TIFF
+  'image/heif', // HEIF（需系统支持）
+  'image/heic', // HEIC（需系统支持）
+  'application/pdf', // PDF（提取第一页）
 ];
 
 onMounted(() => {
@@ -174,7 +181,7 @@ const beforeRead = (file: File | File[]): boolean => {
   for (let i = 0; i < files.length; i++) {
     const currentFile = files[i];
     if (!supportedFormats.includes(currentFile.type)) {
-      showToast('请上传 jpg, jpeg, png, gif 或 svg 格式图片');
+      showToast('不支持的图片格式');
       return false;
     }
   }
@@ -184,9 +191,17 @@ const beforeRead = (file: File | File[]): boolean => {
 
 const handleUpload = async () => {
   await Promise.all(
-    pendingUploads.value.map((fileItem) => {
+    pendingUploads.value.map(async (fileItem) => {
       if (fileItem.file) {
-        return useUpdateRewardApi(fileItem.file, formatDate.value);
+        let newFile;
+        try {
+          // 使用 await 调用 compressToAvif，并获取压缩后的文件
+          newFile = await ImageUtils.compressToAvif(fileItem.file);
+        } catch (error) {
+          showToast('图片压缩失败');
+          return;
+        }
+        return useUpdateRewardApi(newFile, formatDate.value);
       }
     }),
   );
