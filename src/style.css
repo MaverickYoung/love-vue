@@ -36,3 +36,9 @@ body {
 button, button * {
     color: var(--button-text-color);
 }
+
+.van-toast {
+    * {
+        color: #fff;
+    }
+}
