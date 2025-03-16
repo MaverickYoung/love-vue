@@ -5,7 +5,7 @@
     </div>
     <hr class="divider" />
     <div class="reward-container">
-      <ImageLoading v-if="isLoading" />
+      <ImageLoading v-if="isLoading" style="padding: 80px" />
       <!-- 空数据提示 -->
       <div v-else-if="rewards.length === 0" class="tips-empty">
         <image-wrapper :src="EmptyIcon" width="70%" />
