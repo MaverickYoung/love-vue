@@ -1,3 +1,27 @@
+<!--
+  - MIT License
+  -
+  - Copyright (c) 2025 Maverick Young
+  -
+  - Permission is hereby granted, free of charge, to any person obtaining a copy
+  - of this software and associated documentation files (the "Software"), to deal
+  - in the Software without restriction, including without limitation the rights
+  - to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  - copies of the Software, and to permit persons to whom the Software is
+  - furnished to do so, subject to the following conditions:
+  -
+  - The above copyright notice and this permission notice shall be included in all
+  - copies or substantial portions of the Software.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  - IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  - FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  - AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  - LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  - OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  - SOFTWARE.
+  -->
+
 <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
      width="200" height="200">
     <path d="M736 85.33c-111.29 0-182.89 51.39-224 104.94-41.11-53.55-112.71-104.94-224-104.94-169.47 0-266.67 106.53-266.67 292.27 0 183.71 166.69 441.81 475.61 558.32 4.84 1.82 9.95 2.74 15.05 2.74 5.1 0 10.21-0.92 15.05-2.74 308.93-116.51 475.61-374.61 475.61-558.32 0.02-185.74-97.17-292.27-266.65-292.27z m-224 764.9C232.56 738.5 106.67 508.14 106.67 377.6c0-137.31 61.01-206.94 181.33-206.94 146.48 0 181.3 116.75 182.83 122.15 5.05 18.56 21.91 31.46 41.17 31.46 19.35 0 36.28-13.02 41.24-31.73 0.32-1.22 34.04-121.87 182.76-121.87 120.33 0 181.33 69.62 181.33 206.94 0 130.53-125.89 360.89-405.33 472.62z"

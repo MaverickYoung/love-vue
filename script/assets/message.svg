@@ -1,1 +1,27 @@
-<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1741944976006" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6149" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M864 97H158c-52.383 0-95 42.617-95 95v514c0 52.383 42.617 95 95 95h212.818l118.644 117.716C495.7 924.905 503.85 928 512 928s16.301-3.095 22.538-9.284L653.182 801H864c52.383 0 95-42.617 95-95V192c0-52.383-42.617-95-95-95z m31 609c0 17.094-13.906 31-31 31H640a31.998 31.998 0 0 0-22.538 9.284L512 850.922 406.538 746.284A32 32 0 0 0 384 737H158c-17.093 0-31-13.906-31-31V192c0-17.093 13.907-31 31-31h706c17.094 0 31 13.907 31 31v514z" p-id="6150"></path><path d="M256 447m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" p-id="6151"></path><path d="M512 447m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" p-id="6152"></path><path d="M768 447m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" p-id="6153"></path></svg>
+<?xml version="1.0" standalone="no"?><!--
+  - MIT License
+  -
+  - Copyright (c) 2025 Maverick Young
+  -
+  - Permission is hereby granted, free of charge, to any person obtaining a copy
+  - of this software and associated documentation files (the "Software"), to deal
+  - in the Software without restriction, including without limitation the rights
+  - to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  - copies of the Software, and to permit persons to whom the Software is
+  - furnished to do so, subject to the following conditions:
+  -
+  - The above copyright notice and this permission notice shall be included in all
+  - copies or substantial portions of the Software.
+  -
+  - THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  - IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  - FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  - AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  - LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  - OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  - SOFTWARE.
+  -->
+
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg t="1741944976006" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6149"
+     width="200" height="200"><path d="M864 97H158c-52.383 0-95 42.617-95 95v514c0 52.383 42.617 95 95 95h212.818l118.644 117.716C495.7 924.905 503.85 928 512 928s16.301-3.095 22.538-9.284L653.182 801H864c52.383 0 95-42.617 95-95V192c0-52.383-42.617-95-95-95z m31 609c0 17.094-13.906 31-31 31H640a31.998 31.998 0 0 0-22.538 9.284L512 850.922 406.538 746.284A32 32 0 0 0 384 737H158c-17.093 0-31-13.906-31-31V192c0-17.093 13.907-31 31-31h706c17.094 0 31 13.907 31 31v514z" p-id="6150"></path><path d="M256 447m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" p-id="6151"></path><path d="M512 447m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" p-id="6152"></path><path d="M768 447m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" p-id="6153"></path></svg>
