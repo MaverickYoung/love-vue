@@ -1,8 +1,16 @@
-# 💩 便便记录器
+<div style="text-align: center">
+  <h1>💩 便便记录器</h1>
+
+![GitHub stars](https://img.shields.io/github/stars/MaverickYoung/love-vue?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/MaverickYoung/love-vue?style=flat-square)
+![License](https://img.shields.io/github/license/MaverickYoung/love-vue?style=flat-square)
+![Vue Version](https://img.shields.io/badge/Vue-3-42b883?style=flat-square&logo=vue.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.9-3178c6?style=flat-square&logo=typescript)
+</div>
 
 ## 📝 项目简介
 
-**便便记录器** 是一个基于 Vue 3 开发的 Web 应用，帮助用户记录每日便便情况，以便追踪健康状况。
+**便便记录器** 是一个基于 Vue 3 开发的 Web 应用，帮助用户记录每次便便情况，以便追踪健康状况。
 
 ## 🚀 技术栈
 
@@ -19,27 +27,32 @@
 ## 📦 安装与运行
 
 ### 1. 克隆仓库
+
 ```sh
 git clone https://github.com/MaverickYoung/love-vue.git
 cd love-vue
 ```
 
 ### 2. 安装依赖
+
 ```sh
 npm install
 ```
 
 ### 3. 运行 SVG 图片压缩脚本（首次构建前必须执行）
+
 ```sh
 node script/convert-svg-to-avif.js
 ```
 
 ### 4. 运行开发环境
+
 ```sh
 npm run dev
 ```
 
 ### 5. 构建生产环境
+
 ```sh
 npm run build
 ```
