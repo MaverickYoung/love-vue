@@ -1,4 +1,4 @@
-<div style="text-align: center">
+<div align="center">
   <h1>💩 便便记录器</h1>
 
 ![GitHub stars](https://img.shields.io/github/stars/MaverickYoung/love-vue?style=flat-square)
