@@ -82,7 +82,7 @@
           span="8">
           <image-wrapper
             :src="poop.src"
-            width="80%"
+            width="60px"
             @click="onOptionClick(poop)" />
         </van-col>
       </van-row>
@@ -90,7 +90,7 @@
       <template #reference>
         <image-wrapper
           :src="selectedType?.src ? selectedType?.src : ''"
-          width="50%" />
+          width="100px" />
       </template>
     </van-popover>
     <br />
@@ -248,14 +248,15 @@ const setInitialOption = () => {
 };
 
 onMounted(async () => {
-  await poopStore.getPoopsAction();
+  // 并行执行 getPoopsAction 和 onLogPage
+  await Promise.all([poopStore.getPoopsAction(), onLogPage()]);
+
+  // 这些操作需在 getPoopsAction 完成后执行
   poopOptions.value = [...poopStore.poops.values()];
   setInitialOption();
 
-  await onLogPage();
-
+  // 等待 Vue 更新 DOM
   await nextTick();
-
   scrollToBottom(true);
 });
 </script>
@@ -300,6 +301,7 @@ onMounted(async () => {
         display: flex;
         flex-direction: row;
         align-items: center;
+        height: 47px;
         width: 100%;
 
         /* 接收消息：头像左对齐，消息内容右对齐 */

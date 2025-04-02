@@ -38,7 +38,7 @@ const CONFIG = {
   outputDir: 'src/assets', // 文件输出目录
   conversion: {
     sizeThreshold: 2 * 1024, // 2KB阈值（小于此值保留SVG）
-    maxDimension: 512, // 最大输出尺寸
+    maxDimension: 128, // 最大输出尺寸
     defaultQuality: 55, // AVIF默认质量（1-100）
     compressionEffort: 9, // 压缩强度（0-9）
     chromaSubsampling: '4:2:0', // 色度子采样

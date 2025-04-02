@@ -82,12 +82,6 @@ watch(activeTab, (newVal) => {
     loadedTabs.value.push(newVal);
   }
 });
-
-onMounted(() => {
-  const img = new Image();
-  img.src = NormalPoopIcon;
-  img.decode().catch(() => {});
-});
 </script>
 
 <style scoped>
