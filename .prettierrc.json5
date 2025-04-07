@@ -1,0 +1,40 @@
+{
+	// 设置每行最大字符宽度
+	printWidth: 120,
+
+	// 设置制表符宽度
+	tabWidth: 2,
+
+	// 是否使用制表符进行缩进
+	useTabs: true,
+
+	// 句尾是否使用分号
+	semi: false,
+
+	// 使用单引号而不是双引号
+	singleQuote: true,
+
+	// 在 JSX 文件中使用单引号
+	jsxSingleQuote: true,
+
+	// 是否在对象、数组的最后一项后面加逗号
+	trailingComma: 'none',
+
+	// 在多行 JSX 中，`>` 是否放在最后一行的末尾
+	bracketSpacing: true,
+
+	// 在 JSX 中是否保持括号和参数之间的空格
+	bracketSameLine: true,
+
+	// 使用箭头函数时，括号是否保留
+	arrowParens: 'avoid',
+
+	// 指定 HTML 文件的换行规则
+	proseWrap: 'preserve',
+
+	// HTML 中的空格敏感度
+	htmlWhitespaceSensitivity: 'css',
+
+	// 行尾换行符类型，默认为 lf
+	endOfLine: 'auto'
+}

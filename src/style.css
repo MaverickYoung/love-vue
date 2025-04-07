@@ -22,47 +22,47 @@
  * SOFTWARE.
  */
 
-
 :root:root {
-    --van-background: #E6E6E6;
-    --van-text-color: #323233;
-    --van-background-2: #FFFFFF;
-    --van-background-3: #FFFFFF;
-    --van-text-color-2: #acacac;
-    --van-text-color-3: #000000;
+	--van-background: #e6e6e6;
+	--van-text-color: #323233;
+	--van-background-2: #ffffff;
+	--van-background-3: #ffffff;
+	--van-text-color-2: #acacac;
+	--van-text-color-3: #000000;
 
-    --box-shadow-top: #FFFFFF19;
-    --box-shadow-bottom: #00000033;
-    --box-shadow-soft: #D1D9E6;
-    --box-shadow-deep: #F9F9F9;
+	--box-shadow-top: #ffffff19;
+	--box-shadow-bottom: #00000033;
+	--box-shadow-soft: #d1d9e6;
+	--box-shadow-deep: #f9f9f9;
 
-    --van-tabs-nav-background: var(--van-background);
+	--van-tabs-nav-background: var(--van-background);
 
-    --button-text-color: white;
+	--button-text-color: white;
 }
 
 * {
-    padding: 0;
-    margin: 0;
-    color: var(--van-text-color);
+	padding: 0;
+	margin: 0;
+	color: var(--van-text-color);
 }
 
 body {
-    height: 100dvh;
-    width: 100dvw;
-    background-color: var(--van-background);
+	height: 100dvh;
+	width: 100dvw;
+	background-color: var(--van-background);
 }
 
 #app {
-    position: relative;
+	position: relative;
 }
 
-button, button * {
-    color: var(--button-text-color);
+button,
+button * {
+	color: var(--button-text-color);
 }
 
 .van-toast {
-    * {
-        color: #fff;
-    }
+	* {
+		color: #fff;
+	}
 }
