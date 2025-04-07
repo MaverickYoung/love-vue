@@ -25,5 +25,5 @@
 import service from '@/utlis/request';
 
 export const usePoopsApi = () => {
-  return service.get(`/poop/type`);
+	return service.get(`/poop/type`);
 };

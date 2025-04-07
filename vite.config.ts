@@ -31,42 +31,51 @@ import { resolve } from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
-  resolve: {
-    // 配置别名
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
-  },
-  plugins: [
-    vue(),
-    AutoImport({
-      resolvers: [VantResolver()],
-    }),
-    Components({
-      resolvers: [VantResolver()],
-    }),
-  ],
-  server: {
-    host: '0.0.0.0',
-    port: 4000, // 端口号
-    open: false, // 是否自动打开浏览器
-  },
-  build: {
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        //生产环境时移除console、debugger
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          echarts: ['echarts/core', 'echarts/charts', 'echarts/components'],
-        },
-      },
-    },
-  },
+	base: './',
+	resolve: {
+		// 配置别名
+		alias: {
+			'@': resolve(__dirname, './src')
+		}
+	},
+	plugins: [
+		vue(),
+		AutoImport({
+			resolvers: [VantResolver()]
+		}),
+		Components({
+			resolvers: [VantResolver()]
+		})
+	],
+	server: {
+		host: '0.0.0.0',
+		port: 4000, // 端口号
+		open: false, // 是否自动打开浏览器
+		proxy: {
+			'/api': {
+				// 匹配所有以 '/api'开头的请求路径
+				target: 'http://[::1]:8080', //目标请求地址
+				// secure: false,  //忽略安全证书校验,如果是https接口，需要配置这个参数
+				changeOrigin: true,
+				rewrite: path => path.replace(/^\/api/, '') //去除'/api'
+			}
+		}
+	},
+	build: {
+		minify: 'terser',
+		terserOptions: {
+			compress: {
+				//生产环境时移除console、debugger
+				drop_console: true,
+				drop_debugger: true
+			}
+		},
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					echarts: ['echarts/core', 'echarts/charts', 'echarts/components']
+				}
+			}
+		}
+	}
 });

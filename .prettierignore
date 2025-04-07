@@ -1,0 +1,12 @@
+# 忽略 node_modules
+node_modules
+
+# 忽略打包输出
+dist
+
+# 忽略 lock 文件
+package-lock.json
+pnpm-lock.yaml
+
+# 忽略 ESLint 缓存
+.eslintcache

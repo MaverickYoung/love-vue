@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/github/license/MaverickYoung/love-vue?style=flat-square)
 ![Vue Version](https://img.shields.io/badge/Vue-3-42b883?style=flat-square&logo=vue.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-4.9-3178c6?style=flat-square&logo=typescript)
+
 </div>
 
 ## 📝 项目简介
@@ -62,22 +63,24 @@ npm run build
 本应用分为三个主要模块：
 
 1. **记录**
-    - 记录并查看自己和他人的便便时间
-    - 每条便便记录包含时间和便便类型
+
+   - 记录并查看自己和他人的便便时间
+   - 每条便便记录包含时间和便便类型
 
 2. **奖励**
-    - 统计上月便便最多的人，最多的用户可获得奖励
-    - 允许上传奖励图片
+
+   - 统计上月便便最多的人，最多的用户可获得奖励
+   - 允许上传奖励图片
 
 3. **统计**
-    - 使用 ECharts 进行数据可视化，展示便便趋势
+   - 使用 ECharts 进行数据可视化，展示便便趋势
 
 ## 🌙 主题与存储
 
 - **支持暗色主题**，可根据用户偏好自动切换
 - **存储策略**：
-    - 背景图和主题设置存储在本地
-    - 其他数据存储在云端
+  - 背景图和主题设置存储在本地
+  - 其他数据存储在云端
 - **安全设计**：采用 **双 Token** 机制
 
 ## 📜 许可证
@@ -87,4 +90,3 @@ npm run build
 ---
 
 如果你有任何建议或问题，欢迎提 Issue 或 PR！😊
-

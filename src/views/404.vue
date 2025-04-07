@@ -23,7 +23,7 @@
   -->
 
 <template>
-  <image-wrapper :src="_404Icon" />
+	<image-wrapper :src="_404Icon" />
 </template>
 
 <script lang="ts" setup>

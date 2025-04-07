@@ -27,13 +27,13 @@ import * as echarts from 'echarts/core';
 
 // 引入内置组件，组件后缀都为Component
 import {
-  DatasetComponent,
-  DataZoomComponent,
-  GridComponent,
-  LegendComponent,
-  TitleComponent,
-  ToolboxComponent,
-  TooltipComponent,
+	DatasetComponent,
+	DataZoomComponent,
+	GridComponent,
+	LegendComponent,
+	TitleComponent,
+	ToolboxComponent,
+	TooltipComponent
 } from 'echarts/components';
 
 // 引入渲染器：echarts默认使用canvas渲染，引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
@@ -47,21 +47,21 @@ import { BarChart } from 'echarts/charts';
 
 // 注册必须的组件
 echarts.use([
-  // 内置组件
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  LegendComponent,
-  ToolboxComponent,
-  DatasetComponent,
-  DataZoomComponent,
-  // 渲染器
-  CanvasRenderer,
-  // 特性
-  LabelLayout,
-  UniversalTransition,
-  // 图表
-  BarChart,
+	// 内置组件
+	TitleComponent,
+	TooltipComponent,
+	GridComponent,
+	LegendComponent,
+	ToolboxComponent,
+	DatasetComponent,
+	DataZoomComponent,
+	// 渲染器
+	CanvasRenderer,
+	// 特性
+	LabelLayout,
+	UniversalTransition,
+	// 图表
+	BarChart
 ]);
 
 export default echarts;

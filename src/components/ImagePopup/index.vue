@@ -23,21 +23,21 @@
   -->
 
 <template>
-  <div v-if="show" class="popup-container" @click="closePopup">
-    <div class="popup-content" @click.stop>
-      <image-wrapper v-if="src" :src="src" width="80dvw" />
-      <div v-else class="empty-image-placeholder">空</div>
-      <slot></slot>
-    </div>
-  </div>
+	<div v-if="show" class="popup-container" @click="closePopup">
+		<div class="popup-content" @click.stop>
+			<image-wrapper v-if="src" :src="src" width="80dvw" />
+			<div v-else class="empty-image-placeholder">空</div>
+			<slot></slot>
+		</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import ImageWrapper from '@/components/ImageWrapper.vue';
 
 const props = defineProps<{
-  src?: string;
-  show: boolean;
+	src?: string;
+	show: boolean;
 }>();
 
 // 定义 emit
@@ -45,36 +45,36 @@ const emit = defineEmits(['update:show']);
 
 // 关闭弹窗
 const closePopup = () => {
-  emit('update:show', false);
+	emit('update:show', false);
 };
 </script>
 
 <style scoped>
 .popup-container {
-  height: 100dvh;
-  width: 100dvw;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
+	height: 100dvh;
+	width: 100dvw;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1000;
 
-  background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+	background: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 
-  .popup-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+	.popup-content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
 
-    .empty-image-placeholder {
-      font-size: 30px;
-      margin: 50px;
-      color: white;
-    }
-  }
+		.empty-image-placeholder {
+			font-size: 30px;
+			margin: 50px;
+			color: white;
+		}
+	}
 }
 </style>
