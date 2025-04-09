@@ -410,11 +410,11 @@ const greenChange = (e: Event): void => {
 
 	if (v !== '') {
 		if (numValue > 255) {
-			red.value = 255;
+			green.value = 255;
 		} else if (numValue < 0) {
-			red.value = 0;
+			green.value = 0;
 		} else if (numValue >= 0 && numValue <= 255) {
-			red.value = numValue;
+			green.value = numValue;
 		}
 	}
 };
@@ -426,11 +426,11 @@ const blueChange = (e: Event): void => {
 
 	if (v !== '') {
 		if (numValue > 255) {
-			red.value = 255;
+			blue.value = 255;
 		} else if (numValue < 0) {
-			red.value = 0;
+			blue.value = 0;
 		} else if (numValue >= 0 && numValue <= 255) {
-			red.value = numValue;
+			blue.value = numValue;
 		}
 	}
 };
@@ -442,11 +442,11 @@ const alphaChange = (e: Event): void => {
 
 	if (v !== '') {
 		if (numValue > 255) {
-			red.value = 255;
+			alpha.value = 255;
 		} else if (numValue < 0) {
-			red.value = 0;
+			alpha.value = 0;
 		} else if (numValue >= 0 && numValue <= 255) {
-			red.value = numValue;
+			alpha.value = numValue;
 		}
 	}
 };
